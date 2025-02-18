@@ -89,6 +89,7 @@ function AppWrapper() {
   return (
     <BrowserRouter>
       <App />
+      <Home/>
     </BrowserRouter>
   );
 }
