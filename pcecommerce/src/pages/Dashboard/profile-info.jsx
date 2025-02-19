@@ -1,6 +1,14 @@
-import React from "react";
-
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 function Profileinfo() {
+  // Tạo state để theo dõi tab đang active, mặc định là 'id1'
+  const [activeTab, setActiveTab] = useState("id1");
+
+  // Hàm thay đổi tab khi thẻ được click
+  const handleTabClick = (tabId) => {
+    setActiveTab(tabId); // Cập nhật tab đang active
+  };
+
   return (
     <div>
       <>
@@ -18,10 +26,12 @@ function Profileinfo() {
                         <h2 className="sherah-breadcrumb__title">Setting</h2>
                         <ul className="sherah-breadcrumb__list">
                           <li>
-                            <a href="#">Home</a>
+                            <Link to="/admin">Dashboard</Link>
                           </li>
                           <li className="active">
-                            <a href="profile-info.html">Personal Information</a>
+                            <Link to="/admin/profileinfo">
+                              Personal Information
+                            </Link>
                           </li>
                         </ul>
                       </div>
@@ -37,10 +47,13 @@ function Profileinfo() {
                                 role="tablist"
                               >
                                 <a
-                                  className="list-group-item active"
+                                  className={`list-group-item ${
+                                    activeTab === "id1" ? "active" : ""
+                                  }`} // Thêm class 'active' khi tab này được chọn
                                   data-bs-toggle="list"
                                   href="#id1"
                                   role="tab"
+                                  onClick={() => handleTabClick("id1")} // Xử lý sự kiện click
                                 >
                                   <span className="sherah-psidebar__icon">
                                     <svg
@@ -73,10 +86,13 @@ function Profileinfo() {
                                   </span>
                                 </a>
                                 <a
-                                  className="list-group-item"
+                                  className={`list-group-item ${
+                                    activeTab === "id2" ? "active" : ""
+                                  }`}
                                   data-bs-toggle="list"
                                   href="#id2"
                                   role="tab"
+                                  onClick={() => handleTabClick("id2")}
                                 >
                                   <span className="sherah-psidebar__icon">
                                     <svg
@@ -115,10 +131,13 @@ function Profileinfo() {
                                   </span>
                                 </a>
                                 <a
-                                  className="list-group-item"
+                                  className={`list-group-item ${
+                                    activeTab === "id3" ? "active" : ""
+                                  }`}
                                   data-bs-toggle="list"
                                   href="#id3"
                                   role="tab"
+                                  onClick={() => handleTabClick("id3")}
                                 >
                                   <span className="sherah-psidebar__icon">
                                     <svg
@@ -145,10 +164,13 @@ function Profileinfo() {
                                   </span>
                                 </a>
                                 <a
-                                  className="list-group-item"
+                                  className={`list-group-item ${
+                                    activeTab === "id4" ? "active" : ""
+                                  }`}
                                   data-bs-toggle="list"
                                   href="#id4"
                                   role="tab"
+                                  onClick={() => handleTabClick("id4")}
                                 >
                                   <span className="sherah-psidebar__icon">
                                     <svg
@@ -204,10 +226,13 @@ function Profileinfo() {
                                   </span>
                                 </a>
                                 <a
-                                  className="list-group-item"
+                                  className={`list-group-item ${
+                                    activeTab === "id5" ? "active" : ""
+                                  }`}
                                   data-bs-toggle="list"
                                   href="#id5"
                                   role="tab"
+                                  onClick={() => handleTabClick("id5")}
                                 >
                                   <span className="sherah-psidebar__icon">
                                     <svg
@@ -240,10 +265,13 @@ function Profileinfo() {
                                   </span>
                                 </a>
                                 <a
-                                  className="list-group-item"
+                                  className={`list-group-item ${
+                                    activeTab === "id6" ? "active" : ""
+                                  }`}
                                   data-bs-toggle="list"
                                   href="#id6"
                                   role="tab"
+                                  onClick={() => handleTabClick("id6")}
                                 >
                                   <span className="sherah-psidebar__icon">
                                     <svg
@@ -281,7 +309,9 @@ function Profileinfo() {
                                 >
                                   {/*  Features Single Tab */}
                                   <div
-                                    className="tab-pane fade show active"
+                                    className={`tab-pane fade ${
+                                      activeTab === "id1" ? "show active" : ""
+                                    }`} // Chỉ hiển thị tab1 khi activeTab là 'id1'
                                     id="id1"
                                     role="tabpanel"
                                   >
@@ -455,7 +485,9 @@ function Profileinfo() {
                                     </form>
                                   </div>
                                   <div
-                                    className="tab-pane fade"
+                                    className={`tab-pane fade ${
+                                      activeTab === "id2" ? "show active" : ""
+                                    }`}
                                     id="id2"
                                     role="tabpanel"
                                   >
@@ -665,7 +697,9 @@ function Profileinfo() {
                                     </form>
                                   </div>
                                   <div
-                                    className="tab-pane fade"
+                                    className={`tab-pane fade ${
+                                      activeTab === "id3" ? "show active" : ""
+                                    }`}
                                     id="id3"
                                     role="tabpanel"
                                   >
@@ -1081,7 +1115,9 @@ function Profileinfo() {
                                     </form>
                                   </div>
                                   <div
-                                    className="tab-pane fade"
+                                    className={`tab-pane fade ${
+                                      activeTab === "id4" ? "show active" : ""
+                                    }`}
                                     id="id4"
                                     role="tabpanel"
                                   >
@@ -1576,7 +1612,9 @@ function Profileinfo() {
                                     </form>
                                   </div>
                                   <div
-                                    className="tab-pane fade"
+                                    className={`tab-pane fade ${
+                                      activeTab === "id5" ? "show active" : ""
+                                    }`}
                                     id="id5"
                                     role="tabpanel"
                                   >
@@ -1663,7 +1701,9 @@ function Profileinfo() {
                                     </div>
                                   </div>
                                   <div
-                                    className="tab-pane fade"
+                                    className={`tab-pane fade ${
+                                      activeTab === "id6" ? "show active" : ""
+                                    }`}
                                     id="id6"
                                     role="tabpanel"
                                   >
