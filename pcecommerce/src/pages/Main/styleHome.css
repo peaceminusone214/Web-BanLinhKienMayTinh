@@ -1,0 +1,38 @@
+
+/* slide */
+
+.homepage-showcase .container{
+    padding: 0px;
+}
+.swiper-showcase {
+    max-height: unset;
+    overflow: hidden;
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+}
+
+.swiper-wrapper {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+}
+
+.swiper-slide {
+    min-width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.swiper-slide img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+}
+
+.swiper-slide img:hover {
+    transform: scale(1.03);
+}
