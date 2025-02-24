@@ -1,9 +1,9 @@
-
 /* slide */
 
-.homepage-showcase .container{
+.homepage-showcase .container {
     padding: 0px;
 }
+
 .swiper-showcase {
     max-height: unset;
     overflow: hidden;
@@ -34,5 +34,367 @@
 }
 
 .swiper-slide img:hover {
-    transform: scale(1.03);
+    transform: scale(1.01);
+}
+
+
+
+
+
+
+/* Tổng thể Homepage */
+.homepage-showcase {
+    width: 100%;
+    position: relative;
+}
+
+/* Showcase Section */
+.homepage-showcase {
+    position: relative;
+}
+
+.swiper-showcase {
+    position: relative;
+}
+
+.homepage-banner {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 1200px;
+    z-index: 2;
+    padding: 10px 20px;
+    border-radius: 10px;
+
+
+}
+
+.banner-under-showcase {
+    display: grid;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Danh sách Banner */
+.banner-under-showcase-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+/* Ảnh Banner */
+.banner-under-showcase-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.banner-under-showcase-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+/* Hiệu ứng hover */
+.banner-under-showcase-image:hover {
+    transform: scale(1.05);
+}
+
+
+
+
+
+
+
+/* ===== Box Collection (Ưu Đãi Dành Cho Bạn) ===== */
+.box-collection {
+    max-width: 1200px;
+    height: 100%;
+    background-image: url("../../../public//assets//interface-main//images/banner-home.jpg");
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px 10px 20px 10px;
+    transition: all 0.3s ease-in-out;
+    margin: auto;
+}
+
+/* ===== Box Header (Tiêu đề) ===== */
+.box-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.box-header h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.box-header ul {
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+
+}
+
+.box-header ul li {
+    color: #0b0b0b;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 5px 35px;
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+}
+
+.box-header .font-weight-bold {
+    color: #131313;
+    font-weight: 600;
+}
+
+
+.js-collection-button {
+    background-color: #fff;
+}
+
+.box-header ul li.cat-active {
+    background: #fc5c00;
+    color: white;
+}
+
+
+.box-header ul li:hover {
+    background: #ff7f2a;
+    color: white;
+}
+
+/* ===== Swiper Wrapper (Danh sách sản phẩm) ===== */
+.homepage-collection-swiper {
+    overflow: hidden;
+}
+
+.grid--6-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+/* ===== Product Card (Sản phẩm) ===== */
+.p-item {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.p-item:hover {
+    transform: scale(1.05);
+}
+
+.p-img img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+/* ===== Product Content ===== */
+.p-content {
+    padding: 10px;
+    text-align: center;
+}
+
+.p-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.p-price {
+    color: #fc5c00;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.p-market-price {
+    text-decoration: line-through;
+    color: gray;
+}
+
+.p-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.p-compare {
+    color: #fc5c00;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-cart-sp {
+    background: #fc5c00;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn-cart-sp:hover {
+    background: #b64300;
+}
+
+/* ===== Xem tất cả Button ===== */
+.box-bottom {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.btn-view-more {
+    display: inline-block;
+    color: white;
+    font-size: 11px;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-view-more:hover {
+    color: #ff5e00;
+}
+
+
+
+
+
+
+
+
+/* ===== Section Wrapper===== */
+.banner-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    background: #f8f8f8;
+    margin: auto;
+
+}
+
+/* ===== Banner Box (Cấu trúc chính) ===== */
+.box-category-big-image {
+    margin-top: 5px;
+    width: 1200px;
+    overflow: hidden;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* ===== Hình ảnh Banner ===== */
+.box-category-big-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+}
+
+
+.box-category-big-image::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0) 30%,
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0) 70%
+    );
+    transition: left 1.0s ease-in-out;
+}
+
+.box-category-big-image:hover::before {
+    left: 100%;
+}
+
+.box-category-big-image:hover {
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+
+
+
+
+
+
+
+/* box header */
+/* ===== Header Section ===== */
+.pc-header {
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 2px solid #ddd;
+    margin: auto;
+}
+
+/* ===== Tiêu đề chính ===== */
+.pc-heading {
+    font-size: 24px;
+    font-weight: bold;
+    color: #222;
+}
+
+/* ===== Sub-header (Danh sách PC) ===== */
+.pc-sub-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* ===== Danh sách PC ===== */
+.pc-list {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 15px;
+    padding: 0;
+    margin: 0;
+}
+
+.pc-list li a {
+    text-decoration: none;
+    font-size: 14px;
+    color: #151414;
+    font-weight: 600;
+    transition: color 0.3s ease-in-out;
+}
+
+.pc-list li a:hover {
+    color: #3538e8;
+}
+
+/* ===== Button Xem tất cả ===== */
+.btn-view-all {
+    font-weight: 500;
+    color: #fc5c00;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+
+.btn-view-all:hover {
+    color: #4e10eb;
 }

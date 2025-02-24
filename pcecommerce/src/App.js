@@ -80,7 +80,7 @@ function App() {
       </Routes>
 
       {/* Conditionally render Footer based on the route */}
-      {!isAdminPath && !isLoginPage && <Footer />}
+      {/* {!isAdminPath && !isLoginPage && <Footer />} */}
     </div>
   );
 }
@@ -89,7 +89,9 @@ function AppWrapper() {
   return (
     <BrowserRouter>
       <App />
-      <Home/>
+      
+      <Footer/>
+
     </BrowserRouter>
   );
 }
