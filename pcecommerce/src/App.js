@@ -6,6 +6,15 @@ import Contact from './pages/Main/Contact';
 import Home from './pages/Main/Home';
 import Laptop from './pages/Main/Laptop';
 import Product from './pages/Main/Product';
+import Cart from './pages/Main/Cart'; //Giỏ hàng
+import News from './pages/Main/News'; // Tin tức
+
+import Tech from './pages/Main/Tech';
+import Game from "./pages/Main/Game";
+import SanPham from "./pages/Main/SanPham";
+import Tips from "./pages/Main/Tips";
+import Software from "./pages/Main/Software";
+
 import Header from './components/Header';
 import Footer from './components/Footer';
 import AdminDashboard from './pages/Dashboard/AdminDashboard';
@@ -53,6 +62,16 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/laptop" element={<Laptop />} />
         <Route path="/products" element={<Product />} />
+
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/news" element={<News />} />
+        <Route path="/tech" element={<Tech />} />
+        <Route path="/game" element={<Game />} />
+        <Route path="/san-pham" element={<SanPham />} />
+        <Route path="/tips" element={<Tips />} />
+        <Route path="/software" element={<Software />} />
+
+        
         <Route path="/login" element={<Login />} />
         
         {/* Admin Routes (including sub-routes) */}

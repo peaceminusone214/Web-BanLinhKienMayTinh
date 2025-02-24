@@ -1,11 +1,11 @@
+
 * {
     font-size: 11px;
-
 }
 
 .header-top {
     background: #d94700;
-
+    z-index: 1;
 }
 
 .box-header-top {
@@ -16,7 +16,6 @@
 .header-top .container {
     width: 1200px;
     padding: 0px;
-
 }
 
 .header-top .title-group {
@@ -33,7 +32,6 @@
     margin-top: 8px;
 }
 
-
 .header-top .title-group>i {
     margin-right: 7px
 }
@@ -47,7 +45,6 @@
 .fa-share-alt i {
     color: #d94700;
 }
-
 
 .header-top .title-group.title-group-hover:hover {
     background: #ff7e00
@@ -66,16 +63,6 @@
     height: 11px;
     background-position: -207px -0px
 }
-
-/* .header-top .fa-search .fa-info-circle .fa-envelope .fa-users i{
-    float: left;
-    margin-right: 5px;
-    width: 17px;
-    height: 11px;
-    background-position: -207px -0px
-} */
-
-
 
 .header-top .item-left .bg-linear {
     background: -o-repeating-linear-gradient(left, #f1d113 0, #fef273 25%, #f1b01f 50%, #fde904 75%, #e5bf23 100%);
@@ -112,12 +99,9 @@
     margin-top: 10px;
 }
 
-
 .header-top .item-right .title-group {
     padding: 0
 }
-
-
 
 .header-top .item-right .pl-chia {
     color: #fff;
@@ -148,20 +132,15 @@
     }
 }
 
-
-
-
-/* Định dạng chung cho thanh header */
 .header {
     background: #ff7e00;
     padding: 12px;
     display: flex;
     justify-content: center;
     align-items: center;
-    
+    z-index: 2;
 }
 
-/* Định dạng menu list */
 .menu-list {
     display: flex;
     justify-content: center;
@@ -170,7 +149,6 @@
     width: 100%;
 }
 
-/* Định dạng danh sách menu */
 .header-nav-menu {
     list-style: none;
     display: flex;
@@ -179,21 +157,19 @@
     padding: 0;
     margin: 0;
     border-bottom: 1px solid #e0e0e0;
-
 }
 
-/* Định dạng từng item */
 .header-nav-item {
     margin: 0 25px;
     position: relative;
     transition: all 0.3s ease-in-out;
+    position: relative;
 }
 
 .header-nav-item:hover {
     transform: translateY(-3px);
 }
 
-/* Link bên trong navbar */
 .header-nav-link {
     display: flex;
     flex-direction: column;
@@ -209,7 +185,6 @@
     color: #333536;
 }
 
-/* Hình ảnh icon */
 .header-nav-link img {
     width: 30px;
     height: 30px;
@@ -223,15 +198,107 @@
     color: #fff;
 }
 
+/* Dropdown menu */
+.dropdown-menu {
+    z-index: 1000;
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2); 
+    border-radius: 12px; 
+    padding: 20px;
+    min-width: 450px;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.3s ease-in-out;
+    display: flex;
+    justify-content: space-between; 
+    align-items: flex-start; 
+    transform: translateY(20px); 
+}
 
+/* ----- Dropdown Menu ----- */
+/*
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+    min-width: 800px; 
+    padding: 25px;
+    display: none;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 9999;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
 
+.dropdown-menu .dropdown-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    grid-template-rows: repeat(3, auto); 
+    gap: 15px;
+    padding-right: 250px; 
+}
 
+.dropdown-menu .dropdown-content a {
+    display: block;
+    padding: 14px 18px;
+    color: #333;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
+.dropdown-menu .dropdown-content a:hover {
+    background-color: #ff6600;
+    color: #fff;
+}
 
+.dropdown-menu .dropdown-image {
+    width: 100%; 
+    height: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 2px solid #ddd;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
+.dropdown-menu .dropdown-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
 
+.dropdown-menu .dropdown-image img:hover {
+    transform: scale(1.1);
+}
 
+.header-nav-item.dropdown:hover .dropdown-menu {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+}
 
+.header-nav-item.dropdown {
+    position: relative;
+    cursor: pointer;
+}
+
+*/
 
 
 
