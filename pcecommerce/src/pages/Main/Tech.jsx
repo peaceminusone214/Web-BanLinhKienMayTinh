@@ -39,25 +39,57 @@ const techArticles = [
     views: 1086,
     image: "/assets/interface-main/imgTech/gddr7.png",
   },
+  {
+    title: "Chiếc 'RTX 4090 Super' đầu tiên trên thế giới đạt điểm số cao hơn tới 16% so với phiên bản tiêu chuẩn 4090",
+    date: "10-07-2024, 8:45 am",
+    views: 313,
+    image: "/assets/interface-main/imgTech/11zon.png",
+  },
+  {
+    title: "Chip RISC-V sẽ hỗ trợ thay thế RAM mà không cần tắt hệ thống - tính năng hot plugging sẽ có mặt trong các phiên bản Linux mới hơn",
+    date: "08-07-2024, 1:20 pm",
+    views: 42,
+    image: "/assets/interface-main/imgTech/risc.png",
+  },
+  {
+    title: "Socket CPU LGA 1851 Arrow Lake của Intel được chi tiết hóa",
+    date: "08-07-2024, 8:33 am",
+    views: 1086,
+    image: "/assets/interface-main/imgTech/socketcpu.png",
+  },
+  {
+    title: "Bổ sung mới AMD cho tiện ích ép xung cho phép điều chỉnh hiệu suất thêm - Curve Shaper cho phép 15 điểm bù điện áp",
+    date: "07-07-2024, 4:33 am",
+    views: 85,
+    image: "/assets/interface-main/imgTech/amadanew1.png",
+  },
+  {
+    title: "Intel vs AMD: CPU nào tốt hơn vào năm 2024?",
+    date: "07-07-2024, 10:39 am",
+    views: 1765,
+    image: "/assets/interface-main/imgTech/amdavsintel.png",
+  },
+  {
+    title: "AMD công bố tài liệu phân tích chi tiết về bộ vi xử lý MI300A - APU exascale đột phá của họ được nghiên cứu kỹ lưỡng... ",
+    date: "06-07-2024, 2:04 pm",
+    views: 56,
+    image: "/assets/interface-main/imgTech/mi300a.png",
+  },
 ];
 
 const Tech = () => {
   return (
     <div className="tech-container">
-      {/* Breadcrumb */}
       <div className="breadcrumb">
         <Link to="/">Trang chủ</Link> <span className="current">Tin Công Nghệ</span>
       </div>
-
-      {/* Danh mục */}
       <nav className="news-categories">
-        <Link to="/tech">TIN CÔNG NGHỆ</Link>
-        <Link to="/san-pham">SẢN PHẨM MỚI</Link>
-        <Link to="/game">CHỦ ĐỀ GAME</Link>
-        <Link to="/tips">THỦ THUẬT</Link>
-        <Link to="/software">PHẦN MỀM CRACK</Link>
+        <Link to="/News/tech">TIN CÔNG NGHỆ</Link>
+        <Link to="/News/san-pham">SẢN PHẨM MỚI</Link>
+        <Link to="/News/game">CHỦ ĐỀ GAME</Link>
+        <Link to="/News/tips">THỦ THUẬT</Link>
+        <Link to="/News/software">PHẦN MỀM CRACK</Link>
       </nav>
-
       {/* Danh sách bài viết công nghệ */}
       <div className="tech-content">
         <h2>TIN CÔNG NGHỆ MỚI NHẤT</h2>
@@ -74,5 +106,6 @@ const Tech = () => {
     </div>
   );
 };
+
 
 export default Tech;

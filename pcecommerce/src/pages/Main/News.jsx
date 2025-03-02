@@ -1,7 +1,17 @@
 import React from "react";
-import { Link } from "react-router-dom"; 
+import { Link, Route, Routes, Outlet } from "react-router-dom"; 
 import "./styleNews.css";
+import Tech from "./Tech";
+import SanPham from "./SanPham";
+import Game from "./Game";
+import Tips from "./Tips";
+import Software from "./Software";
 
+const TechContent = () => <div>Thông tin về Tin Công Nghệ</div>;
+const ProductContent = () => <div>Thông tin về Sản Phẩm Mới</div>;
+const GameContent = () => <div>Thông tin về Chủ Đề Game</div>;
+const TipsContent = () => <div>Thông tin về Thủ Thuật</div>;
+const SoftwareContent = () => <div>Thông tin về Phần Mềm Crack</div>;
 
 const News = () => {
   const featuredArticle = {
@@ -42,11 +52,11 @@ const News = () => {
 
       {/* Danh mục */}
       <nav className="news-categories">
-        <Link to="/tech">TIN CÔNG NGHỆ</Link>
-        <Link to="/san-pham">SẢN PHẨM MỚI</Link>
-        <Link to="/game">CHỦ ĐỀ GAME</Link>
-        <Link to="/tips">THỦ THUẬT</Link>
-        <Link to="/software">PHẦN MỀM CRACK</Link>
+        <Link to="/News/tech">TIN CÔNG NGHỆ</Link>
+        <Link to="/News/san-pham">SẢN PHẨM MỚI</Link>
+        <Link to="/News/game">CHỦ ĐỀ GAME</Link>
+        <Link to="/News/tips">THỦ THUẬT</Link>
+        <Link to="/News/software">PHẦN MỀM CRACK</Link>
       </nav>
 
       <div className="news-content">
@@ -151,6 +161,17 @@ const News = () => {
           ))}
         </div>
       </div>
+
+      <Routes>
+        <Route path="tin-cong-nghe" element={<Tech />} />
+        <Route path="san-pham-moi" element={<ProductContent />} />
+        <Route path="chu-de-game" element={<GameContent />} />
+        <Route path="thu-thuat" element={<TipsContent />} />
+        <Route path="phan-mem-crack" element={<SoftwareContent />} />
+      </Routes>
+
+      {/* Outlet để hiển thị nội dung trang con */}
+      <Outlet />
 
     </div>
   );

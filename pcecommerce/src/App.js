@@ -65,11 +65,11 @@ function App() {
 
         <Route path="/cart" element={<Cart />} />
         <Route path="/news" element={<News />} />
-        <Route path="/tech" element={<Tech />} />
-        <Route path="/game" element={<Game />} />
-        <Route path="/san-pham" element={<SanPham />} />
-        <Route path="/tips" element={<Tips />} />
-        <Route path="/software" element={<Software />} />
+        <Route path="News/tech" element={<Tech />} />
+        <Route path="News/game" element={<Game />} />
+        <Route path="News/san-pham" element={<SanPham />} />
+        <Route path="News/tips" element={<Tips />} />
+        <Route path="News/software" element={<Software />} />
 
         
         <Route path="/login" element={<Login />} />
