@@ -94,14 +94,14 @@ const Game = () => {
   return (
     <div className="tech-container">
       <div className="breadcrumb">
-        <Link to="/">Trang chủ</Link> <span className="current">Sản phẩm mới</span>
+        <Link to="/">Trang chủ</Link> <span className="current">Chủ đề Game</span>
       </div>
       <nav className="news-categories">
         <Link to="/News/tech">TIN CÔNG NGHỆ</Link>
         <Link to="/News/san-pham">SẢN PHẨM MỚI</Link>
         <Link to="/News/game">CHỦ ĐỀ GAME</Link>
         <Link to="/News/tips">THỦ THUẬT</Link>
-        <Link to="/News/software">PHẦN MỀM CRACK</Link>
+        <Link to="/News/software">PHẦN MỀM</Link>
       </nav>
       <div className="game-container">
       {games.map((game, index) => (

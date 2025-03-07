@@ -8,6 +8,7 @@ import Laptop from './pages/Main/Laptop';
 import Product from './pages/Main/Product';
 import Cart from './pages/Main/Cart'; //Giỏ hàng
 import News from './pages/Main/News'; // Tin tức
+import BuildPC from './pages/Main/BuildPC'; //BuildPC
 
 import Tech from './pages/Main/Tech';
 import Game from "./pages/Main/Game";
@@ -62,6 +63,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/laptop" element={<Laptop />} />
         <Route path="/products" element={<Product />} />
+        <Route path="/buildpc" element={<BuildPC/>} />
 
         <Route path="/cart" element={<Cart />} />
         <Route path="/news" element={<News />} />
@@ -70,8 +72,6 @@ function App() {
         <Route path="News/san-pham" element={<SanPham />} />
         <Route path="News/tips" element={<Tips />} />
         <Route path="News/software" element={<Software />} />
-
-        
         <Route path="/login" element={<Login />} />
         
         {/* Admin Routes (including sub-routes) */}

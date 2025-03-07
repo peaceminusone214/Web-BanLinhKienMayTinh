@@ -1,53 +1,68 @@
-import React, { useState } from 'react';
-import './styleCart.css'; 
-function Cart() {
-  // Giả lập dữ liệu sản phẩm để thêm vào giỏ hàng
-  const products = [
-    { id: 1, name: 'Laptop', price: 1000 },
-    { id: 2, name: 'Computer', price: 500 },
-    { id: 3, name: 'Smartphone', price: 700 },
-  ];
+import React, { useState, useEffect } from "react";
+import "./styleCart.css";
 
-  const [cart, setCart] = useState([]);
+const Cart = () => {
+  const [cartItems, setCartItems] = useState([]);
 
-  const addToCart = (product) => {
-    setCart([...cart, product]);
-  };
+  // Lấy dữ liệu giỏ hàng từ localStorage
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCartItems(storedCart);
+  }, []);
 
-  const calculateTotal = () => {
-    return cart.reduce((total, product) => total + product.price, 0);
-  };
-
-  return (
-    <div className="cart-container">
-      <h1 className="cart-title">Giỏ hàng</h1>
-
-      <div className="product-list">
-        {products.map((product) => (
-          <div key={product.id} className="product-item">
-            <span>{product.name} - ${product.price}</span>
-            <button onClick={() => addToCart(product)} className="add-to-cart-btn">Thêm vào giỏ hàng</button>
+  // Nếu giỏ hàng trống, hiển thị giao diện trống như hiện tại
+  if (cartItems.length === 0) {
+    return (
+      <div className="cart-page">
+        {/* Thanh điều hướng */}
+        <div className="breadcrumb-container1">
+          <a href="/" className="breadcrumb-link1">Trang chủ</a>
+          <span className="breadcrumb-separator">›</span>
+          <span className="breadcrumb-current">Thông tin giỏ hàng</span>
+        </div>
+        <div className="cart-container">
+          <h1 className="cart-title">GIỎ HÀNG</h1>
+          <div className="cart-content">
+            <img
+              src="../assets/interface-main/images/empty_cart.png"
+              alt="Empty Cart"
+              className="cart-image"
+            />
+            <p className="cart-message">Không có sản phẩm nào trong giỏ hàng của bạn</p>
+            <button className="cart-button">TIẾP TỤC MUA HÀNG</button>
           </div>
-        ))}
+        </div>
       </div>
+    );
+  }
 
-      <div className="cart-summary">
-        <h3>Tổng tiền</h3>
-        {cart.length === 0 ? (
-          <p>Giỏ hàng của bạn đang trống!</p>
-        ) : (
-          <div>
-            <ul>
-              {cart.map((product, index) => (
-                <li key={index}>{product.name} - ${product.price}</li>
-              ))}
-            </ul>
-            <p>Total: ${calculateTotal()}</p>
-          </div>
-        )}
+  // Nếu có sản phẩm, hiển thị danh sách sản phẩm
+  return (
+    <div className="cart-page">
+      {/* Thanh điều hướng */}
+      <div className="breadcrumb-container1">
+        <a href="/" className="breadcrumb-link1">Trang chủ</a>
+        <span className="breadcrumb-separator">›</span>
+        <span className="breadcrumb-current">Thông tin giỏ hàng</span>
+      </div>
+      <div className="cart-container">
+        <h1 className="cart-title">GIỎ HÀNG</h1>
+        <div className="cart-items">
+          {cartItems.map((item) => (
+            <div className="cart-item" key={item.id}>
+              <img src={item.image} alt={item.name} className="cart-item-image" />
+              <div className="cart-item-info">
+                <h3>{item.name}</h3>
+                <p>Giá: {item.price} VND</p>
+                <p>Số lượng: {item.quantity}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <button className="checkout-button">TIẾN HÀNH THANH TOÁN</button>
       </div>
     </div>
   );
-}
+};
 
 export default Cart;

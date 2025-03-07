@@ -44,7 +44,7 @@ function Header() {
               <a href="/" className="title-group title-group-hover">
                 <i className="fa fa-search" aria-hidden="true"></i> Tra cứu bảo hành
               </a>
-              <a href="/" className="title-group title-group-hover header-icon icon-2">
+              <a href="/News" className="title-group title-group-hover header-icon icon-2">
                 <i className="fa fa-newspaper-o" aria-hidden="true"></i> Trang tin công nghệ
               </a>
 

@@ -88,7 +88,7 @@ const Tech = () => {
         <Link to="/News/san-pham">SẢN PHẨM MỚI</Link>
         <Link to="/News/game">CHỦ ĐỀ GAME</Link>
         <Link to="/News/tips">THỦ THUẬT</Link>
-        <Link to="/News/software">PHẦN MỀM CRACK</Link>
+        <Link to="/News/software">PHẦN MỀM</Link>
       </nav>
       {/* Danh sách bài viết công nghệ */}
       <div className="tech-content">

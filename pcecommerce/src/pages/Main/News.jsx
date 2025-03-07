@@ -11,7 +11,7 @@ const TechContent = () => <div>Thông tin về Tin Công Nghệ</div>;
 const ProductContent = () => <div>Thông tin về Sản Phẩm Mới</div>;
 const GameContent = () => <div>Thông tin về Chủ Đề Game</div>;
 const TipsContent = () => <div>Thông tin về Thủ Thuật</div>;
-const SoftwareContent = () => <div>Thông tin về Phần Mềm Crack</div>;
+const SoftwareContent = () => <div>Thông tin về Build PC</div>;
 
 const News = () => {
   const featuredArticle = {
@@ -56,7 +56,7 @@ const News = () => {
         <Link to="/News/san-pham">SẢN PHẨM MỚI</Link>
         <Link to="/News/game">CHỦ ĐỀ GAME</Link>
         <Link to="/News/tips">THỦ THUẬT</Link>
-        <Link to="/News/software">PHẦN MỀM CRACK</Link>
+        <Link to="/News/software">PHẦN MỀM</Link>
       </nav>
 
       <div className="news-content">
