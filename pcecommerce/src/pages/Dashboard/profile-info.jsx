@@ -1,13 +1,106 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
 function Profileinfo() {
-  // Tạo state để theo dõi tab đang active, mặc định là 'id1'
+  const API_URL = process.env.REACT_APP_API_URL;
+  const [roleToDisplay, setRoleToDisplay] = useState("");
   const [activeTab, setActiveTab] = useState("id1");
+  const [user, setUser] = useState(null);
+  const [logins, setLogins] = useState([]);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
 
   // Hàm thay đổi tab khi thẻ được click
   const handleTabClick = (tabId) => {
     setActiveTab(tabId); // Cập nhật tab đang active
   };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // Gọi API session để lấy thông tin user ban đầu
+        const sessionResponse = await fetch(`${API_URL}/auth/session`, { credentials: "include" });
+        if (!sessionResponse.ok) throw new Error("Lỗi khi lấy dữ liệu session");
+  
+        const sessionData = await sessionResponse.json();
+        let user = sessionData.user;
+  
+        if (user?.userId) {
+          // Gọi API bổ sung thông tin user
+          const userResponse = await fetch(`${API_URL}/user/get-user/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: user.userId }),
+          });
+  
+          if (userResponse.ok) {
+            const additionalUserData = await userResponse.json();
+            user = { ...user, ...additionalUserData }; // Gộp dữ liệu từ cả hai API
+          } else {
+            console.warn("Không thể lấy dữ liệu user bổ sung, giữ lại dữ liệu session");
+          }
+        }
+  
+        setUser(user);
+        setRoleToDisplay(user.roles?.join(", ") || "No roles available");
+      } catch (error) {
+        console.error("Lỗi lấy dữ liệu user:", error);
+        setUser(null);
+      }
+    };
+  
+    fetchUserData();
+  }, []);  
+
+  useEffect(() => {
+    if (!user) return;
+  
+    fetch(`${API_URL}/user/get-login-history`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: user._id }), // Sử dụng userId từ session
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("🚀 API login history response:", data); // Kiểm tra dữ liệu API trả về
+        if (Array.isArray(data)) {
+          setLogins(data); // Chỉ set nếu là mảng
+        } else {
+          console.error("Lỗi: API không trả về mảng!", data);
+          setLogins([]); // Đặt giá trị mặc định để tránh lỗi .map()
+        }
+      })
+      .catch((error) => console.error("Lỗi lấy lịch sử đăng nhập:", error));
+  }, [user]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!user) return;
+
+    if (newPassword !== confirmPassword) {
+      setMessage("❌ Mật khẩu mới không khớp!");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/user/change-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user._id, oldPassword, newPassword }), // Dùng userId từ session
+      });
+
+      const data = await response.json();
+      setMessage(response.ok ? "✅ Đổi mật khẩu thành công!" : `❌ ${data.message}`);
+    } catch (error) {
+      setMessage("❌ Lỗi kết nối server!");
+    }
+  };
+
+  if (!user) {
+    return <div>Loading...</div>; // Display a loading state until the user data is fetched
+  }
 
   return (
     <div>
@@ -29,9 +122,7 @@ function Profileinfo() {
                             <Link to="/admin">Dashboard</Link>
                           </li>
                           <li className="active">
-                            <Link to="/admin/profileinfo">
-                              Personal Information
-                            </Link>
+                            <Link to="/admin/profileinfo">Personal Info</Link>
                           </li>
                         </ul>
                       </div>
@@ -82,7 +173,7 @@ function Profileinfo() {
                                     </svg>
                                   </span>
                                   <span className="sherah-psidebar__title">
-                                    Personal Info
+                                    Thông tin cá nhân
                                   </span>
                                 </a>
                                 <a
@@ -127,7 +218,7 @@ function Profileinfo() {
                                     </svg>
                                   </span>
                                   <span className="sherah-psidebar__title">
-                                    Payment Method
+                                    Phương thức<br />thanh toán
                                   </span>
                                 </a>
                                 <a
@@ -160,7 +251,7 @@ function Profileinfo() {
                                     </svg>
                                   </span>
                                   <span className="sherah-psidebar__title">
-                                    Notification Setting
+                                    Cài đặt thông báo
                                   </span>
                                 </a>
                                 <a
@@ -222,7 +313,7 @@ function Profileinfo() {
                                     </svg>
                                   </span>
                                   <span className="sherah-psidebar__title">
-                                    Login Activity
+                                    Lịch sử đăng nhập
                                   </span>
                                 </a>
                                 <a
@@ -261,7 +352,7 @@ function Profileinfo() {
                                     </svg>
                                   </span>
                                   <span className="sherah-psidebar__title">
-                                    Change Password{" "}
+                                    Đổi mật khẩu{" "}
                                   </span>
                                 </a>
                                 <a
@@ -294,7 +385,7 @@ function Profileinfo() {
                                     </svg>
                                   </span>
                                   <span className="sherah-psidebar__title">
-                                    Connect With Social{" "}
+                                    Tài khoản<br/>mạng xã hội
                                   </span>
                                 </a>
                               </div>
@@ -325,17 +416,17 @@ function Profileinfo() {
                                                 <div className="sherah-profile-cover sherah-offset-bg sherah-dflex">
                                                   <div className="sherah-profile-cover__img">
                                                     <img
-                                                      src="/assets/interface-dashboard/img/profile-thumb.png"
+                                                      src={user.image_url}
                                                       alt="#"
                                                     />
                                                   </div>
                                                   <div className="sherah-profile-cover__content">
                                                     <h3 className="sherah-profile-cover__title">
-                                                      Dolores Manlin
+                                                      {user.name}
                                                     </h3>
                                                     <span className="sherah-profile-cover__text sherah-color1">
-                                                      I am Professional Graphic
-                                                      Designer
+                                                      Vị trí làm việc:{" "}
+                                                      {roleToDisplay}
                                                     </span>
                                                     <ul className="sherah-social mg-top-30">
                                                       <li>
@@ -388,33 +479,23 @@ function Profileinfo() {
                                                 {/* End Profile Cover Info */}
                                                 <div className="sherah-profile-info__v2 mg-top-30">
                                                   <h3 className="sherah-profile-info__heading mg-btm-30">
-                                                    Personal Information
+                                                    Thông tin cá nhân
                                                   </h3>
                                                   <ul className="sherah-profile-info__list sherah-dflex-column">
                                                     <li className="sherah-dflex">
                                                       <h4 className="sherah-profile-info__title">
-                                                        Full Name :
+                                                        Họ và Tên :
                                                       </h4>
                                                       <p className="sherah-profile-info__text">
-                                                        Jangoch Ankon
+                                                        {user.name}
                                                       </p>
                                                     </li>
                                                     <li className="sherah-dflex">
                                                       <h4 className="sherah-profile-info__title">
-                                                        About :
+                                                        Giới thiệu :
                                                       </h4>
                                                       <p className="sherah-profile-info__text">
-                                                        Lorem ipsum dolor sit
-                                                        amet, consectetur
-                                                        adipiscing elit.
-                                                        Curabitur sodales sits a
-                                                        amet nunc et vehicula.
-                                                        Mauris sed lectus nisi.
-                                                        Suspendisse velit mi,
-                                                        pretiums as non euismod
-                                                        vitae Suspendisse velit
-                                                        mi, pretium non euismod
-                                                        vitae
+                                                        {user.about}
                                                       </p>
                                                     </li>
                                                     <li className="sherah-dflex">
@@ -422,57 +503,35 @@ function Profileinfo() {
                                                         Email :
                                                       </h4>
                                                       <p className="sherah-profile-info__text">
-                                                        infoyoursiddik@gmail.com
+                                                        {user.email}
                                                       </p>
                                                     </li>
                                                     <li className="sherah-dflex">
                                                       <h4 className="sherah-profile-info__title">
-                                                        Phone :
+                                                        Số điện thoại :
                                                       </h4>
                                                       <p className="sherah-profile-info__text">
-                                                        +8801408317199
+                                                        {user.phoneNumber}
                                                       </p>
                                                     </li>
                                                     <li className="sherah-dflex">
                                                       <h4 className="sherah-profile-info__title">
-                                                        Full Name :
+                                                        Ngày sinh :
                                                       </h4>
                                                       <p className="sherah-profile-info__text">
-                                                        Jangoch Ankon
+                                                        {new Date(
+                                                          user.dateOfBirth
+                                                        ).toLocaleDateString(
+                                                          "vi-VN"
+                                                        )}
                                                       </p>
                                                     </li>
                                                     <li className="sherah-dflex">
                                                       <h4 className="sherah-profile-info__title">
-                                                        Date of Birth :
+                                                        Địa chỉ :
                                                       </h4>
                                                       <p className="sherah-profile-info__text">
-                                                        02/02/1997
-                                                      </p>
-                                                    </li>
-                                                    <li className="sherah-dflex">
-                                                      <h4 className="sherah-profile-info__title">
-                                                        Address :
-                                                      </h4>
-                                                      <p className="sherah-profile-info__text">
-                                                        3801 Chalk Butte Rd, Cut
-                                                        Bank, MT 59427, United
-                                                        States
-                                                      </p>
-                                                    </li>
-                                                    <li className="sherah-dflex">
-                                                      <h4 className="sherah-profile-info__title">
-                                                        Country :
-                                                      </h4>
-                                                      <p className="sherah-profile-info__text">
-                                                        United States
-                                                      </p>
-                                                    </li>
-                                                    <li className="sherah-dflex">
-                                                      <h4 className="sherah-profile-info__title">
-                                                        Language :
-                                                      </h4>
-                                                      <p className="sherah-profile-info__text">
-                                                        English
+                                                        {user.address}
                                                       </p>
                                                     </li>
                                                   </ul>
@@ -1144,468 +1203,95 @@ function Profileinfo() {
                                             </tr>
                                           </thead>
                                           <tbody className="sherah-table__body">
-                                            <tr>
-                                              <td className="sherah-table__column-1 sherah-table__data-1">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    Chrome on Window
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-2 sherah-table__data-2">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    278.281.987.111
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-3 sherah-table__data-3">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    Mar 24, 2022{" "}
-                                                    <span className="sherah-table__time">
-                                                      04:26 PM
-                                                    </span>
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-4 sherah-table__data-4">
-                                                <div className="sherah-table__product-content">
-                                                  <div className="sherah-table__status__group">
-                                                    <a
-                                                      href="#"
-                                                      className="sherah-table__action sherah-color2 sherah-color2__bg--offset"
-                                                    >
-                                                      <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="16.247"
-                                                        height="18.252"
-                                                        viewBox="0 0 16.247 18.252"
-                                                      >
-                                                        <g
-                                                          id="Icon"
-                                                          transform="translate(-160.007 -18.718)"
-                                                        >
-                                                          <path
-                                                            id="Path_484"
-                                                            data-name="Path 484"
-                                                            d="M185.344,88.136c0,1.393,0,2.786,0,4.179-.006,1.909-1.523,3.244-3.694,3.248q-3.623.007-7.246,0c-2.15,0-3.682-1.338-3.687-3.216q-.01-4.349,0-8.7a.828.828,0,0,1,.822-.926.871.871,0,0,1,1,.737c.016.162.006.326.006.489q0,4.161,0,8.321c0,1.061.711,1.689,1.912,1.69q3.58,0,7.161,0c1.2,0,1.906-.631,1.906-1.695q0-4.311,0-8.622a.841.841,0,0,1,.708-.907.871.871,0,0,1,1.113.844C185.349,85.1,185.343,86.618,185.344,88.136Z"
-                                                            transform="translate(-9.898 -58.597)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_485"
-                                                            data-name="Path 485"
-                                                            d="M164.512,21.131c0-.517,0-.98,0-1.443.006-.675.327-.966,1.08-.967q2.537,0,5.074,0c.755,0,1.074.291,1.082.966.005.439.005.878.009,1.317a.615.615,0,0,0,.047.126h.428c1,0,2,0,3,0,.621,0,1.013.313,1.019.788s-.4.812-1.04.813q-7.083,0-14.165,0c-.635,0-1.046-.327-1.041-.811s.4-.786,1.018-.789C162.165,21.127,163.3,21.131,164.512,21.131Zm1.839-.021H169.9v-.764h-3.551Z"
-                                                            transform="translate(0 0)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_486"
-                                                            data-name="Path 486"
-                                                            d="M225.582,107.622c0,.9,0,1.806,0,2.709a.806.806,0,0,1-.787.908.818.818,0,0,1-.814-.924q0-2.69,0-5.38a.82.82,0,0,1,.81-.927.805.805,0,0,1,.79.9C225.585,105.816,225.582,106.719,225.582,107.622Z"
-                                                            transform="translate(-58.483 -78.508)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_487"
-                                                            data-name="Path 487"
-                                                            d="M266.724,107.63c0-.9,0-1.806,0-2.709a.806.806,0,0,1,.782-.912.818.818,0,0,1,.818.919q0,2.69,0,5.38a.822.822,0,0,1-.806.931c-.488,0-.792-.356-.794-.938C266.721,109.411,266.724,108.521,266.724,107.63Z"
-                                                            transform="translate(-97.561 -78.509)"
-                                                            fill="#ff6767"
-                                                          />
-                                                        </g>
-                                                      </svg>
-                                                    </a>
+                                            {logins.map((login) => (
+                                              <tr key={login._id}>
+                                                <td className="sherah-table__column-1 sherah-table__data-1">
+                                                  <div className="sherah-table__product-content">
+                                                    <p className="sherah-table__product-desc">
+                                                      {login.loginPlatform}
+                                                    </p>
                                                   </div>
-                                                </div>
-                                              </td>
-                                            </tr>
-                                            <tr>
-                                              <td className="sherah-table__column-1 sherah-table__data-1">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    Chrome on Window
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-2 sherah-table__data-2">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    278.281.987.111
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-3 sherah-table__data-3">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    Mar 24, 2022{" "}
-                                                    <span className="sherah-table__time">
-                                                      04:26 PM
-                                                    </span>
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-4 sherah-table__data-4">
-                                                <div className="sherah-table__product-content">
-                                                  <div className="sherah-table__status__group">
-                                                    <a
-                                                      href="#"
-                                                      className="sherah-table__action sherah-color2 sherah-color2__bg--offset"
-                                                    >
-                                                      <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="16.247"
-                                                        height="18.252"
-                                                        viewBox="0 0 16.247 18.252"
-                                                      >
-                                                        <g
-                                                          id="Icon"
-                                                          transform="translate(-160.007 -18.718)"
-                                                        >
-                                                          <path
-                                                            id="Path_484"
-                                                            data-name="Path 484"
-                                                            d="M185.344,88.136c0,1.393,0,2.786,0,4.179-.006,1.909-1.523,3.244-3.694,3.248q-3.623.007-7.246,0c-2.15,0-3.682-1.338-3.687-3.216q-.01-4.349,0-8.7a.828.828,0,0,1,.822-.926.871.871,0,0,1,1,.737c.016.162.006.326.006.489q0,4.161,0,8.321c0,1.061.711,1.689,1.912,1.69q3.58,0,7.161,0c1.2,0,1.906-.631,1.906-1.695q0-4.311,0-8.622a.841.841,0,0,1,.708-.907.871.871,0,0,1,1.113.844C185.349,85.1,185.343,86.618,185.344,88.136Z"
-                                                            transform="translate(-9.898 -58.597)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_485"
-                                                            data-name="Path 485"
-                                                            d="M164.512,21.131c0-.517,0-.98,0-1.443.006-.675.327-.966,1.08-.967q2.537,0,5.074,0c.755,0,1.074.291,1.082.966.005.439.005.878.009,1.317a.615.615,0,0,0,.047.126h.428c1,0,2,0,3,0,.621,0,1.013.313,1.019.788s-.4.812-1.04.813q-7.083,0-14.165,0c-.635,0-1.046-.327-1.041-.811s.4-.786,1.018-.789C162.165,21.127,163.3,21.131,164.512,21.131Zm1.839-.021H169.9v-.764h-3.551Z"
-                                                            transform="translate(0 0)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_486"
-                                                            data-name="Path 486"
-                                                            d="M225.582,107.622c0,.9,0,1.806,0,2.709a.806.806,0,0,1-.787.908.818.818,0,0,1-.814-.924q0-2.69,0-5.38a.82.82,0,0,1,.81-.927.805.805,0,0,1,.79.9C225.585,105.816,225.582,106.719,225.582,107.622Z"
-                                                            transform="translate(-58.483 -78.508)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_487"
-                                                            data-name="Path 487"
-                                                            d="M266.724,107.63c0-.9,0-1.806,0-2.709a.806.806,0,0,1,.782-.912.818.818,0,0,1,.818.919q0,2.69,0,5.38a.822.822,0,0,1-.806.931c-.488,0-.792-.356-.794-.938C266.721,109.411,266.724,108.521,266.724,107.63Z"
-                                                            transform="translate(-97.561 -78.509)"
-                                                            fill="#ff6767"
-                                                          />
-                                                        </g>
-                                                      </svg>
-                                                    </a>
+                                                </td>
+                                                <td className="sherah-table__column-2 sherah-table__data-2">
+                                                  <div className="sherah-table__product-content">
+                                                    <p className="sherah-table__product-desc">
+                                                      {login.loginIp}
+                                                    </p>
                                                   </div>
-                                                </div>
-                                              </td>
-                                            </tr>
-                                            <tr>
-                                              <td className="sherah-table__column-1 sherah-table__data-1">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    Chrome on Window
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-2 sherah-table__data-2">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    278.281.987.111
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-3 sherah-table__data-3">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    Mar 24, 2022{" "}
-                                                    <span className="sherah-table__time">
-                                                      04:26 PM
-                                                    </span>
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-4 sherah-table__data-4">
-                                                <div className="sherah-table__product-content">
-                                                  <div className="sherah-table__status__group">
-                                                    <a
-                                                      href="#"
-                                                      className="sherah-table__action sherah-color2 sherah-color2__bg--offset"
-                                                    >
-                                                      <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="16.247"
-                                                        height="18.252"
-                                                        viewBox="0 0 16.247 18.252"
-                                                      >
-                                                        <g
-                                                          id="Icon"
-                                                          transform="translate(-160.007 -18.718)"
-                                                        >
-                                                          <path
-                                                            id="Path_484"
-                                                            data-name="Path 484"
-                                                            d="M185.344,88.136c0,1.393,0,2.786,0,4.179-.006,1.909-1.523,3.244-3.694,3.248q-3.623.007-7.246,0c-2.15,0-3.682-1.338-3.687-3.216q-.01-4.349,0-8.7a.828.828,0,0,1,.822-.926.871.871,0,0,1,1,.737c.016.162.006.326.006.489q0,4.161,0,8.321c0,1.061.711,1.689,1.912,1.69q3.58,0,7.161,0c1.2,0,1.906-.631,1.906-1.695q0-4.311,0-8.622a.841.841,0,0,1,.708-.907.871.871,0,0,1,1.113.844C185.349,85.1,185.343,86.618,185.344,88.136Z"
-                                                            transform="translate(-9.898 -58.597)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_485"
-                                                            data-name="Path 485"
-                                                            d="M164.512,21.131c0-.517,0-.98,0-1.443.006-.675.327-.966,1.08-.967q2.537,0,5.074,0c.755,0,1.074.291,1.082.966.005.439.005.878.009,1.317a.615.615,0,0,0,.047.126h.428c1,0,2,0,3,0,.621,0,1.013.313,1.019.788s-.4.812-1.04.813q-7.083,0-14.165,0c-.635,0-1.046-.327-1.041-.811s.4-.786,1.018-.789C162.165,21.127,163.3,21.131,164.512,21.131Zm1.839-.021H169.9v-.764h-3.551Z"
-                                                            transform="translate(0 0)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_486"
-                                                            data-name="Path 486"
-                                                            d="M225.582,107.622c0,.9,0,1.806,0,2.709a.806.806,0,0,1-.787.908.818.818,0,0,1-.814-.924q0-2.69,0-5.38a.82.82,0,0,1,.81-.927.805.805,0,0,1,.79.9C225.585,105.816,225.582,106.719,225.582,107.622Z"
-                                                            transform="translate(-58.483 -78.508)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_487"
-                                                            data-name="Path 487"
-                                                            d="M266.724,107.63c0-.9,0-1.806,0-2.709a.806.806,0,0,1,.782-.912.818.818,0,0,1,.818.919q0,2.69,0,5.38a.822.822,0,0,1-.806.931c-.488,0-.792-.356-.794-.938C266.721,109.411,266.724,108.521,266.724,107.63Z"
-                                                            transform="translate(-97.561 -78.509)"
-                                                            fill="#ff6767"
-                                                          />
-                                                        </g>
-                                                      </svg>
-                                                    </a>
+                                                </td>
+                                                <td className="sherah-table__column-3 sherah-table__data-3">
+                                                  <div className="sherah-table__product-content">
+                                                    <p className="sherah-table__product-desc">
+                                                      {new Date(
+                                                        login.loginTime
+                                                      ).toLocaleString(
+                                                        "en-US",
+                                                        {
+                                                          month: "short",
+                                                          day: "2-digit",
+                                                          year: "numeric",
+                                                          hour: "2-digit",
+                                                          minute: "2-digit",
+                                                          second: "2-digit",
+                                                          hour12: true,
+                                                        }
+                                                      )}
+                                                    </p>
                                                   </div>
-                                                </div>
-                                              </td>
-                                            </tr>
-                                            <tr>
-                                              <td className="sherah-table__column-1 sherah-table__data-1">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    Chrome on Window
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-2 sherah-table__data-2">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    278.281.987.111
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-3 sherah-table__data-3">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    Mar 24, 2022{" "}
-                                                    <span className="sherah-table__time">
-                                                      04:26 PM
-                                                    </span>
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-4 sherah-table__data-4">
-                                                <div className="sherah-table__product-content">
-                                                  <div className="sherah-table__status__group">
-                                                    <a
-                                                      href="#"
-                                                      className="sherah-table__action sherah-color2 sherah-color2__bg--offset"
-                                                    >
-                                                      <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="16.247"
-                                                        height="18.252"
-                                                        viewBox="0 0 16.247 18.252"
+                                                </td>
+                                                <td className="sherah-table__column-4 sherah-table__data-4">
+                                                  <div className="sherah-table__product-content">
+                                                    <div className="sherah-table__status__group">
+                                                      <a
+                                                        href="#"
+                                                        className="sherah-table__action sherah-color2 sherah-color2__bg--offset"
                                                       >
-                                                        <g
-                                                          id="Icon"
-                                                          transform="translate(-160.007 -18.718)"
+                                                        <svg
+                                                          xmlns="http://www.w3.org/2000/svg"
+                                                          width="16.247"
+                                                          height="18.252"
+                                                          viewBox="0 0 16.247 18.252"
                                                         >
-                                                          <path
-                                                            id="Path_484"
-                                                            data-name="Path 484"
-                                                            d="M185.344,88.136c0,1.393,0,2.786,0,4.179-.006,1.909-1.523,3.244-3.694,3.248q-3.623.007-7.246,0c-2.15,0-3.682-1.338-3.687-3.216q-.01-4.349,0-8.7a.828.828,0,0,1,.822-.926.871.871,0,0,1,1,.737c.016.162.006.326.006.489q0,4.161,0,8.321c0,1.061.711,1.689,1.912,1.69q3.58,0,7.161,0c1.2,0,1.906-.631,1.906-1.695q0-4.311,0-8.622a.841.841,0,0,1,.708-.907.871.871,0,0,1,1.113.844C185.349,85.1,185.343,86.618,185.344,88.136Z"
-                                                            transform="translate(-9.898 -58.597)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_485"
-                                                            data-name="Path 485"
-                                                            d="M164.512,21.131c0-.517,0-.98,0-1.443.006-.675.327-.966,1.08-.967q2.537,0,5.074,0c.755,0,1.074.291,1.082.966.005.439.005.878.009,1.317a.615.615,0,0,0,.047.126h.428c1,0,2,0,3,0,.621,0,1.013.313,1.019.788s-.4.812-1.04.813q-7.083,0-14.165,0c-.635,0-1.046-.327-1.041-.811s.4-.786,1.018-.789C162.165,21.127,163.3,21.131,164.512,21.131Zm1.839-.021H169.9v-.764h-3.551Z"
-                                                            transform="translate(0 0)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_486"
-                                                            data-name="Path 486"
-                                                            d="M225.582,107.622c0,.9,0,1.806,0,2.709a.806.806,0,0,1-.787.908.818.818,0,0,1-.814-.924q0-2.69,0-5.38a.82.82,0,0,1,.81-.927.805.805,0,0,1,.79.9C225.585,105.816,225.582,106.719,225.582,107.622Z"
-                                                            transform="translate(-58.483 -78.508)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_487"
-                                                            data-name="Path 487"
-                                                            d="M266.724,107.63c0-.9,0-1.806,0-2.709a.806.806,0,0,1,.782-.912.818.818,0,0,1,.818.919q0,2.69,0,5.38a.822.822,0,0,1-.806.931c-.488,0-.792-.356-.794-.938C266.721,109.411,266.724,108.521,266.724,107.63Z"
-                                                            transform="translate(-97.561 -78.509)"
-                                                            fill="#ff6767"
-                                                          />
-                                                        </g>
-                                                      </svg>
-                                                    </a>
+                                                          <g
+                                                            id="Icon"
+                                                            transform="translate(-160.007 -18.718)"
+                                                          >
+                                                            <path
+                                                              id="Path_484"
+                                                              data-name="Path 484"
+                                                              d="M185.344,88.136c0,1.393,0,2.786,0,4.179-.006,1.909-1.523,3.244-3.694,3.248q-3.623.007-7.246,0c-2.15,0-3.682-1.338-3.687-3.216q-.01-4.349,0-8.7a.828.828,0,0,1,.822-.926.871.871,0,0,1,1,.737c.016.162.006.326.006.489q0,4.161,0,8.321c0,1.061.711,1.689,1.912,1.69q3.58,0,7.161,0c1.2,0,1.906-.631,1.906-1.695q0-4.311,0-8.622a.841.841,0,0,1,.708-.907.871.871,0,0,1,1.113.844C185.349,85.1,185.343,86.618,185.344,88.136Z"
+                                                              transform="translate(-9.898 -58.597)"
+                                                              fill="#ff6767"
+                                                            />
+                                                            <path
+                                                              id="Path_485"
+                                                              data-name="Path 485"
+                                                              d="M164.512,21.131c0-.517,0-.98,0-1.443.006-.675.327-.966,1.08-.967q2.537,0,5.074,0c.755,0,1.074.291,1.082.966.005.439.005.878.009,1.317a.615.615,0,0,0,.047.126h.428c1,0,2,0,3,0,.621,0,1.013.313,1.019.788s-.4.812-1.04.813q-7.083,0-14.165,0c-.635,0-1.046-.327-1.041-.811s.4-.786,1.018-.789C162.165,21.127,163.3,21.131,164.512,21.131Zm1.839-.021H169.9v-.764h-3.551Z"
+                                                              transform="translate(0 0)"
+                                                              fill="#ff6767"
+                                                            />
+                                                            <path
+                                                              id="Path_486"
+                                                              data-name="Path 486"
+                                                              d="M225.582,107.622c0,.9,0,1.806,0,2.709a.806.806,0,0,1-.787.908.818.818,0,0,1-.814-.924q0-2.69,0-5.38a.82.82,0,0,1,.81-.927.805.805,0,0,1,.79.9C225.585,105.816,225.582,106.719,225.582,107.622Z"
+                                                              transform="translate(-58.483 -78.508)"
+                                                              fill="#ff6767"
+                                                            />
+                                                            <path
+                                                              id="Path_487"
+                                                              data-name="Path 487"
+                                                              d="M266.724,107.63c0-.9,0-1.806,0-2.709a.806.806,0,0,1,.782-.912.818.818,0,0,1,.818.919q0,2.69,0,5.38a.822.822,0,0,1-.806.931c-.488,0-.792-.356-.794-.938C266.721,109.411,266.724,108.521,266.724,107.63Z"
+                                                              transform="translate(-97.561 -78.509)"
+                                                              fill="#ff6767"
+                                                            />
+                                                          </g>
+                                                        </svg>
+                                                      </a>
+                                                    </div>
                                                   </div>
-                                                </div>
-                                              </td>
-                                            </tr>
-                                            <tr>
-                                              <td className="sherah-table__column-1 sherah-table__data-1">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    Chrome on Window
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-2 sherah-table__data-2">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    278.281.987.111
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-3 sherah-table__data-3">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    Mar 24, 2022{" "}
-                                                    <span className="sherah-table__time">
-                                                      04:26 PM
-                                                    </span>
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-4 sherah-table__data-4">
-                                                <div className="sherah-table__product-content">
-                                                  <div className="sherah-table__status__group">
-                                                    <a
-                                                      href="#"
-                                                      className="sherah-table__action sherah-color2 sherah-color2__bg--offset"
-                                                    >
-                                                      <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="16.247"
-                                                        height="18.252"
-                                                        viewBox="0 0 16.247 18.252"
-                                                      >
-                                                        <g
-                                                          id="Icon"
-                                                          transform="translate(-160.007 -18.718)"
-                                                        >
-                                                          <path
-                                                            id="Path_484"
-                                                            data-name="Path 484"
-                                                            d="M185.344,88.136c0,1.393,0,2.786,0,4.179-.006,1.909-1.523,3.244-3.694,3.248q-3.623.007-7.246,0c-2.15,0-3.682-1.338-3.687-3.216q-.01-4.349,0-8.7a.828.828,0,0,1,.822-.926.871.871,0,0,1,1,.737c.016.162.006.326.006.489q0,4.161,0,8.321c0,1.061.711,1.689,1.912,1.69q3.58,0,7.161,0c1.2,0,1.906-.631,1.906-1.695q0-4.311,0-8.622a.841.841,0,0,1,.708-.907.871.871,0,0,1,1.113.844C185.349,85.1,185.343,86.618,185.344,88.136Z"
-                                                            transform="translate(-9.898 -58.597)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_485"
-                                                            data-name="Path 485"
-                                                            d="M164.512,21.131c0-.517,0-.98,0-1.443.006-.675.327-.966,1.08-.967q2.537,0,5.074,0c.755,0,1.074.291,1.082.966.005.439.005.878.009,1.317a.615.615,0,0,0,.047.126h.428c1,0,2,0,3,0,.621,0,1.013.313,1.019.788s-.4.812-1.04.813q-7.083,0-14.165,0c-.635,0-1.046-.327-1.041-.811s.4-.786,1.018-.789C162.165,21.127,163.3,21.131,164.512,21.131Zm1.839-.021H169.9v-.764h-3.551Z"
-                                                            transform="translate(0 0)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_486"
-                                                            data-name="Path 486"
-                                                            d="M225.582,107.622c0,.9,0,1.806,0,2.709a.806.806,0,0,1-.787.908.818.818,0,0,1-.814-.924q0-2.69,0-5.38a.82.82,0,0,1,.81-.927.805.805,0,0,1,.79.9C225.585,105.816,225.582,106.719,225.582,107.622Z"
-                                                            transform="translate(-58.483 -78.508)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_487"
-                                                            data-name="Path 487"
-                                                            d="M266.724,107.63c0-.9,0-1.806,0-2.709a.806.806,0,0,1,.782-.912.818.818,0,0,1,.818.919q0,2.69,0,5.38a.822.822,0,0,1-.806.931c-.488,0-.792-.356-.794-.938C266.721,109.411,266.724,108.521,266.724,107.63Z"
-                                                            transform="translate(-97.561 -78.509)"
-                                                            fill="#ff6767"
-                                                          />
-                                                        </g>
-                                                      </svg>
-                                                    </a>
-                                                  </div>
-                                                </div>
-                                              </td>
-                                            </tr>
-                                            <tr>
-                                              <td className="sherah-table__column-1 sherah-table__data-1">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    Chrome on Window
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-2 sherah-table__data-2">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    278.281.987.111
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-3 sherah-table__data-3">
-                                                <div className="sherah-table__product-content">
-                                                  <p className="sherah-table__product-desc">
-                                                    Mar 24, 2022{" "}
-                                                    <span className="sherah-table__time">
-                                                      04:26 PM
-                                                    </span>
-                                                  </p>
-                                                </div>
-                                              </td>
-                                              <td className="sherah-table__column-4 sherah-table__data-4">
-                                                <div className="sherah-table__product-content">
-                                                  <div className="sherah-table__status__group">
-                                                    <a
-                                                      href="#"
-                                                      className="sherah-table__action sherah-color2 sherah-color2__bg--offset"
-                                                    >
-                                                      <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="16.247"
-                                                        height="18.252"
-                                                        viewBox="0 0 16.247 18.252"
-                                                      >
-                                                        <g
-                                                          id="Icon"
-                                                          transform="translate(-160.007 -18.718)"
-                                                        >
-                                                          <path
-                                                            id="Path_484"
-                                                            data-name="Path 484"
-                                                            d="M185.344,88.136c0,1.393,0,2.786,0,4.179-.006,1.909-1.523,3.244-3.694,3.248q-3.623.007-7.246,0c-2.15,0-3.682-1.338-3.687-3.216q-.01-4.349,0-8.7a.828.828,0,0,1,.822-.926.871.871,0,0,1,1,.737c.016.162.006.326.006.489q0,4.161,0,8.321c0,1.061.711,1.689,1.912,1.69q3.58,0,7.161,0c1.2,0,1.906-.631,1.906-1.695q0-4.311,0-8.622a.841.841,0,0,1,.708-.907.871.871,0,0,1,1.113.844C185.349,85.1,185.343,86.618,185.344,88.136Z"
-                                                            transform="translate(-9.898 -58.597)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_485"
-                                                            data-name="Path 485"
-                                                            d="M164.512,21.131c0-.517,0-.98,0-1.443.006-.675.327-.966,1.08-.967q2.537,0,5.074,0c.755,0,1.074.291,1.082.966.005.439.005.878.009,1.317a.615.615,0,0,0,.047.126h.428c1,0,2,0,3,0,.621,0,1.013.313,1.019.788s-.4.812-1.04.813q-7.083,0-14.165,0c-.635,0-1.046-.327-1.041-.811s.4-.786,1.018-.789C162.165,21.127,163.3,21.131,164.512,21.131Zm1.839-.021H169.9v-.764h-3.551Z"
-                                                            transform="translate(0 0)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_486"
-                                                            data-name="Path 486"
-                                                            d="M225.582,107.622c0,.9,0,1.806,0,2.709a.806.806,0,0,1-.787.908.818.818,0,0,1-.814-.924q0-2.69,0-5.38a.82.82,0,0,1,.81-.927.805.805,0,0,1,.79.9C225.585,105.816,225.582,106.719,225.582,107.622Z"
-                                                            transform="translate(-58.483 -78.508)"
-                                                            fill="#ff6767"
-                                                          />
-                                                          <path
-                                                            id="Path_487"
-                                                            data-name="Path 487"
-                                                            d="M266.724,107.63c0-.9,0-1.806,0-2.709a.806.806,0,0,1,.782-.912.818.818,0,0,1,.818.919q0,2.69,0,5.38a.822.822,0,0,1-.806.931c-.488,0-.792-.356-.794-.938C266.721,109.411,266.724,108.521,266.724,107.63Z"
-                                                            transform="translate(-97.561 -78.509)"
-                                                            fill="#ff6767"
-                                                          />
-                                                        </g>
-                                                      </svg>
-                                                    </a>
-                                                  </div>
-                                                </div>
-                                              </td>
-                                            </tr>
+                                                </td>
+                                              </tr>
+                                            ))}
                                           </tbody>
                                         </table>
                                       </div>
@@ -1620,74 +1306,74 @@ function Profileinfo() {
                                   >
                                     <div className="sherah-paymentm sherah__item-group sherah-default-bg sherah-border ">
                                       <h4 className="sherah__item-group sherah-default-bg sherah-border__title">
-                                        Change Password
+                                        Đổi mật khẩu
                                       </h4>
                                       <div className="row">
                                         <div className="col-xxl-8  col-lg-6 col-md-6 col-12">
-                                          {/* Sign in Form */}
+                                          {/* Change Password Form */}
                                           <form
                                             className="sherah-wc__form-main sherah-form-main--v2 p-0"
-                                            action="#"
-                                            method="post"
+                                            onSubmit={handleSubmit}
                                           >
                                             <div className="form-group">
                                               <label className="sherah-wc__form-label">
-                                                Old Password *
+                                                Mật khẩu cũ *
                                               </label>
                                               <div className="form-group__input">
-                                                <input
-                                                  className="sherah-wc__form-input"
-                                                  placeholder="●●●●●●"
-                                                  id="password-field"
-                                                  type="password"
-                                                  name="password"
-                                                  maxLength={8}
-                                                  required="required"
-                                                />
+                                              <input
+            className="sherah-wc__form-input"
+            placeholder="●●●●●●"
+            type="password"
+            value={oldPassword}
+            onChange={(e) => setOldPassword(e.target.value)}
+            maxLength={8}
+            required
+          />
                                               </div>
                                             </div>
                                             <div className="form-group">
                                               <label className="sherah-wc__form-label">
-                                                New Password *
+                                                Mật khẩu mới *
                                               </label>
                                               <div className="form-group__input">
-                                                <input
-                                                  className="sherah-wc__form-input"
-                                                  placeholder="●●●●●●"
-                                                  id="password-field"
-                                                  type="password"
-                                                  name="password"
-                                                  maxLength={8}
-                                                  required="required"
-                                                />
+                                              <input
+            className="sherah-wc__form-input"
+            placeholder="●●●●●●"
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            maxLength={8}
+            required
+          />
                                               </div>
                                             </div>
                                             <div className="form-group">
                                               <label className="sherah-wc__form-label">
-                                                Re-enter Password *
+                                                Nhập lại mật khẩu mới *
                                               </label>
                                               <div className="form-group__input">
-                                                <input
-                                                  className="sherah-wc__form-input"
-                                                  placeholder="●●●●●●"
-                                                  id="password-field"
-                                                  type="password"
-                                                  name="password"
-                                                  maxLength={8}
-                                                  required="required"
-                                                />
+                                              <input
+            className="sherah-wc__form-input"
+            placeholder="●●●●●●"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            maxLength={8}
+            required
+          />
                                               </div>
                                             </div>
+                                            {message && <p>{message}</p>}
                                             <div className="form-group mg-top-30">
                                               <button
                                                 type="submit"
                                                 className="sherah-btn sherah-btn__primary"
                                               >
-                                                Changed Password
+                                                Đổi mật khẩu
                                               </button>
                                             </div>
                                           </form>
-                                          {/* End Sign in Form */}
+                                          {/* End Change Password Form */}
                                         </div>
                                         <div className="col-xxl-4 col-lg-6 col-md-6 col-12">
                                           <div className="sherah-password__img">
@@ -1713,7 +1399,7 @@ function Profileinfo() {
                                     >
                                       <div className="sherah__item-group sherah-default-bg sherah-border mg-top-30">
                                         <h4 className="sherah-default-bg sherah-border__title">
-                                          Social Account
+                                          Tài khoản
                                         </h4>
                                         <div className="sherah__item-form--group">
                                           <form className="sherah-wc__form-main p-0">
