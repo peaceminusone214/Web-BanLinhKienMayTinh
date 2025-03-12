@@ -1,5 +1,5 @@
 import React from 'react'
-import '../components/styleHeader.css'
+import '../components/css/styleHeader.css'
 import SearchBar from '../components/SearchBar.jsx';
 
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
-import '../components/styleSearchBar.css'
+import '../components/css/styleSearchBar.css'
 
 
 
@@ -38,8 +38,8 @@ function Header() {
                                 <input
                                     type="text"
                                     name="q"
-                                    className="search-bar-input"
-                                    placeholder="Nhập từ khóa cần tìm"
+                                    placeholder="Tìm kiếm sản phẩm..."
+                                    className="search-bar-input-2"
                                     autoComplete="off"
                                     value={searchText}
                                     onChange={handleSearchChange}

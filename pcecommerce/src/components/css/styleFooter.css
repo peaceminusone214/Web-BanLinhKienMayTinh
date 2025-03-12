@@ -1,6 +1,6 @@
 /* Footer */
 .footer {
-  background-color: #f8f8f8;
+  background-color: #f1f1f1;
   color: black;
   font-family: Arial, sans-serif;
   margin-top: 500px;
@@ -13,6 +13,7 @@
   padding: 20px;
   border-bottom: 1px solid #ccc;
   text-align: center;
+
 }
 
 .service-item img {
@@ -32,7 +33,7 @@
 
 /* Đăng ký nhận tin */
 .footer-newsletter {
-  background-color: #ff6600;
+  background-color: #1A73E8;
   color: white;
   text-align: center;
   padding: 30px;
@@ -41,6 +42,10 @@
 .footer-newsletter h2 {
   font-size: 22px;
   font-weight: bold;
+}
+
+.footer-newsletter p {
+  color: #333;
 }
 
 .newsletter-input {
@@ -57,7 +62,7 @@
 }
 
 .newsletter-input button {
-  background-color: #cc5500;
+  background-color: #0033ff;
   color: white;
   border: none;
   padding: 10px 15px;
@@ -66,7 +71,7 @@
 }
 
 .newsletter-input button:hover {
-  background-color: #993d00;
+  background-color: #89bafb;
 }
 
 /* Thông tin footer */
@@ -108,3 +113,13 @@
 .payment-methods img {
   height: 40px;
 }
+
+.service-item img {
+  filter: invert(48%) sepia(91%) saturate(1352%) hue-rotate(188deg) brightness(99%) contrast(88%);
+}
+
+.footer-copy-right{
+  background-color: #fdfeff;
+  
+}
+

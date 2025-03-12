@@ -4,8 +4,7 @@
 }
 
 .header-top {
-    background: #d94700;
-
+    background-color: #0652b5;
 }
 
 .box-header-top {
@@ -40,7 +39,7 @@
 
 .fa-phone,
 .fa-share-alt {
-    color: #d94700;
+    color: #0011ff;
 }
 
 .fa-phone,
@@ -50,11 +49,11 @@
 
 
 .header-top .title-group.title-group-hover:hover {
-    background: #ff7e00
+    background-color: #1e95f7;
 }
 
 .header-top .title-group.header-icon::before {
-    background: url(../../public//assets/interface-main/category/sprite-2021.png) no-repeat;
+    /* background: url(../../public//assets/interface-main/category/sprite-2021.png) no-repeat; */
     vertical-align: middle;
     content: ''
 }
@@ -78,8 +77,9 @@
 
 
 .header-top .item-left .bg-linear {
-    background: -o-repeating-linear-gradient(left, #f1d113 0, #fef273 25%, #f1b01f 50%, #fde904 75%, #e5bf23 100%);
-    background: repeating-linear-gradient(to right, #f1d113 0, #fef273 25%, #f1b01f 50%, #fde904 75%, #e5bf23 100%);
+    background: -o-repeating-linear-gradient(left, #0072ff 0%, #00c6ff 25%, #0056b3 50%, #2196f3 75%, #1e90ff 100%);
+    background: repeating-linear-gradient(to right, #0072ff 0%, #00c6ff 25%, #0056b3 50%, #2196f3 75%, #1e90ff 100%);
+    
     width: 100%;
     background-size: 200% auto;
     -webkit-animation: gradient 2s infinite;
@@ -125,7 +125,7 @@
 }
 
 .header-top .item-right a:hover {
-    color: #ff7e00
+    color: #0027a8
 }
 
 @-webkit-keyframes gradient {
@@ -153,7 +153,7 @@
 
 /* Định dạng chung cho thanh header */
 .header {
-    background: #ff7e00;
+    background-color: #1A73E8;
     padding: 12px;
     display: flex;
     justify-content: center;

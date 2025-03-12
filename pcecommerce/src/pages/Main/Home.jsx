@@ -1,8 +1,9 @@
 import React from 'react'
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation, Pagination } from "swiper/modules";
+
 import '../Main/styleHome.css';
 
+import BannerShowcase from '../../components/Banner';
+import News from '../../components/NewsSections';
 
 
 function Home() {
@@ -12,6 +13,41 @@ function Home() {
     { id: 70, img: "/assets/interface-main/imgComp/bannner-slide2.png" },
     { id: 65, img: "/assets/interface-main/imgComp/banner-slide3.png" },
     { id: 42, img: "/assets/interface-main/imgComp/banner-slide4.png" },
+  ];
+
+  const articles = [
+    {
+      id: 1,
+      title: "Bản firmware mới của AMD mang đến các tối ưu hiệu suất cho các vi xử lý Ryzen 9000",
+      img: "https://kccshop.vn/media/news/25563-erwpxmfvqk8vnasdrxv7ma-1200-80-png_11zon.jpg",
+      link: "/ban-firmware-moi-cua-amd-mang-den-cac-toi-uu-hieu-suat-cho-cac-vi-xu-ly-ryzen-9000/",
+      date: "14-07-2024",
+      description: "Gigabyte đã bắt đầu cập nhật các bo mạch chủ AM5 của mình lên firmware AGESA 1.2.0.0a, hỗ trợ vi xử lý desktop Ryzen 9000 series sắp tới của AMD. Được phát hiện bởi HXL trên X (Twitter), các cập nhật BIOS mới từ Gigabyte với firmware AGESA mới nhất của AMD cung cấp các tối ưu hiệu suất mới cho dòng chip Zen 5 mới. Những cập nhật mới này đến đúng lúc để người dùng có thể cập nhật trước khi vi xử lý Ryzen 9000 của AMD ra mắt."
+    },
+    {
+      id: 2,
+      title: "Kết quả Ryzen 9 9900X được cho là đặt AMD lên đỉnh cao với danh hiệu CPU đơn luồng mạnh nhất trên Geekbench",
+      img: "https://kccshop.vn/media/news/25562-xh5it4jz6hnp63jl2zcvn3-1200-80_11zon.jpg",
+      link: "/ket-qua-ryzen-9-9900x-duoc-cho-la-dat-amd-len-dinh-cao-voi-danh-hieu-cpu-don-luong-manh-nhat-tren-geekbench/",
+      date: "14-07-2024",
+      description: "Kiểm tra CPU AMD Ryzen 9 9900X trên Geekbench 6 được cho là đã xuất hiện từ Benchleaks. Một bài kiểm tra CPU đơn luồng với điểm số 3,401 điểm đáng chú ý và nếu thông tin này là thật, nó sẽ dẫn đầu bảng xếp hạng Geekbench 6 về hiệu năng xử lý đơn luồng. Điểm số đa luồng được báo cáo là 19,756 điểm, tuy không ấn tượng bằng các CPU 24 luồng tiêu dùng tốt nhất từ Intel, nhưng vẫn không thua kém quá nhiều."
+    },
+    {
+      id: 3,
+      title: "ASRock chuẩn bị các GPU AMD cho công việc suy luận AI và hệ thống đa GPU",
+      img: "https://kccshop.vn/media/news/25561-ucmckunbtogwtfu8hyw4vp-1200-80_11zon.jpg",
+      link: "/asrock-chuan-bi-cac-gpu-amd-cho-cong-viec-suy-luan-ai-va-he-thong-da-gpu/",
+      date: "13-07-2024",
+      description: "ASRock (qua momomo_us) đã tái thương hiệu các card đồ họa AMD Radeon RX 7900 XT và RX 7900 XTX WS dựa trên Navi 31 thành dòng mới Creator, dành cho các công việc tạo sinh và cài đặt máy trạm. Những card đồ họa dòng WS này ban đầu được ra mắt tại Computex 2024."
+    },
+    {
+      id: 4,
+      title: "Vụ lừa đảo Nvidia RTX 4090 sử dụng GPU RTX 3080 Ti dán lại nhãn, chip nhớ giả mạo",
+      img: "https://kccshop.vn/media/news/25560-wtjsjem9ovszcdvbzutpms-1200-80-png_11zon.jpg",
+      link: "/vu-lua-dao-nvidia-rtx-4090-su-dung-gpu-rtx-3080-ti-dan-la-i-nhan-chip-nho-gia-mao/",
+      date: "13-07-2024",
+      description: "Làm thế nào để làm giả một card đồ họa GeForce RTX 4090, một trong những card đồ họa tốt nhất hiện nay, với giá ít nhất 1.500 đô la mà không cần truy cập vào bộ vi xử lý AD102 của Nvidia và bộ nhớ GDDR6X của Micron? Dễ dàng, theo NorthWest Repair, một cửa hàng sửa chữa nổi tiếng."
+    }
   ];
 
 
@@ -102,31 +138,10 @@ function Home() {
 
   return (
     <div className="homepage">
+
       {/* Showcase Section */}
-      <section className="homepage-showcase">
-        <div className="container">
-          <div className="section-showcase">
-            <Swiper
-              modules={[Autoplay, Navigation, Pagination]}
-              spaceBetween={10}
-              slidesPerView={1}
-              loop={true}
-              autoplay={{ delay: 4000, disableOnInteraction: false }}
-              pagination={{ clickable: true }}
-              navigation={true}
-              className="swiper-showcase"
-            >
-              {banners.map((item, index) => (
-                <SwiperSlide key={index}>
-                  <a href={`/ad.php?id=${item.id}`} target="_blank" rel="nofollow">
-                    <img src={item.img} alt="Showcase" className="d-block lazy" />
-                  </a>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        </div>
-      </section>
+      <BannerShowcase banners={banners} />
+
 
 
       {/* Banner dưới Showcase */}
@@ -256,6 +271,7 @@ function Home() {
       </div>
 
 
+
       <section className='banner-section'>
         <a
           href="/bo-pc-kcc-lap-rap/"
@@ -278,7 +294,6 @@ function Home() {
 
 
       {/* Box Header */}
-
       <div className="pc-header d-flex align-center space-between">
         <h2 className="pc-heading">Bộ PC</h2>
 
@@ -293,6 +308,187 @@ function Home() {
           <a href="/bo-pc-kcc-lap-rap/" className="btn-view-all">XEM TẤT CẢ +</a>
         </div>
       </div>
+
+      {/* card */}
+
+      {/* <div className="box-content">
+        <div className="homepage-cat-swiper">
+          <div className="grid grid--6-cols" id="js-product-2">
+            <div className="swiper-slide min-width-0">
+              <div className="product p-item" data-id="10521" data-type="product">
+                <a href="/pc-kcc-intel-i5-12400f-vga-rtx-3060/" className="p-img">
+                  <img src="https://kccshop.vn/media/product/250-10521-pc-kcc-intel-i5-12400f-vga-rtx-3060.jpg" alt="PC KCC Intel i5-12400F/13400F / VGA RTX 3060" />
+                  <div className="p-sale-off">
+                    <p className="font-weight-500 text-uppercase">
+                      Tiết kiệm
+                      <span className="d-block text-12 font-weight-bold color-white">1,440,000 ₫</span>
+                    </p>
+                  </div>
+                </a>
+
+                <div className="p-content">
+                  <a href="/pc-kcc-intel-i5-12400f-vga-rtx-3060/">
+                    <h3 className="p-name line-clamp-2">PC KCC Intel i5-12400F/13400F / VGA RTX 3060</h3>
+                  </a>
+                  <p className="p-price color-secondary font-weight-bold text-20">
+                    14.400.000 ₫
+                  </p>
+
+                  <span className="p-market-price">15.840.000 ₫</span>
+                  <span className="color-secondary" style={{ marginLeft: "4px" }}>-9%</span>
+
+                  <div className="p-box d-flex align-items-center justify-content-between">
+                    <div className="wrapper">
+                      <p className="color-green">✓ Còn hàng</p>
+                      <a href="#" className="p-compare color-primary" >
+                        <span>+</span> So sánh
+                      </a>
+                    </div>
+
+                    <a href="#" className="btn-cart-sp d-flex align-items-center justify-content-center" >
+                      <i className="static-icon static-icon-cart"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> */}
+
+
+
+
+
+      <section className='banner-section'>
+        <a
+          href="/bo-pc-kcc-lap-rap/"
+          className="box-category-big-image banner-hover"
+          target="_blank"
+          rel="nofollow"
+        >
+          <img
+            src="/assets/interface-main/imgHome/banner_2.png"
+            alt="Banner category"
+            className="lazy-cat-img"
+            data-src="/media/category/cat_big_2.png"
+          />
+        </a>
+      </section>
+
+
+
+      {/* Box Header */}
+      <div className="pc-header d-flex align-center space-between">
+        <h2 className="pc-heading">MAIN</h2>
+
+        <div className="pc-sub-header d-flex align-center">
+          <ul className="pc-list d-flex align-center">
+            <li><a href="/bo-pc-kcc-cho-thue/"><p>Mainboard ASROCK</p></a></li>
+            <li><a href="/pc-server-kcc/"><p>Mainboard ASUS</p></a></li>
+            <li><a href="/pc-may-bo-kcc-i3-r3/"><p>Mainboard INTEL</p></a></li>
+            <li><a href="/pc-may-bo-kcc-i5-r5/"><p>Mainboard MSI</p></a></li>
+            <li><a href="/pc-may-bo-kcc-i7-r7/"><p>Mainboard GIGABYTE</p></a></li>
+          </ul>
+          <a href="/bo-pc-kcc-lap-rap/" className="btn-view-all">XEM TẤT CẢ +</a>
+        </div>
+      </div>
+
+
+
+      <section className='banner-section'>
+        <a
+          href="/bo-pc-kcc-lap-rap/"
+          className="box-category-big-image banner-hover"
+          target="_blank"
+          rel="nofollow"
+        >
+          <img
+            src="/assets/interface-main/imgHome/banner_3.png"
+            alt="Banner category"
+            className="lazy-cat-img"
+            data-src="/media/category/cat_big_2.png"
+          />
+        </a>
+      </section>
+
+
+
+      {/* Box Header */}
+      <div className="pc-header d-flex align-center space-between">
+        <h2 className="pc-heading">CPU</h2>
+
+        <div className="pc-sub-header d-flex align-center">
+          <ul className="pc-list d-flex align-center">
+            <li><a href="/bo-pc-kcc-cho-thue/"><p>CPU Intel Core i3</p></a></li>
+            <li><a href="/pc-server-kcc/"><p>CPU Intel Core i5</p></a></li>
+            <li><a href="/pc-may-bo-kcc-i3-r3/"><p>CPU Intel Core i7</p></a></li>
+            <li><a href="/pc-may-bo-kcc-i5-r5/"><p>CPU Intel Core i9</p></a></li>
+            <li><a href="/pc-may-bo-kcc-i7-r7/"><p>Ryzen 3</p></a></li>
+          </ul>
+          <a href="/bo-pc-kcc-lap-rap/" className="btn-view-all">XEM TẤT CẢ +</a>
+        </div>
+      </div>
+
+
+      <section className='banner-section'>
+        <a
+          href="/bo-pc-kcc-lap-rap/"
+          className="box-category-big-image banner-hover"
+          target="_blank"
+          rel="nofollow"
+        >
+          <img
+            src="/assets/interface-main/imgHome/banner_4.png"
+            alt="Banner category"
+            className="lazy-cat-img"
+            data-src="/media/category/cat_big_2.png"
+          />
+        </a>
+      </section>
+
+
+
+
+
+      {/* Box Header */}
+      <div className="pc-header d-flex align-center space-between">
+        <h2 className="pc-heading">RAM</h2>
+
+        <div className="pc-sub-header d-flex align-center">
+          <ul className="pc-list d-flex align-center">
+            <li><a href="/bo-pc-kcc-cho-thue/"><p>RAM CORSAIR</p></a></li>
+            <li><a href="/pc-server-kcc/"><p>RAM GSKILL</p></a></li>
+            <li><a href="/pc-may-bo-kcc-i3-r3/"><p>RAM KINGMAX</p></a></li>
+            <li><a href="/pc-may-bo-kcc-i5-r5/"><p>RAM KINGSTON</p></a></li>
+            <li><a href="/pc-may-bo-kcc-i7-r7/"><p>RAM T-Force</p></a></li>
+          </ul>
+          <a href="/bo-pc-kcc-lap-rap/" className="btn-view-all">XEM TẤT CẢ +</a>
+        </div>
+      </div>
+
+
+
+      {/* Box Header */}
+      <div className="pc-header d-flex align-center space-between">
+        <h2 className="pc-heading">VGA</h2>
+
+        <div className="pc-sub-header d-flex align-center">
+          <ul className="pc-list d-flex align-center">
+            <li><a href="/bo-pc-kcc-cho-thue/"><p>NVIDIA RTX 5000 Series</p></a></li>
+            <li><a href="/pc-server-kcc/"><p>NVIDIA RTX 4000 Series</p></a></li>
+            <li><a href="/pc-may-bo-kcc-i3-r3/"><p>AMD RX 7000 Series</p></a></li>
+            <li><a href="/pc-may-bo-kcc-i5-r5/"><p>AMD RX 9000 Series</p></a></li>
+            <li><a href="/pc-may-bo-kcc-i7-r7/"><p>VGA THEO HÃNG</p></a></li>
+          </ul>
+          <a href="/bo-pc-kcc-lap-rap/" className="btn-view-all">XEM TẤT CẢ +</a>
+        </div>
+      </div>
+
+
+
+      {/* News Section home */}
+      <News articles={articles} />
 
 
 
