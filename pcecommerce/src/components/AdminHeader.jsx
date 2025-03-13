@@ -1,79 +1,91 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 function AdminHeader() {
+  const API_URL = process.env.REACT_APP_API_URL;
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const navigate = useNavigate();
+  const [roleToDisplay, setRoleToDisplay] = useState("");
+  const [user, setUser] = useState(null);
 
   const checkFullscreen = () => {
-    if (document.fullscreenElement) {
-      setIsFullscreen(true);
-    } else {
-      setIsFullscreen(false);
-    }
+    setIsFullscreen(!!document.fullscreenElement);
   };
 
   const handleFullScreenClick = () => {
     const elem = document.documentElement;
-
     if (isFullscreen) {
-      // Exit fullscreen
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.webkitExitFullscreen) {
-        // For Safari
-        document.webkitExitFullscreen();
-      } else if (document.mozCancelFullScreen) {
-        // For Firefox
-        document.mozCancelFullScreen();
-      } else if (document.msExitFullscreen) {
-        // For IE/Edge
-        document.msExitFullscreen();
-      }
+      document.exitFullscreen?.();
     } else {
-      // Enter fullscreen
-      if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-      } else if (elem.mozRequestFullScreen) {
-        // For Firefox
-        elem.mozRequestFullScreen();
-      } else if (elem.webkitRequestFullscreen) {
-        // For Chrome, Safari, Opera
-        elem.webkitRequestFullscreen();
-      } else if (elem.msRequestFullscreen) {
-        // For IE/Edge
-        elem.msRequestFullscreen();
-      }
+      elem.requestFullscreen?.();
     }
   };
 
-  // Add event listener to monitor fullscreen changes
   useEffect(() => {
     document.addEventListener("fullscreenchange", checkFullscreen);
-    document.addEventListener("webkitfullscreenchange", checkFullscreen); // For Safari
-    document.addEventListener("mozfullscreenchange", checkFullscreen); // For Firefox
-    document.addEventListener("MSFullscreenChange", checkFullscreen); // For IE/Edge
-
     return () => {
       document.removeEventListener("fullscreenchange", checkFullscreen);
-      document.removeEventListener("webkitfullscreenchange", checkFullscreen);
-      document.removeEventListener("mozfullscreenchange", checkFullscreen);
-      document.removeEventListener("MSFullscreenChange", checkFullscreen);
     };
   }, []);
-  //Dark light
-  const [isDarkMode, setIsDarkMode] = useState(false); // Default to light theme (no active class)
 
   useEffect(() => {
     document.body.id = "sherah-dark-light";
-    if (isDarkMode) {
-      document.body.classList.add("active");
-    } else {
-      document.body.classList.remove("active");
-    }
+    document.body.classList.toggle("active", isDarkMode);
   }, [isDarkMode]);
 
   const toggleTheme = () => {
     setIsDarkMode((prevMode) => !prevMode);
   };
+
+  const handleLogout = async () => {
+    try {
+      await fetch(`${API_URL}/auth/logout`, { method: "POST", credentials: "include" });
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // Gọi API session để lấy thông tin user ban đầu
+        const sessionResponse = await fetch(`${API_URL}/auth/session`, { credentials: "include" });
+        if (!sessionResponse.ok) throw new Error("Lỗi khi lấy dữ liệu session");
+  
+        const sessionData = await sessionResponse.json();
+        let user = sessionData.user;
+  
+        if (user?.userId) {
+          // Gọi API bổ sung thông tin user
+          const userResponse = await fetch(`${API_URL}/user/get-user/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: user.userId }),
+          });
+  
+          if (userResponse.ok) {
+            const additionalUserData = await userResponse.json();
+            user = { ...user, ...additionalUserData }; // Gộp dữ liệu từ cả hai API
+          } else {
+            console.warn("Không thể lấy dữ liệu user bổ sung, giữ lại dữ liệu session");
+          }
+        }
+  
+        setUser(user);
+        setRoleToDisplay(user.roles?.join(", ") || "No roles available");
+      } catch (error) {
+        console.error("Lỗi lấy dữ liệu user:", error);
+        setUser(null);
+      }
+    };
+  
+    fetchUserData();
+  }, []);  
+
+  if (!user) return <div>Loading...</div>;
+
   return (
     <div>
       {/* Start Header */}
@@ -378,12 +390,12 @@ function AdminHeader() {
                               </ul>
                               {/* sherah Balance Button */}
                               <div className="sherah-dropdown-card__button">
-                                <a
-                                  href="chat-messages.html"
+                                <Link
                                   className="sherah-dropdown-card__sell-all"
+                                  to="/admin/chat"
                                 >
-                                  See all Notification
-                                </a>
+                                  See all Messages
+                                </Link>
                               </div>
                             </div>
                             {/* End sherah Balance Hover */}
@@ -670,12 +682,12 @@ function AdminHeader() {
                               </ul>
                               {/* sherah Balance Button */}
                               <div className="sherah-dropdown-card__button">
-                                <a
-                                  href="notifications.html"
+                                <Link
                                   className="sherah-dropdown-card__sell-all"
+                                  to="/admin/chat"
                                 >
                                   See all Notification
-                                </a>
+                                </Link>
                               </div>
                             </div>
                             {/* End sherah Balance Hover */}
@@ -685,15 +697,15 @@ function AdminHeader() {
                           <div className="sherah-header__author sherah-flex__center--top">
                             <div className="sherah-header__author-img">
                               <img
-                                src="/assets/interface-dashboard/img/profile-pic.png"
+                                src={user.image_url}
                                 alt="#"
                               />
                             </div>
                             <div className="sherah-header__author--info sherah-dflex sherah-dflex__base">
                               <h4 className="sherah-header__author--title  sherah-dflex sherah-dflex__column">
-                                Anthony{" "}
+                                {user.username}
                                 <span className="sherah-header__author--text">
-                                  USA
+                                  {roleToDisplay}
                                 </span>
                               </h4>
                               <svg
@@ -740,161 +752,181 @@ function AdminHeader() {
                               {/* sherah Balance List */}
                               <ul className="sherah-dropdown-card_list">
                                 <li>
-                                  <div className="sherah-dropdown-card-info">
-                                    <div className="sherah-dropdown-card__img sherah-color1__bg">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="18.192"
-                                        height="21.5"
-                                        viewBox="0 0 18.192 21.5"
-                                      >
-                                        <g
-                                          id="user_account_people_man"
-                                          data-name="user, account, people, man"
-                                          transform="translate(-5 -3)"
-                                        >
-                                          <path
-                                            id="Path_1272"
-                                            data-name="Path 1272"
-                                            d="M20.494,16.131a.827.827,0,1,0-1.163,1.176,7.391,7.391,0,0,1,2.207,5.29c0,1.011-2.9,2.481-7.442,2.481S6.654,23.607,6.654,22.6a7.391,7.391,0,0,1,2.179-5.261.827.827,0,1,0-1.169-1.169A9.036,9.036,0,0,0,5,22.6c0,2.686,4.686,4.135,9.1,4.135s9.1-1.449,9.1-4.135a9.03,9.03,0,0,0-2.7-6.466Z"
-                                            transform="translate(0 -2.231)"
-                                            fill="#fff"
-                                          />
-                                          <path
-                                            id="Path_1273"
-                                            data-name="Path 1273"
-                                            d="M14.788,14.577A5.788,5.788,0,1,0,9,8.788,5.788,5.788,0,0,0,14.788,14.577Zm0-9.923a4.135,4.135,0,1,1-4.135,4.135,4.135,4.135,0,0,1,4.135-4.135Z"
-                                            transform="translate(-0.692)"
-                                            fill="#fff"
-                                          />
-                                        </g>
-                                      </svg>
-                                    </div>
-                                    <h4 className="sherah-dropdown-card-name">
-                                      <a href="profile-info.html">My Profile</a>
-                                    </h4>
-                                  </div>
-                                </li>
-                                <li>
-                                  <div className="sherah-dropdown-card-info">
-                                    <div className="sherah-dropdown-card__img sherah-color1__bg">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="22.029"
-                                        height="22.368"
-                                        viewBox="0 0 22.029 22.368"
-                                      >
-                                        <g
-                                          id="Message"
-                                          transform="translate(-78.827 -199.134)"
+                                  <Link
+                                    to="/admin/profileinfo"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#menu-item_home"
+                                  >
+                                    <div className="sherah-dropdown-card-info">
+                                      <div className="sherah-dropdown-card__img sherah-color1__bg">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="18.192"
+                                          height="21.5"
+                                          viewBox="0 0 18.192 21.5"
                                         >
                                           <g
-                                            id="Icon"
-                                            transform="translate(-257.234 -162.564)"
+                                            id="user_account_people_man"
+                                            data-name="user, account, people, man"
+                                            transform="translate(-5 -3)"
                                           >
                                             <path
-                                              id="Path_230"
-                                              data-name="Path 230"
-                                              d="M336.063,371.173q0-3.247,0-6.494a2.764,2.764,0,0,1,2.976-2.979q5.978,0,11.955,0a2.76,2.76,0,0,1,2.962,2.95q.006,3.935,0,7.87a2.759,2.759,0,0,1-2.968,2.944c-3.154,0-6.307,0-9.461.012a1.181,1.181,0,0,0-.685.246c-1.16.936-2.3,1.9-3.444,2.851-.272.227-.543.44-.925.263-.4-.185-.414-.538-.413-.911Q336.067,374.549,336.063,371.173Zm1.378,5.571c.986-.82,1.884-1.554,2.766-2.307a1.4,1.4,0,0,1,.976-.355q4.881.015,9.763.005a1.423,1.423,0,0,0,1.633-1.629q0-3.849,0-7.7c0-1.175-.5-1.681-1.668-1.681H339.126c-1.177,0-1.685.5-1.685,1.664q0,5.742,0,11.484Z"
-                                              transform="translate(0 0)"
+                                              id="Path_1272"
+                                              data-name="Path 1272"
+                                              d="M20.494,16.131a.827.827,0,1,0-1.163,1.176,7.391,7.391,0,0,1,2.207,5.29c0,1.011-2.9,2.481-7.442,2.481S6.654,23.607,6.654,22.6a7.391,7.391,0,0,1,2.179-5.261.827.827,0,1,0-1.169-1.169A9.036,9.036,0,0,0,5,22.6c0,2.686,4.686,4.135,9.1,4.135s9.1-1.449,9.1-4.135a9.03,9.03,0,0,0-2.7-6.466Z"
+                                              transform="translate(0 -2.231)"
                                               fill="#fff"
                                             />
                                             <path
-                                              id="Path_231"
-                                              data-name="Path 231"
-                                              d="M415,440.162v-8.715c0-.932,0-1.864,0-2.8a1.38,1.38,0,0,0-1.328-1.5c-.48-.059-.753-.333-.729-.732.025-.417.352-.664.852-.642a2.731,2.731,0,0,1,2.578,2.721c.019,2.251.007,4.5.007,6.752,0,2.036,0,4.071,0,6.107,0,.364-.043.692-.419.864s-.63-.024-.9-.237c-.917-.736-1.828-1.478-2.761-2.193a1.225,1.225,0,0,0-.687-.245c-2.924-.016-5.85-.044-8.773,0A2.889,2.889,0,0,1,399.878,436a.63.63,0,0,1,.678-.59.64.64,0,0,1,.672.6,4.747,4.747,0,0,1,.014.644,1.385,1.385,0,0,0,1.5,1.5c3.025,0,6.05.01,9.075-.007a1.732,1.732,0,0,1,1.211.43C413.65,439.1,414.3,439.6,415,440.162Z"
-                                              transform="translate(-58.296 -58.218)"
-                                              fill="#fff"
-                                            />
-                                            <path
-                                              id="Path_232"
-                                              data-name="Path 232"
-                                              d="M388.91,411.084c-1.3,0-2.6,0-3.906,0-.546,0-.855-.252-.859-.682s.306-.693.847-.694q3.971,0,7.941,0c.534,0,.848.271.838.7-.009.416-.313.671-.826.672C391.6,411.086,390.255,411.084,388.91,411.084Z"
-                                              transform="translate(-43.947 -43.807)"
-                                              fill="#fff"
-                                            />
-                                            <path
-                                              id="Path_233"
-                                              data-name="Path 233"
-                                              d="M387.582,443.079c-.872,0-1.744,0-2.616,0-.511,0-.814-.259-.822-.675-.008-.432.3-.7.84-.7q2.595,0,5.19,0c.538,0,.849.264.844.7s-.315.677-.861.679C389.3,443.082,388.44,443.079,387.582,443.079Z"
-                                              transform="translate(-43.946 -73.004)"
+                                              id="Path_1273"
+                                              data-name="Path 1273"
+                                              d="M14.788,14.577A5.788,5.788,0,1,0,9,8.788,5.788,5.788,0,0,0,14.788,14.577Zm0-9.923a4.135,4.135,0,1,1-4.135,4.135,4.135,4.135,0,0,1,4.135-4.135Z"
+                                              transform="translate(-0.692)"
                                               fill="#fff"
                                             />
                                           </g>
-                                        </g>
-                                      </svg>
+                                        </svg>
+                                      </div>
+                                      <h4 className="sherah-dropdown-card-name">
+                                        <a>My Profile</a>
+                                      </h4>
                                     </div>
-                                    <h4 className="sherah-dropdown-card-name ">
-                                      <a href="chat-messages.html">Message</a>
-                                    </h4>
-                                  </div>
+                                  </Link>
                                 </li>
                                 <li>
-                                  <div className="sherah-dropdown-card-info">
-                                    <div className="sherah-dropdown-card__img sherah-color1__bg">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="22.103"
-                                        height="22.368"
-                                        viewBox="0 0 22.103 22.368"
-                                      >
-                                        <g
-                                          id="Settings"
-                                          transform="translate(-78.799 -199)"
+                                  <Link
+                                    to="/admin/chat"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#menu-item_home"
+                                  >
+                                    <div className="sherah-dropdown-card-info">
+                                      <div className="sherah-dropdown-card__img sherah-color1__bg">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="22.029"
+                                          height="22.368"
+                                          viewBox="0 0 22.029 22.368"
                                         >
                                           <g
-                                            id="Icon"
-                                            transform="translate(79.586 197.962)"
+                                            id="Message"
+                                            transform="translate(-78.827 -199.134)"
                                           >
                                             <g
-                                              id="setting"
-                                              transform="translate(-0.787 1.038)"
+                                              id="Icon"
+                                              transform="translate(-257.234 -162.564)"
                                             >
                                               <path
-                                                id="Path_39"
-                                                data-name="Path 39"
-                                                d="M20.942,9.2h-.094A.71.71,0,0,1,20.359,8l.067-.068a2.209,2.209,0,0,0,0-3.092L19.313,3.715a2.144,2.144,0,0,0-3.055,0l-.067.068a.7.7,0,0,1-.759.145A.713.713,0,0,1,15,3.282v-.1A2.175,2.175,0,0,0,12.838,1H11.264A2.175,2.175,0,0,0,9.1,3.186v.1a.713.713,0,0,1-.435.64.7.7,0,0,1-.754-.142l-.063-.068a2.144,2.144,0,0,0-3.055,0L3.68,4.838a2.209,2.209,0,0,0,0,3.092L3.747,8a.7.7,0,0,1,.136.772.681.681,0,0,1-.629.432H3.16A2.175,2.175,0,0,0,1,11.388V12.98a2.175,2.175,0,0,0,2.16,2.186h.094a.71.71,0,0,1,.489,1.2l-.067.068a2.209,2.209,0,0,0,0,3.092l1.112,1.125a2.144,2.144,0,0,0,3.055,0l.067-.068a.7.7,0,0,1,1.189.5v.1a2.2,2.2,0,0,0,.633,1.549,2.149,2.149,0,0,0,1.53.641h1.574A2.175,2.175,0,0,0,15,21.182v-.1a.713.713,0,0,1,.435-.64.7.7,0,0,1,.754.142l.067.068a2.144,2.144,0,0,0,3.055,0l1.113-1.125a2.209,2.209,0,0,0,0-3.092l-.067-.068a.7.7,0,0,1-.136-.772.681.681,0,0,1,.629-.432h.094A2.175,2.175,0,0,0,23.1,12.98V11.388A2.175,2.175,0,0,0,20.942,9.2Zm.687,3.779a.692.692,0,0,1-.687.695h-.094a2.178,2.178,0,0,0-1.993,1.36,2.223,2.223,0,0,0,.459,2.388l.066.068a.7.7,0,0,1,0,.983L18.267,19.6a.681.681,0,0,1-.971,0l-.066-.068a2.16,2.16,0,0,0-2.36-.463,2.2,2.2,0,0,0-1.345,2.016v.1a.692.692,0,0,1-.687.695H11.264a.692.692,0,0,1-.687-.695v-.1a2.2,2.2,0,0,0-1.342-2.022,2.155,2.155,0,0,0-2.362.47l-.067.068a.682.682,0,0,1-.971,0L4.723,18.476a.7.7,0,0,1,0-.983l.067-.068a2.223,2.223,0,0,0,.459-2.389,2.178,2.178,0,0,0-1.995-1.36H3.16a.692.692,0,0,1-.687-.695V11.388a.692.692,0,0,1,.687-.695h.094a2.178,2.178,0,0,0,1.993-1.36,2.223,2.223,0,0,0-.459-2.388l-.066-.068a.7.7,0,0,1,0-.983L5.835,4.767a.681.681,0,0,1,.971,0l.066.068a2.16,2.16,0,0,0,2.36.464,2.2,2.2,0,0,0,1.345-2.017v-.1a.692.692,0,0,1,.687-.695h1.574a.692.692,0,0,1,.687.695v.1A2.2,2.2,0,0,0,14.869,5.3a2.159,2.159,0,0,0,2.36-.464l.067-.068a.681.681,0,0,1,.971,0L19.38,5.893a.7.7,0,0,1,0,.983l-.067.068a2.223,2.223,0,0,0-.459,2.389,2.178,2.178,0,0,0,1.994,1.36h.094a.692.692,0,0,1,.687.695Z"
-                                                transform="translate(-1 -1)"
+                                                id="Path_230"
+                                                data-name="Path 230"
+                                                d="M336.063,371.173q0-3.247,0-6.494a2.764,2.764,0,0,1,2.976-2.979q5.978,0,11.955,0a2.76,2.76,0,0,1,2.962,2.95q.006,3.935,0,7.87a2.759,2.759,0,0,1-2.968,2.944c-3.154,0-6.307,0-9.461.012a1.181,1.181,0,0,0-.685.246c-1.16.936-2.3,1.9-3.444,2.851-.272.227-.543.44-.925.263-.4-.185-.414-.538-.413-.911Q336.067,374.549,336.063,371.173Zm1.378,5.571c.986-.82,1.884-1.554,2.766-2.307a1.4,1.4,0,0,1,.976-.355q4.881.015,9.763.005a1.423,1.423,0,0,0,1.633-1.629q0-3.849,0-7.7c0-1.175-.5-1.681-1.668-1.681H339.126c-1.177,0-1.685.5-1.685,1.664q0,5.742,0,11.484Z"
+                                                transform="translate(0 0)"
                                                 fill="#fff"
                                               />
                                               <path
-                                                id="Path_40"
-                                                data-name="Path 40"
-                                                d="M13.965,9a4.965,4.965,0,1,0,4.965,4.965A4.965,4.965,0,0,0,13.965,9Zm0,8.511a3.546,3.546,0,1,1,3.546-3.546,3.546,3.546,0,0,1-3.546,3.546Z"
-                                                transform="translate(-2.913 -2.781)"
+                                                id="Path_231"
+                                                data-name="Path 231"
+                                                d="M415,440.162v-8.715c0-.932,0-1.864,0-2.8a1.38,1.38,0,0,0-1.328-1.5c-.48-.059-.753-.333-.729-.732.025-.417.352-.664.852-.642a2.731,2.731,0,0,1,2.578,2.721c.019,2.251.007,4.5.007,6.752,0,2.036,0,4.071,0,6.107,0,.364-.043.692-.419.864s-.63-.024-.9-.237c-.917-.736-1.828-1.478-2.761-2.193a1.225,1.225,0,0,0-.687-.245c-2.924-.016-5.85-.044-8.773,0A2.889,2.889,0,0,1,399.878,436a.63.63,0,0,1,.678-.59.64.64,0,0,1,.672.6,4.747,4.747,0,0,1,.014.644,1.385,1.385,0,0,0,1.5,1.5c3.025,0,6.05.01,9.075-.007a1.732,1.732,0,0,1,1.211.43C413.65,439.1,414.3,439.6,415,440.162Z"
+                                                transform="translate(-58.296 -58.218)"
+                                                fill="#fff"
+                                              />
+                                              <path
+                                                id="Path_232"
+                                                data-name="Path 232"
+                                                d="M388.91,411.084c-1.3,0-2.6,0-3.906,0-.546,0-.855-.252-.859-.682s.306-.693.847-.694q3.971,0,7.941,0c.534,0,.848.271.838.7-.009.416-.313.671-.826.672C391.6,411.086,390.255,411.084,388.91,411.084Z"
+                                                transform="translate(-43.947 -43.807)"
+                                                fill="#fff"
+                                              />
+                                              <path
+                                                id="Path_233"
+                                                data-name="Path 233"
+                                                d="M387.582,443.079c-.872,0-1.744,0-2.616,0-.511,0-.814-.259-.822-.675-.008-.432.3-.7.84-.7q2.595,0,5.19,0c.538,0,.849.264.844.7s-.315.677-.861.679C389.3,443.082,388.44,443.079,387.582,443.079Z"
+                                                transform="translate(-43.946 -73.004)"
                                                 fill="#fff"
                                               />
                                             </g>
                                           </g>
-                                        </g>
-                                      </svg>
+                                        </svg>
+                                      </div>
+                                      <h4 className="sherah-dropdown-card-name ">
+                                        <a>Message</a>
+                                      </h4>
                                     </div>
-                                    <h4 className="sherah-dropdown-card-name">
-                                      <a href="profile-info.html">Settings</a>
-                                    </h4>
-                                  </div>
+                                  </Link>
                                 </li>
                                 <li>
-                                  <div className="sherah-dropdown-card-info">
-                                    <div className="sherah-dropdown-card__img sherah-color1__bg">
-                                      <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="17.5"
-                                        height="17.5"
-                                        viewBox="0 0 17.5 17.5"
-                                      >
-                                        <path
-                                          id="path52"
-                                          d="M9.27,291.179a.877.877,0,0,0-.867.889V299.1a.876.876,0,1,0,1.752,0v-7.033a.877.877,0,0,0-.885-.889Zm5.105,1.763c-.028,0-.057,0-.085,0A.88.88,0,0,0,13.8,294.5a7,7,0,1,1-9.076.026.882.882,0,0,0,.1-1.239.873.873,0,0,0-1.234-.1,8.815,8.815,0,0,0,5.691,15.495,8.815,8.815,0,0,0,5.652-15.521.873.873,0,0,0-.561-.216Z"
-                                          transform="translate(-0.529 -291.179)"
-                                          fill="#fff"
-                                        />
-                                      </svg>
+                                  <Link
+                                    to="/admin/profileinfo"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#menu-item_home"
+                                  >
+                                    <div className="sherah-dropdown-card-info">
+                                      <div className="sherah-dropdown-card__img sherah-color1__bg">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="22.103"
+                                          height="22.368"
+                                          viewBox="0 0 22.103 22.368"
+                                        >
+                                          <g
+                                            id="Settings"
+                                            transform="translate(-78.799 -199)"
+                                          >
+                                            <g
+                                              id="Icon"
+                                              transform="translate(79.586 197.962)"
+                                            >
+                                              <g
+                                                id="setting"
+                                                transform="translate(-0.787 1.038)"
+                                              >
+                                                <path
+                                                  id="Path_39"
+                                                  data-name="Path 39"
+                                                  d="M20.942,9.2h-.094A.71.71,0,0,1,20.359,8l.067-.068a2.209,2.209,0,0,0,0-3.092L19.313,3.715a2.144,2.144,0,0,0-3.055,0l-.067.068a.7.7,0,0,1-.759.145A.713.713,0,0,1,15,3.282v-.1A2.175,2.175,0,0,0,12.838,1H11.264A2.175,2.175,0,0,0,9.1,3.186v.1a.713.713,0,0,1-.435.64.7.7,0,0,1-.754-.142l-.063-.068a2.144,2.144,0,0,0-3.055,0L3.68,4.838a2.209,2.209,0,0,0,0,3.092L3.747,8a.7.7,0,0,1,.136.772.681.681,0,0,1-.629.432H3.16A2.175,2.175,0,0,0,1,11.388V12.98a2.175,2.175,0,0,0,2.16,2.186h.094a.71.71,0,0,1,.489,1.2l-.067.068a2.209,2.209,0,0,0,0,3.092l1.112,1.125a2.144,2.144,0,0,0,3.055,0l.067-.068a.7.7,0,0,1,1.189.5v.1a2.2,2.2,0,0,0,.633,1.549,2.149,2.149,0,0,0,1.53.641h1.574A2.175,2.175,0,0,0,15,21.182v-.1a.713.713,0,0,1,.435-.64.7.7,0,0,1,.754.142l.067.068a2.144,2.144,0,0,0,3.055,0l1.113-1.125a2.209,2.209,0,0,0,0-3.092l-.067-.068a.7.7,0,0,1-.136-.772.681.681,0,0,1,.629-.432h.094A2.175,2.175,0,0,0,23.1,12.98V11.388A2.175,2.175,0,0,0,20.942,9.2Zm.687,3.779a.692.692,0,0,1-.687.695h-.094a2.178,2.178,0,0,0-1.993,1.36,2.223,2.223,0,0,0,.459,2.388l.066.068a.7.7,0,0,1,0,.983L18.267,19.6a.681.681,0,0,1-.971,0l-.066-.068a2.16,2.16,0,0,0-2.36-.463,2.2,2.2,0,0,0-1.345,2.016v.1a.692.692,0,0,1-.687.695H11.264a.692.692,0,0,1-.687-.695v-.1a2.2,2.2,0,0,0-1.342-2.022,2.155,2.155,0,0,0-2.362.47l-.067.068a.682.682,0,0,1-.971,0L4.723,18.476a.7.7,0,0,1,0-.983l.067-.068a2.223,2.223,0,0,0,.459-2.389,2.178,2.178,0,0,0-1.995-1.36H3.16a.692.692,0,0,1-.687-.695V11.388a.692.692,0,0,1,.687-.695h.094a2.178,2.178,0,0,0,1.993-1.36,2.223,2.223,0,0,0-.459-2.388l-.066-.068a.7.7,0,0,1,0-.983L5.835,4.767a.681.681,0,0,1,.971,0l.066.068a2.16,2.16,0,0,0,2.36.464,2.2,2.2,0,0,0,1.345-2.017v-.1a.692.692,0,0,1,.687-.695h1.574a.692.692,0,0,1,.687.695v.1A2.2,2.2,0,0,0,14.869,5.3a2.159,2.159,0,0,0,2.36-.464l.067-.068a.681.681,0,0,1,.971,0L19.38,5.893a.7.7,0,0,1,0,.983l-.067.068a2.223,2.223,0,0,0-.459,2.389,2.178,2.178,0,0,0,1.994,1.36h.094a.692.692,0,0,1,.687.695Z"
+                                                  transform="translate(-1 -1)"
+                                                  fill="#fff"
+                                                />
+                                                <path
+                                                  id="Path_40"
+                                                  data-name="Path 40"
+                                                  d="M13.965,9a4.965,4.965,0,1,0,4.965,4.965A4.965,4.965,0,0,0,13.965,9Zm0,8.511a3.546,3.546,0,1,1,3.546-3.546,3.546,3.546,0,0,1-3.546,3.546Z"
+                                                  transform="translate(-2.913 -2.781)"
+                                                  fill="#fff"
+                                                />
+                                              </g>
+                                            </g>
+                                          </g>
+                                        </svg>
+                                      </div>
+                                      <h4 className="sherah-dropdown-card-name">
+                                        <a>Settings</a>
+                                      </h4>
                                     </div>
-                                    <h4 className="sherah-dropdown-card-name">
-                                      <a href="#">Logout</a>
-                                    </h4>
-                                  </div>
+                                  </Link>
+                                </li>
+                                <li>
+                                  <a onClick={handleLogout}>
+                                    <div className="sherah-dropdown-card-info">
+                                      <div className="sherah-dropdown-card__img sherah-color1__bg">
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          width="17.5"
+                                          height="17.5"
+                                          viewBox="0 0 17.5 17.5"
+                                        >
+                                          <path
+                                            id="path52"
+                                            d="M9.27,291.179a.877.877,0,0,0-.867.889V299.1a.876.876,0,1,0,1.752,0v-7.033a.877.877,0,0,0-.885-.889Zm5.105,1.763c-.028,0-.057,0-.085,0A.88.88,0,0,0,13.8,294.5a7,7,0,1,1-9.076.026.882.882,0,0,0,.1-1.239.873.873,0,0,0-1.234-.1,8.815,8.815,0,0,0,5.691,15.495,8.815,8.815,0,0,0,5.652-15.521.873.873,0,0,0-.561-.216Z"
+                                            transform="translate(-0.529 -291.179)"
+                                            fill="#fff"
+                                          />
+                                        </svg>
+                                      </div>
+                                      <h4 className="sherah-dropdown-card-name">
+                                        Logout
+                                      </h4>
+                                    </div>
+                                  </a>
                                 </li>
                               </ul>
                             </div>

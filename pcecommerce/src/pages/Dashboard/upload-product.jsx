@@ -1,6 +1,318 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 function Uploadproduct() {
+  const API_URL = process.env.REACT_APP_API_URL;
+  const [categories, setCategories] = useState([]); // State để lưu trữ danh sách danh mục
+  const [selectedCategory, setSelectedCategory] = useState(""); // State lưu trữ danh mục được chọn
+  const [otherCategory, setOtherCategory] = useState(""); // State lưu trữ danh mục nhập tay khác
+  const [brands, setBrands] = useState([]);
+  const [selectedBrand, setSelectedBrand] = useState("");
+  const [otherBrand, setOtherBrand] = useState("");
+  const [specifications, setSpecifications] = useState([]);
+  const [svalues, setSValues] = useState([]);
+  const [compatibilities, setCompatibilities] = useState([]);
+  const [cvalues, setCValues] = useState([]);
+  const [productName, setProductName] = useState("");
+  const [productDescription, setProductDescription] = useState("");
+  const [originalPrice, setOriginalPrice] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [productImageUrl, setProductImageUrl] = useState("");
+  const [condition, setCondition] = useState("New");
+  const [warranty, setWarranty] = useState("6 tháng");
+  const [specificationGroups, setSpecificationGroups] = useState([
+    {
+      selectedSpecification: "",
+      otherSpecification: "",
+      selectedSValue: "",
+      otherSValue: "",
+    },
+  ]);
+  const [compatibilityGroups, setCompatibilityGroups] = useState([
+    { selectedCompatibility: "", otherCompatibility: "", selectedCValue: "", otherCValue: "" },
+  ]);
+
+  const handleAddSpecificationGroup = () => {
+    setSpecificationGroups([
+      ...specificationGroups,
+      {
+        selectedSpecification: "",
+        otherSpecification: "",
+        selectedSValue: "",
+        otherSValue: "",
+      },
+    ]);
+  };
+
+  const handleRemoveSpecificationGroup = (index) => {
+    setSpecificationGroups(specificationGroups.filter((_, i) => i !== index));
+  };
+
+  const handleChangeSpecification = (index, event) => {
+    const newGroups = [...specificationGroups];
+    newGroups[index].selectedSpecification = event.target.value;
+    setSpecificationGroups(newGroups);
+  };
+
+  const handleInputChangeSpecification = (index, event) => {
+    const newGroups = [...specificationGroups];
+    newGroups[index].otherSpecification = event.target.value;
+    setSpecificationGroups(newGroups);
+  };
+
+  const handleChangeSValue = (index, event) => {
+    const newGroups = [...specificationGroups];
+    newGroups[index].selectedSValue = event.target.value;
+    setSpecificationGroups(newGroups);
+  };
+
+  const handleInputChangeSValue = (index, event) => {
+    const newGroups = [...specificationGroups];
+    newGroups[index].otherSValue = event.target.value;
+    setSpecificationGroups(newGroups);
+  };
+
+  const handleAddCompatibilityGroup = () => {
+    setCompatibilityGroups([
+      ...compatibilityGroups,
+      { selectedCompatibility: "", otherCompatibility: "", selectedCValue: "", otherCValue: "" },
+    ]);
+  };
+  
+  const handleRemoveCompatibilityGroup = (index) => {
+    setCompatibilityGroups(compatibilityGroups.filter((_, i) => i !== index));
+  };
+  
+  const handleChangeCompatibility = (index, event) => {
+    const newGroups = [...compatibilityGroups];
+    newGroups[index].selectedCompatibility = event.target.value;
+    setCompatibilityGroups(newGroups);
+  };
+  
+  const handleInputChangeCompatibility = (index, event) => {
+    const newGroups = [...compatibilityGroups];
+    newGroups[index].otherCompatibility = event.target.value;
+    setCompatibilityGroups(newGroups);
+  };
+  
+  const handleChangeCValue = (index, event) => {
+    const newGroups = [...compatibilityGroups];
+    newGroups[index].selectedCValue = event.target.value;
+    setCompatibilityGroups(newGroups);
+  };
+  
+  const handleInputChangeCValue = (index, event) => {
+    const newGroups = [...compatibilityGroups];
+    newGroups[index].otherCValue = event.target.value;
+    setCompatibilityGroups(newGroups);
+  };  
+
+  const conditions = [
+    { value: "New", label: "Mới" },
+    { value: "Used", label: "Đã sử dụng" },
+  ];
+
+  useEffect(() => {
+    // Gọi API để lấy danh sách danh mục
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(
+          `${API_URL}/product/categories`
+        );
+        const data = await response.json();
+
+        // Giả sử API trả về dữ liệu là một mảng các đối tượng chứa trường 'name'
+        setCategories(data.map((category) => category.name));
+      } catch (err) {
+        console.error("Lỗi khi lấy danh mục:", err);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const handleChangeCategory = (event) => {
+    setSelectedCategory(event.target.value);
+    if (event.target.value !== "newCategory") {
+      setOtherCategory(""); // Nếu chọn danh mục khác, reset giá trị ô nhập
+    }
+  };
+
+  const handleInputChangeCategory = (event) => {
+    setOtherCategory(event.target.value);
+  };
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const response = await fetch(
+          `${API_URL}/product/get-brands`
+        );
+        const data = await response.json();
+        setBrands(data); // Trực tiếp gán data cho brands
+      } catch (err) {
+        console.error("Lỗi khi lấy thương hiệu:", err);
+      }
+    };
+    fetchBrands();
+  }, []);
+
+  const handleChangeBrand = (event) => {
+    setSelectedBrand(event.target.value);
+    if (event.target.value !== "newBrand") {
+      setOtherBrand("");
+    }
+  };
+
+  const handleInputChangeBrand = (event) => {
+    setOtherBrand(event.target.value);
+  };
+
+  useEffect(() => {
+    const fetchSpecifications = async () => {
+      try {
+        const response = await fetch(
+          `${API_URL}/product/get-specifications`
+        );
+        const data = await response.json();
+        setSpecifications(data);
+      } catch (err) {
+        console.error("Lỗi khi lấy thông số kỹ thuật:", err);
+      }
+    };
+    fetchSpecifications();
+  }, []);
+
+  useEffect(() => {
+    const fetchSValues = async () => {
+      try {
+        const response = await fetch(
+          `${API_URL}/product/get-specificationvalues`
+        );
+        const data = await response.json();
+        setSValues(data);
+      } catch (err) {
+        console.error("Lỗi khi lấy thông số kỹ thuật:", err);
+      }
+    };
+    fetchSValues();
+  }, []);
+
+  useEffect(() => {
+    const fetchCompatibilities = async () => {
+      try {
+        const response = await fetch(`${API_URL}/product/get-compatibilities`);
+        const data = await response.json();
+        setCompatibilities(data);
+      } catch (err) {
+        console.error("Lỗi khi lấy compatibilities:", err);
+      }
+    };
+  
+    fetchCompatibilities();
+  }, []);
+  
+  useEffect(() => {
+    const fetchCValues = async () => {
+      try {
+        const response = await fetch(`${API_URL}/product/get-compatibilityvalues`);
+        const data = await response.json();
+        setCValues(data);
+      } catch (err) {
+        console.error("Lỗi khi lấy giá trị compatibility:", err);
+      }
+    };
+  
+    fetchCValues();
+  }, []);
+  
+  //Hàm thêm sản phẩm
+  const handleSubmit = async () => {
+    try {
+      const categoryId = await fetch(
+        `${API_URL}/product/get-category-id`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: selectedCategory }),
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => data.categoryId);
+
+      const specifications = {};
+      specificationGroups.forEach((group) => {
+        const key =
+          group.selectedSpecification !== "newSpecification"
+            ? group.selectedSpecification
+            : group.otherSpecification;
+
+        const value =
+          group.selectedSValue !== "newSValue"
+            ? group.selectedSValue
+            : group.otherSValue;
+
+        if (key) specifications[key] = value;
+      });
+
+    // Xử lý compatibility (key-value giống specifications)
+    const compatibility = {};
+    compatibilityGroups.forEach((group) => {
+      const key = group.selectedCompatibility !== "newCompatibility" 
+        ? group.selectedCompatibility 
+        : group.otherCompatibility;
+
+      const value = group.selectedCValue !== "newCValue" 
+        ? group.selectedCValue 
+        : group.otherCValue;
+
+      if (key) compatibility[key] = value;
+    });
+
+      const data = {
+        product_name: productName,
+        description: productDescription,
+        category_id: categoryId,
+        price: originalPrice,
+        stock_quantity: quantity,
+        image_url: productImageUrl,
+        brand: selectedBrand,
+        condition: condition,
+        specifications: specifications,
+        compatibility: compatibility,
+        warranty: warranty,
+      };
+
+      const response = await fetch(
+        `${API_URL}/product/add-product`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (response.ok) {
+        alert("Sản phẩm đã tải thành công! 🎉");
+
+        // Reset tất cả các trường về mặc định
+        setProductName("");
+        setProductDescription("");
+        setSelectedCategory("");
+        setOriginalPrice("");
+        setQuantity("");
+        setProductImageUrl("");
+        setSelectedBrand("");
+        setCondition("");
+        setWarranty("");
+        setSpecificationGroups([]);
+        setCompatibilityGroups([]);
+      }
+    } catch (err) {
+      console.error("Lỗi khi gửi dữ liệu:", err);
+      alert("Lỗi khi gửi sản phẩm, vui lòng thử lại.");
+    }
+  };
+
   return (
     <div>
       <>
@@ -31,56 +343,37 @@ function Uploadproduct() {
                         </div>
                       </div>
                       <div className="sherah-page-inner sherah-border sherah-basic-page sherah-default-bg mg-top-25 p-0">
-                        <form className="sherah-wc__form-main" action="#">
+                        <form
+                          onSubmit={(event) => {
+                            event.preventDefault();
+                            handleSubmit();
+                          }}
+                          className="sherah-wc__form-main"
+                          action="#"
+                        >
                           <div className="row">
                             <div className="col-lg-6 col-12">
                               {/* Product Info */}
                               <div className="product-form-box sherah-border mg-top-30">
                                 <h4 className="form-title m-0">
-                                  Basic Information
+                                  Thông tin cơ bản
                                 </h4>
                                 <div className="row">
                                   <div className="col-12">
                                     <div className="form-group">
                                       <label className="sherah-wc__form-label">
-                                        Product Title
+                                        Tên sản phẩm
                                       </label>
                                       <div className="form-group__input">
                                         <input
                                           className="sherah-wc__form-input"
-                                          placeholder="Type here"
+                                          placeholder="Nhập"
                                           type="text"
-                                          name="p_title"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="col-lg-6 col-md-6 col-12">
-                                    <div className="form-group">
-                                      <label className="sherah-wc__form-label">
-                                        Regular Price
-                                      </label>
-                                      <div className="form-group__input">
-                                        <input
-                                          className="sherah-wc__form-input"
-                                          placeholder="Type here"
-                                          type="text"
-                                          name="p_title"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="col-lg-6 col-md-6 col-12">
-                                    <div className="form-group">
-                                      <label className="sherah-wc__form-label">
-                                        Discount Price
-                                      </label>
-                                      <div className="form-group__input">
-                                        <input
-                                          className="sherah-wc__form-input"
-                                          placeholder="Type here"
-                                          type="text"
-                                          name="p_title"
+                                          name="product_name"
+                                          value={productName}
+                                          onChange={(e) =>
+                                            setProductName(e.target.value)
+                                          }
                                         />
                                       </div>
                                     </div>
@@ -88,15 +381,121 @@ function Uploadproduct() {
                                   <div className="col-12">
                                     <div className="form-group">
                                       <label className="sherah-wc__form-label">
-                                        About Description
+                                        Mô tả sản phẩm
                                       </label>
                                       <div className="form-group__input">
                                         <textarea
                                           className="sherah-wc__form-input"
-                                          placeholder="Type here"
+                                          placeholder="Nhập"
                                           type="text"
-                                          name="p_title"
-                                          defaultValue={""}
+                                          name="p_description"
+                                          value={productDescription}
+                                          onChange={(e) =>
+                                            setProductDescription(
+                                              e.target.value
+                                            )
+                                          }
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="col-12">
+                                    <div className="form-group">
+                                      <label className="sherah-wc__form-label">
+                                        Danh mục
+                                      </label>
+                                      <div className="d-flex">
+                                        <select
+                                          className="form-group__input"
+                                          aria-label="Default select example"
+                                          value={selectedCategory}
+                                          onChange={handleChangeCategory}
+                                        >
+                                          <option value="">
+                                            Chọn danh mục
+                                          </option>
+                                          {categories.length > 0 ? (
+                                            categories.map(
+                                              (category, index) => (
+                                                <option
+                                                  key={index}
+                                                  value={category}
+                                                >
+                                                  {category}
+                                                </option>
+                                              )
+                                            )
+                                          ) : (
+                                            <option disabled>
+                                              Không có danh mục nào
+                                            </option>
+                                          )}
+                                          <option value="newCategory">
+                                            Danh mục mới
+                                          </option>{" "}
+                                          {/* Thêm tùy chọn "Danh mục mới" */}
+                                        </select>
+                                        <input
+                                          type="text"
+                                          className="form-group__input ml-2"
+                                          placeholder={
+                                            selectedCategory === "newCategory"
+                                              ? "Nhập Danh mục mới"
+                                              : "Chỉ được nhập khi chọn Danh mục mới"
+                                          }
+                                          value={otherCategory}
+                                          onChange={handleInputChangeCategory}
+                                          readOnly={
+                                            selectedCategory !== "newCategory"
+                                          } // Chỉ cho phép nhập khi chọn "Danh mục mới"
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="col-12">
+                                    <div className="form-group">
+                                      <label className="sherah-wc__form-label">
+                                        Thương hiệu
+                                      </label>
+                                      <div className="d-flex">
+                                        <select
+                                          className="form-group__input"
+                                          aria-label="Default select example"
+                                          value={selectedBrand}
+                                          onChange={handleChangeBrand}
+                                        >
+                                          <option value="">
+                                            Chọn thương hiệu
+                                          </option>
+                                          {brands.length > 0 ? (
+                                            brands.map((brand, index) => (
+                                              <option key={index} value={brand}>
+                                                {brand}
+                                              </option>
+                                            ))
+                                          ) : (
+                                            <option disabled>
+                                              Không có thương hiệu nào
+                                            </option>
+                                          )}
+                                          <option value="newBrand">
+                                            Thương hiệu mới
+                                          </option>{" "}
+                                          {/* Thêm tùy chọn "Thương hiệu mới" */}
+                                        </select>
+                                        <input
+                                          type="text"
+                                          className="form-group__input ml-2"
+                                          placeholder={
+                                            selectedBrand === "newBrand"
+                                              ? "Nhập Thương hiệu mới"
+                                              : "Chỉ được nhập khi chọn Thương hiệu mới"
+                                          }
+                                          value={otherBrand}
+                                          onChange={handleInputChangeBrand}
+                                          readOnly={
+                                            selectedBrand !== "newBrand"
+                                          } // Chỉ cho phép nhập khi chọn "Thương hiệu mới"
                                         />
                                       </div>
                                     </div>
@@ -104,59 +503,90 @@ function Uploadproduct() {
                                   <div className="col-lg-6 col-md-6 col-12">
                                     <div className="form-group">
                                       <label className="sherah-wc__form-label">
-                                        Category*
-                                      </label>
-                                      <select
-                                        className="form-group__input"
-                                        aria-label="Default select example"
-                                      >
-                                        <option selected="">Men</option>
-                                        <option value={1}>Women</option>
-                                        <option value={2}>Clock</option>
-                                      </select>
-                                    </div>
-                                  </div>
-                                  <div className="col-lg-6 col-md-6 col-12">
-                                    <div className="form-group">
-                                      <label className="sherah-wc__form-label">
-                                        Brand*
-                                      </label>
-                                      <select
-                                        className="form-group__input"
-                                        aria-label="Default select example"
-                                      >
-                                        <option selected="">NogorPolli</option>
-                                        <option value={1}>BangBang</option>
-                                        <option value={2}>Bagdoom</option>
-                                      </select>
-                                    </div>
-                                  </div>
-                                  <div className="col-lg-6 col-md-6 col-12">
-                                    <div className="form-group">
-                                      <label className="sherah-wc__form-label">
-                                        Shipping Free
+                                        Giá thành
                                       </label>
                                       <div className="form-group__input">
                                         <input
                                           className="sherah-wc__form-input"
-                                          placeholder="Type here"
+                                          placeholder="Nhập"
                                           type="text"
-                                          name="p_title"
+                                          name="original_price"
+                                          value={originalPrice}
+                                          onChange={(e) =>
+                                            setOriginalPrice(e.target.value)
+                                          }
                                         />
                                       </div>
                                     </div>
                                   </div>
+                                  <div className="col-lg-6 col-md-6 col-12"></div>
                                   <div className="col-lg-6 col-md-6 col-12">
                                     <div className="form-group">
                                       <label className="sherah-wc__form-label">
-                                        Tax Rate
+                                        Tình trạng
+                                      </label>
+                                      <select
+                                        className="form-group__input"
+                                        aria-label="Default select example"
+                                        name="condition"
+                                        value={condition}
+                                        onChange={(e) =>
+                                          setCondition(e.target.value)
+                                        }
+                                      >
+                                        {conditions.map((condition, index) => (
+                                          <option
+                                            key={index}
+                                            value={condition.value}
+                                          >
+                                            {condition.label}
+                                          </option>
+                                        ))}
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div className="col-lg-6 col-md-6 col-12">
+                                    <div className="form-group">
+                                      <label className="sherah-wc__form-label">
+                                        Thời hạn bảo hành
+                                      </label>
+                                      <select
+                                        className="form-group__input"
+                                        aria-label="Default select example"
+                                        name="warranty"
+                                        value={warranty}
+                                        onChange={(e) =>
+                                          setWarranty(e.target.value)
+                                        }
+                                      >
+                                        <option value="6 tháng">6 tháng</option>
+                                        <option value="12 tháng">
+                                          12 tháng
+                                        </option>
+                                        <option value="24 tháng">
+                                          24 tháng
+                                        </option>
+                                        <option value="36 tháng">
+                                          36 tháng
+                                        </option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div className="col-lg-6 col-md-6 col-12">
+                                    <div className="form-group">
+                                      <label className="sherah-wc__form-label">
+                                        Số lượng
                                       </label>
                                       <div className="form-group__input">
                                         <input
                                           className="sherah-wc__form-input"
-                                          placeholder="Type here"
+                                          placeholder="Nhập"
                                           type="text"
-                                          name="p_title"
+                                          name="quantity"
+                                          value={quantity}
+                                          onChange={(e) =>
+                                            setQuantity(e.target.value)
+                                          }
                                         />
                                       </div>
                                     </div>
@@ -169,7 +599,7 @@ function Uploadproduct() {
                                       <div className="form-group__input">
                                         <textarea
                                           className="sherah-wc__form-input"
-                                          placeholder="Tag type here"
+                                          placeholder="Nhập"
                                           type="text"
                                           name="p_title"
                                           defaultValue={""}
@@ -182,373 +612,443 @@ function Uploadproduct() {
                               {/* End Product Info */}
                             </div>
                             <div className="col-lg-6 col-12">
-                              {/* Organization */}
-                              <div className="product-form-box sherah-border mg-top-30">
-                                <h4 className="form-title m-0">Organization</h4>
-                                <div className="form-group">
-                                  <label className="sherah-wc__form-label">
-                                    Add Category
-                                  </label>
-                                  <div className="form-group__input">
-                                    <input
-                                      className="sherah-wc__form-input"
-                                      placeholder="Type here"
-                                      type="text"
-                                      name="p_title"
-                                    />
-                                    <button
-                                      className="sherah-btn__add sherah-btn sherah-btn__secondary"
-                                      type="button"
-                                    >
-                                      Add
-                                    </button>
-                                  </div>
-                                </div>
-                                <div className="form-group">
-                                  <label className="sherah-wc__form-label">
-                                    Add Brand
-                                  </label>
-                                  <div className="form-group__input">
-                                    <input
-                                      className="sherah-wc__form-input"
-                                      placeholder="Type here"
-                                      type="text"
-                                      name="p_title"
-                                    />
-                                    <button
-                                      className="sherah-btn__add sherah-btn sherah-btn__secondary"
-                                      type="button"
-                                    >
-                                      Add
-                                    </button>
-                                  </div>
-                                </div>
-                                <div className="form-group">
-                                  <label className="sherah-wc__form-label">
-                                    Add Color
-                                  </label>
-                                  <div className="form-group__input">
-                                    <input
-                                      className="sherah-wc__form-input"
-                                      placeholder="Type here"
-                                      type="text"
-                                      name="p_title"
-                                    />
-                                    <button
-                                      className="sherah-btn__add sherah-btn sherah-btn__secondary"
-                                      type="button"
-                                    >
-                                      Add
-                                    </button>
-                                  </div>
-                                </div>
-                                <div className="form-group">
-                                  <label className="sherah-wc__form-label">
-                                    Add Size
-                                  </label>
-                                  <div className="form-group__input">
-                                    <input
-                                      className="sherah-wc__form-input"
-                                      placeholder="Type here"
-                                      type="text"
-                                      name="p_title"
-                                    />
-                                    <button
-                                      className="sherah-btn__add sherah-btn sherah-btn__secondary"
-                                      type="button"
-                                    >
-                                      Add
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                              {/* End Organization */}
-                              {/* Specification */}
+                              {/* Specifications */}
                               <div className="product-form-box sherah-border mg-top-30">
                                 <h4 className="form-title m-0">
-                                  Specification
+                                  Thông số kỹ thuật
                                 </h4>
-                                <div className="row">
-                                  <div className="col-lg-6 col-md-6 col-12">
-                                    <div className="form-group">
-                                      <label className="sherah-wc__form-label">
-                                        Stock
-                                      </label>
-                                      <div className="form-group__input">
-                                        <input
-                                          className="sherah-wc__form-input"
-                                          placeholder="Type here"
-                                          type="text"
-                                          name="p_title"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="col-lg-6 col-md-6 col-12">
-                                    <div className="form-group">
-                                      <label className="sherah-wc__form-label">
-                                        Weight
-                                      </label>
-                                      <div className="form-group__input">
-                                        <input
-                                          className="sherah-wc__form-input"
-                                          placeholder="Type here"
-                                          type="text"
-                                          name="p_title"
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="col-lg-6 col-md-6 col-12">
-                                    <div className="form-group">
-                                      <label className="sherah-wc__form-label">
-                                        Size
-                                      </label>
-                                      <div className="checkbox-group">
-                                        <div className="checkbox-group__single">
-                                          <input
-                                            type="checkbox"
-                                            className="btn-check"
-                                            name="options"
-                                            id="option1"
-                                            autoComplete="off"
-                                          />
-                                          <label
-                                            className="checkbox-group__single--label"
-                                            htmlFor="option1"
+
+                                {specificationGroups.map((group, index) => (
+                                  <div
+                                    key={index}
+                                    className="spec-group position-relative p-2 border mb-2"
+                                  >
+                                    <div className="col-12">
+                                      <div className="form-group">
+                                        <label className="sherah-wc__form-label">
+                                          Thuộc tính thông số
+                                        </label>
+                                        <div className="d-flex">
+                                          <select
+                                            className="form-group__input"
+                                            value={group.selectedSpecification}
+                                            onChange={(e) =>
+                                              handleChangeSpecification(
+                                                index,
+                                                e
+                                              )
+                                            }
                                           >
-                                            MM
-                                          </label>
-                                        </div>
-                                        <div className="checkbox-group__single">
+                                            <option value="">
+                                              Chọn thông số
+                                            </option>
+                                            {specifications.length > 0 ? (
+                                              specifications.map(
+                                                (specification, i) => (
+                                                  <option
+                                                    key={i}
+                                                    value={specification}
+                                                  >
+                                                    {specification}
+                                                  </option>
+                                                )
+                                              )
+                                            ) : (
+                                              <option disabled>
+                                                Không có thông số nào
+                                              </option>
+                                            )}
+                                            <option value="newSpecification">
+                                              Thông số mới
+                                            </option>
+                                          </select>
                                           <input
-                                            type="checkbox"
-                                            className="btn-check"
-                                            name="options"
-                                            id="option2"
-                                            defaultChecked=""
-                                            autoComplete="off"
+                                            type="text"
+                                            className="form-group__input ml-2"
+                                            placeholder={
+                                              group.selectedSpecification ===
+                                              "newSpecification"
+                                                ? "Nhập Thông số mới"
+                                                : "Chỉ được nhập khi chọn Thông số mới"
+                                            }
+                                            value={group.otherSpecification}
+                                            onChange={(e) =>
+                                              handleInputChangeSpecification(
+                                                index,
+                                                e
+                                              )
+                                            }
+                                            readOnly={
+                                              group.selectedSpecification !==
+                                              "newSpecification"
+                                            }
                                           />
-                                          <label
-                                            className="checkbox-group__single--label"
-                                            htmlFor="option2"
-                                          >
-                                            XL
-                                          </label>
-                                        </div>
-                                        <div className="checkbox-group__single">
-                                          <input
-                                            type="checkbox"
-                                            className="btn-check"
-                                            name="options"
-                                            id="option3"
-                                            autoComplete="off"
-                                          />
-                                          <label
-                                            className="checkbox-group__single--label"
-                                            htmlFor="option3"
-                                          >
-                                            M
-                                          </label>
-                                        </div>
-                                        <div className="checkbox-group__single">
-                                          <input
-                                            type="checkbox"
-                                            className="btn-check"
-                                            name="options"
-                                            id="option4"
-                                            autoComplete="off"
-                                          />
-                                          <label
-                                            className="checkbox-group__single--label"
-                                            htmlFor="option4"
-                                          >
-                                            MM
-                                          </label>
-                                        </div>
-                                        <div className="checkbox-group__single">
-                                          <input
-                                            type="checkbox"
-                                            className="btn-check"
-                                            name="options"
-                                            id="option5"
-                                            autoComplete="off"
-                                          />
-                                          <label
-                                            className="checkbox-group__single--label"
-                                            htmlFor="option5"
-                                          >
-                                            X
-                                          </label>
-                                        </div>
-                                        <div className="checkbox-group__single">
-                                          <input
-                                            type="checkbox"
-                                            className="btn-check"
-                                            name="options"
-                                            id="option6"
-                                            autoComplete="off"
-                                          />
-                                          <label
-                                            className="checkbox-group__single--label"
-                                            htmlFor="option6"
-                                          >
-                                            SM
-                                          </label>
-                                        </div>
-                                        <div className="checkbox-group__single">
-                                          <input
-                                            type="checkbox"
-                                            className="btn-check"
-                                            name="options"
-                                            id="option7"
-                                            autoComplete="off"
-                                          />
-                                          <label
-                                            className="checkbox-group__single--label"
-                                            htmlFor="option7"
-                                          >
-                                            2X
-                                          </label>
-                                        </div>
-                                        <div className="checkbox-group__single">
-                                          <input
-                                            type="checkbox"
-                                            className="btn-check"
-                                            name="options"
-                                            id="option8"
-                                            autoComplete="off"
-                                          />
-                                          <label
-                                            className="checkbox-group__single--label"
-                                            htmlFor="option8"
-                                          >
-                                            3X
-                                          </label>
                                         </div>
                                       </div>
                                     </div>
-                                  </div>
-                                  <div className="col-lg-6 col-md-6 col-12">
-                                    <div className="form-group">
-                                      <label className="sherah-wc__form-label">
-                                        Colors
-                                      </label>
-                                      <div className="checkbox-group">
-                                        <div className="checkbox-group__single">
-                                          <input
-                                            type="checkbox"
-                                            className="btn-check"
-                                            name="options"
-                                            id="option9"
-                                            autoComplete="off"
-                                          />
-                                          <label
-                                            className="checkbox-group__single--label"
-                                            htmlFor="option9"
+
+                                    <div className="col-12">
+                                      <div className="form-group">
+                                        <label className="sherah-wc__form-label">
+                                          Giá trị thông số
+                                        </label>
+                                        <div className="d-flex">
+                                          <select
+                                            className="form-group__input"
+                                            value={group.selectedSValue}
+                                            onChange={(e) =>
+                                              handleChangeSValue(index, e)
+                                            }
                                           >
-                                            White
-                                          </label>
-                                        </div>
-                                        <div className="checkbox-group__single">
+                                            {group.selectedSpecification &&
+                                            group.selectedSpecification !==
+                                              "" ? (
+                                              <>
+                                                <option value="">
+                                                  Chọn giá trị
+                                                </option>
+                                                {group.selectedSpecification !==
+                                                "newSpecification" ? (
+                                                  [
+                                                    ...new Set(
+                                                      svalues.map(
+                                                        (svalue) =>
+                                                          svalue[
+                                                            group
+                                                              .selectedSpecification
+                                                          ]
+                                                      )
+                                                    ),
+                                                  ]
+                                                    .sort((a, b) =>
+                                                      typeof a === "string"
+                                                        ? a.localeCompare(b)
+                                                        : a - b
+                                                    )
+                                                    .map((uniqueValue, i) => (
+                                                      <option
+                                                        key={i}
+                                                        value={uniqueValue}
+                                                      >
+                                                        {uniqueValue}
+                                                      </option>
+                                                    ))
+                                                ) : (
+                                                  <option disabled>
+                                                    Chọn thông số trước
+                                                  </option>
+                                                )}
+                                                <option value="newSValue">
+                                                  Giá trị mới
+                                                </option>
+                                              </>
+                                            ) : (
+                                              <option value="">
+                                                Vui lòng chọn thông số trước
+                                              </option>
+                                            )}
+                                          </select>
                                           <input
-                                            type="checkbox"
-                                            className="btn-check"
-                                            name="options"
-                                            id="option10"
-                                            defaultChecked=""
-                                            autoComplete="off"
+                                            type="text"
+                                            className="form-group__input ml-2"
+                                            placeholder={
+                                              group.selectedSValue ===
+                                              "newSValue"
+                                                ? "Nhập Giá trị mới"
+                                                : "Chỉ được nhập khi chọn Giá trị mới"
+                                            }
+                                            value={group.otherSValue}
+                                            onChange={(e) =>
+                                              handleInputChangeSValue(index, e)
+                                            }
+                                            readOnly={
+                                              group.selectedSValue !==
+                                              "newSValue"
+                                            }
                                           />
-                                          <label
-                                            className="checkbox-group__single--label"
-                                            htmlFor="option10"
-                                          >
-                                            Black
-                                          </label>
-                                        </div>
-                                        <div className="checkbox-group__single">
-                                          <input
-                                            type="checkbox"
-                                            className="btn-check"
-                                            name="options"
-                                            id="option11"
-                                            autoComplete="off"
-                                          />
-                                          <label
-                                            className="checkbox-group__single--label"
-                                            htmlFor="option11"
-                                          >
-                                            Harlequin
-                                          </label>
-                                        </div>
-                                        <div className="checkbox-group__single">
-                                          <input
-                                            type="checkbox"
-                                            className="btn-check"
-                                            name="options"
-                                            id="option12"
-                                            autoComplete="off"
-                                          />
-                                          <label
-                                            className="checkbox-group__single--label"
-                                            htmlFor="option12"
-                                          >
-                                            Red
-                                          </label>
-                                        </div>
-                                        <div className="checkbox-group__single">
-                                          <input
-                                            type="checkbox"
-                                            className="btn-check"
-                                            name="options"
-                                            id="option13"
-                                            autoComplete="off"
-                                          />
-                                          <label
-                                            className="checkbox-group__single--label"
-                                            htmlFor="option13"
-                                          >
-                                            Yellow
-                                          </label>
-                                        </div>
-                                        <div className="checkbox-group__single">
-                                          <input
-                                            type="checkbox"
-                                            className="btn-check"
-                                            name="options"
-                                            id="option14"
-                                            autoComplete="off"
-                                          />
-                                          <label
-                                            className="checkbox-group__single--label"
-                                            htmlFor="option14"
-                                          >
-                                            Blue
-                                          </label>
                                         </div>
                                       </div>
                                     </div>
+
+                                    <a
+                                      href="#"
+                                      className="sherah-table__action sherah-color2 sherah-color2__bg--offset"
+                                      onClick={() =>
+                                        handleRemoveSpecificationGroup(index)
+                                      }
+                                    >
+                                      {/* Delete icon */}
+                                      <svg
+                                        className="sherah-color2__fill"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16.247"
+                                        height="18.252"
+                                        viewBox="0 0 16.247 18.252"
+                                      >
+                                        <g
+                                          id="Icon"
+                                          transform="translate(-160.007 -18.718)"
+                                        >
+                                          <path
+                                            id="Path_484"
+                                            data-name="Path 484"
+                                            d="M185.344,88.136c0,1.393,0,2.786,0,4.179-.006,1.909-1.523,3.244-3.694,3.248q-3.623.007-7.246,0c-2.15,0-3.682-1.338-3.687-3.216q-.01-4.349,0-8.7a.828.828,0,0,1,.822-.926.871.871,0,0,1,1,.737c.016.162.006.326.006.489q0,4.161,0,8.321c0,1.061.711,1.689,1.912,1.69q3.58,0,7.161,0c1.2,0,1.906-.631,1.906-1.695q0-4.311,0-8.622a.841.841,0,0,1,.708-.907.871.871,0,0,1,1.113.844C185.349,85.1,185.343,86.618,185.344,88.136Z"
+                                            transform="translate(-9.898 -58.597)"
+                                          />
+                                          <path
+                                            id="Path_485"
+                                            data-name="Path 485"
+                                            d="M164.512,21.131c0-.517,0-.98,0-1.443.006-.675.327-.966,1.08-.967q2.537,0,5.074,0c.755,0,1.074.291,1.082.966.005.439.005.878.009,1.317a.615.615,0,0,0,.047.126h.428c1,0,2,0,3,0,.621,0,1.013.313,1.019.788s-.4.812-1.04.813q-7.083,0-14.165,0c-.635,0-1.046-.327-1.041-.811s.4-.786,1.018-.789C162.165,21.127,163.3,21.131,164.512,21.131Zm1.839-.021H169.9v-.764h-3.551Z"
+                                            transform="translate(0 0)"
+                                          />
+                                          <path
+                                            id="Path_486"
+                                            data-name="Path 486"
+                                            d="M225.582,107.622c0,.9,0,1.806,0,2.709a.806.806,0,0,1-.787.908.818.818,0,0,1-.814-.924q0-2.69,0-5.38a.82.82,0,0,1,.81-.927.805.805,0,0,1,.79.9C225.585,105.816,225.582,106.719,225.582,107.622Z"
+                                            transform="translate(-58.483 -78.508)"
+                                          />
+                                          <path
+                                            id="Path_487"
+                                            data-name="Path 487"
+                                            d="M266.724,107.63c0-.9,0-1.806,0-2.709a.806.806,0,0,1,.782-.912.818.818,0,0,1,.818.919q0,2.69,0,5.38a.822.822,0,0,1-.806.931c-.488,0-.792-.356-.794-.938C266.721,109.411,266.724,108.521,266.724,107.63Z"
+                                            transform="translate(-97.561 -78.509)"
+                                          />
+                                        </g>
+                                      </svg>
+                                    </a>
                                   </div>
-                                </div>
+                                ))}
+
+                                {/* Nút thêm thông số */}
+                                <button
+                                  className="btn btn-primary mt-3"
+                                  onClick={handleAddSpecificationGroup}
+                                >
+                                  Thêm thông số
+                                </button>
                               </div>
                               {/* End Specification */}
+                              {/* Compatibility */}
+                              <div className="product-form-box sherah-border mg-top-30">
+                                <h4 className="form-title m-0">
+                                  Tính tương thích
+                                </h4>
+
+                                {compatibilityGroups.map((group, index) => (
+                                  <div
+                                    key={index}
+                                    className="spec-group position-relative p-2 border mb-2"
+                                  >
+                                    <div className="col-12">
+                                      <div className="form-group">
+                                        <label className="sherah-wc__form-label">
+                                          Thuộc tính tương thích
+                                        </label>
+                                        <div className="d-flex">
+                                          <select
+                                            className="form-group__input"
+                                            value={group.selectedCompatibility}
+                                            onChange={(e) =>
+                                              handleChangeCompatibility(
+                                                index,
+                                                e
+                                              )
+                                            }
+                                          >
+                                            <option value="">
+                                              Chọn tính tương thích
+                                            </option>
+                                            {compatibilities.length > 0 ? (
+                                              compatibilities.map(
+                                                (compatibility, i) => (
+                                                  <option
+                                                    key={i}
+                                                    value={compatibility}
+                                                  >
+                                                    {compatibility}
+                                                  </option>
+                                                )
+                                              )
+                                            ) : (
+                                              <option disabled>
+                                                Không có tính tương thích
+                                              </option>
+                                            )}
+                                            <option value="newCompatibility">
+                                              Tính tương thích mới
+                                            </option>
+                                          </select>
+                                          <input
+                                            type="text"
+                                            className="form-group__input ml-2"
+                                            placeholder={
+                                              group.selectedCompatibility ===
+                                              "newCompatibility"
+                                                ? "Nhập Tính tương thích mới"
+                                                : "Chỉ được nhập khi chọn Tính tương thích mới"
+                                            }
+                                            value={group.otherCompatibility}
+                                            onChange={(e) =>
+                                              handleInputChangeCompatibility(
+                                                index,
+                                                e
+                                              )
+                                            }
+                                            readOnly={
+                                              group.selectedCompatibility !==
+                                              "newCompatibility"
+                                            }
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div className="col-12">
+                                      <div className="form-group">
+                                        <label className="sherah-wc__form-label">
+                                          Giá trị tính tương thích
+                                        </label>
+                                        <div className="d-flex">
+                                          <select
+                                            className="form-group__input"
+                                            value={group.selectedCValue}
+                                            onChange={(e) =>
+                                              handleChangeCValue(index, e)
+                                            }
+                                          >
+                                            {group.selectedCompatibility &&
+                                            group.selectedCompatibility !==
+                                              "" ? (
+                                              <>
+                                                <option value="">
+                                                  Chọn giá trị
+                                                </option>
+                                                {group.selectedCompatibility !==
+                                                "newCompatibility" ? (
+                                                  [
+                                                    ...new Set(
+                                                      cvalues.map(
+                                                        (cvalue) =>
+                                                          cvalue[
+                                                            group
+                                                              .selectedCompatibility
+                                                          ]
+                                                      )
+                                                    ),
+                                                  ]
+                                                    .sort((a, b) =>
+                                                      typeof a === "string"
+                                                        ? a.localeCompare(b)
+                                                        : a - b
+                                                    )
+                                                    .map((uniqueValue, i) => (
+                                                      <option
+                                                        key={i}
+                                                        value={uniqueValue}
+                                                      >
+                                                        {uniqueValue}
+                                                      </option>
+                                                    ))
+                                                ) : (
+                                                  <option disabled>
+                                                    Chọn tính tương thích trước
+                                                  </option>
+                                                )}
+                                                <option value="newCValue">
+                                                  Giá trị mới
+                                                </option>
+                                              </>
+                                            ) : (
+                                              <option value="">
+                                                Vui lòng chọn tính tương thích mới
+                                              </option>
+                                            )}
+                                          </select>
+                                          <input
+                                            type="text"
+                                            className="form-group__input ml-2"
+                                            placeholder={
+                                              group.selectedCValue ===
+                                              "newCValue"
+                                                ? "Nhập Giá trị mới"
+                                                : "Chỉ được nhập khi chọn Giá trị mới"
+                                            }
+                                            value={group.otherCValue}
+                                            onChange={(e) =>
+                                              handleInputChangeCValue(index, e)
+                                            }
+                                            readOnly={
+                                              group.selectedCValue !==
+                                              "newCValue"
+                                            }
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <a
+                                      href="#"
+                                      className="sherah-table__action sherah-color2 sherah-color2__bg--offset"
+                                      onClick={() =>
+                                        handleRemoveCompatibilityGroup(index)
+                                      }
+                                    >
+                                      {/* Delete icon */}
+                                      <svg
+                                        className="sherah-color2__fill"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="16.247"
+                                        height="18.252"
+                                        viewBox="0 0 16.247 18.252"
+                                      >
+                                        <g
+                                          id="Icon"
+                                          transform="translate(-160.007 -18.718)"
+                                        >
+                                          <path
+                                            id="Path_484"
+                                            data-name="Path 484"
+                                            d="M185.344,88.136c0,1.393,0,2.786,0,4.179-.006,1.909-1.523,3.244-3.694,3.248q-3.623.007-7.246,0c-2.15,0-3.682-1.338-3.687-3.216q-.01-4.349,0-8.7a.828.828,0,0,1,.822-.926.871.871,0,0,1,1,.737c.016.162.006.326.006.489q0,4.161,0,8.321c0,1.061.711,1.689,1.912,1.69q3.58,0,7.161,0c1.2,0,1.906-.631,1.906-1.695q0-4.311,0-8.622a.841.841,0,0,1,.708-.907.871.871,0,0,1,1.113.844C185.349,85.1,185.343,86.618,185.344,88.136Z"
+                                            transform="translate(-9.898 -58.597)"
+                                          />
+                                          <path
+                                            id="Path_485"
+                                            data-name="Path 485"
+                                            d="M164.512,21.131c0-.517,0-.98,0-1.443.006-.675.327-.966,1.08-.967q2.537,0,5.074,0c.755,0,1.074.291,1.082.966.005.439.005.878.009,1.317a.615.615,0,0,0,.047.126h.428c1,0,2,0,3,0,.621,0,1.013.313,1.019.788s-.4.812-1.04.813q-7.083,0-14.165,0c-.635,0-1.046-.327-1.041-.811s.4-.786,1.018-.789C162.165,21.127,163.3,21.131,164.512,21.131Zm1.839-.021H169.9v-.764h-3.551Z"
+                                            transform="translate(0 0)"
+                                          />
+                                          <path
+                                            id="Path_486"
+                                            data-name="Path 486"
+                                            d="M225.582,107.622c0,.9,0,1.806,0,2.709a.806.806,0,0,1-.787.908.818.818,0,0,1-.814-.924q0-2.69,0-5.38a.82.82,0,0,1,.81-.927.805.805,0,0,1,.79.9C225.585,105.816,225.582,106.719,225.582,107.622Z"
+                                            transform="translate(-58.483 -78.508)"
+                                          />
+                                          <path
+                                            id="Path_487"
+                                            data-name="Path 487"
+                                            d="M266.724,107.63c0-.9,0-1.806,0-2.709a.806.806,0,0,1,.782-.912.818.818,0,0,1,.818.919q0,2.69,0,5.38a.822.822,0,0,1-.806.931c-.488,0-.792-.356-.794-.938C266.721,109.411,266.724,108.521,266.724,107.63Z"
+                                            transform="translate(-97.561 -78.509)"
+                                          />
+                                        </g>
+                                      </svg>
+                                    </a>
+                                  </div>
+                                ))}
+
+                                {/* Nút thêm tính tương thích */}
+                                <button
+                                  className="btn btn-primary mt-3"
+                                  onClick={handleAddCompatibilityGroup}
+                                >
+                                  Thêm tính tương thích
+                                </button>
+                              </div>
+                              {/* End Compatibility */}
                             </div>
                           </div>
                           <div className="product-form-box sherah-border mg-top-30">
                             <div className="form-group">
                               <div className="image-upload-group">
-                                <div className="image-upload-group__single">
-                                  <img src="/assets/interface-dashboard/img/product-img5.png" />
-                                </div>
-                                <div className="image-upload-group__single">
-                                  <img src="/assets/interface-dashboard/img/product-img6.png" />
-                                </div>
-                                <div className="image-upload-group__single">
-                                  <img src="/assets/interface-dashboard/img/product-img8.png" />
-                                </div>
-                                <div className="image-upload-group__single">
-                                  <img src="/assets/interface-dashboard/img/product-img9.png" />
-                                </div>
                                 <div className="image-upload-group__single image-upload-group__single--upload">
                                   <input
                                     type="file"
@@ -592,8 +1092,27 @@ function Uploadproduct() {
                                         />
                                       </g>
                                     </svg>
-                                    <span>image upload</span>
+                                    <span>Tải hình ảnh lên</span>
                                   </label>
+                                </div>
+                              </div>
+                              <div className="col-12">
+                                <div className="form-group">
+                                  <label className="sherah-wc__form-label">
+                                    Hoặc nhập Link hình ảnh của sản phẩm
+                                  </label>
+                                  <div className="form-group__input">
+                                    <textarea
+                                      className="sherah-wc__form-input"
+                                      placeholder="Nhập Link ở đây"
+                                      type="text"
+                                      name="product_image_url"
+                                      value={productImageUrl}
+                                      onChange={(e) =>
+                                        setProductImageUrl(e.target.value)
+                                      }
+                                    />
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -602,11 +1121,12 @@ function Uploadproduct() {
                             <button
                               type="submit"
                               className="sherah-btn sherah-btn__primary"
+                              onClick={handleSubmit}
                             >
-                              Publish Product
+                              Thêm sản phẩm
                             </button>
                             <button className="sherah-btn sherah-btn__third">
-                              Cancel
+                              Hủy
                             </button>
                           </div>
                         </form>

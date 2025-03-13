@@ -235,6 +235,76 @@ textarea::-ms-input-placeholder,input::-ms-input-placeholder {
 .sherah-color5__fill{
     fill:#F2994A !important;
 }
+/* Màu 6 - Xám */
+.sherah-color6 {
+    color: #6B7280 !important;
+}
+.sherah-color6__bg {
+    background: #6B7280 !important;
+}
+.sherah-color6__fill {
+    fill: #6B7280 !important;
+}
+.sherah-color6__bg--opacity {
+    background: #D1D5DB;
+}
+
+/* Màu 7 - Xanh dương đậm */
+.sherah-color7 {
+    color: #1E40AF !important;
+}
+.sherah-color7__bg {
+    background: #1E40AF !important;
+}
+.sherah-color7__fill {
+    fill: #1E40AF !important;
+}
+.sherah-color7__bg--opacity {
+    background: #DBEAFE;
+}
+
+/* Màu 8 - Tím */
+.sherah-color8 {
+    color: #9333EA !important;
+}
+.sherah-color8__bg {
+    background: #9333EA !important;
+}
+.sherah-color8__fill {
+    fill: #9333EA !important;
+}
+.sherah-color8__bg--opacity {
+    background: #E9D5FF;
+}
+
+/* Màu 9 - Đỏ đậm */
+.sherah-color9 {
+    color: #B91C1C !important;
+}
+.sherah-color9__bg {
+    background: #B91C1C !important;
+}
+.sherah-color9__fill {
+    fill: #B91C1C !important;
+}
+.sherah-color9__bg--opacity {
+    background: #FECACA;
+}
+
+/* Màu 10 - Xanh lá cây nhạt */
+.sherah-color10 {
+    color: #10B981 !important;
+}
+.sherah-color10__bg {
+    background: #10B981 !important;
+}
+.sherah-color10__fill {
+    fill: #10B981 !important;
+}
+.sherah-color10__bg--opacity {
+    background: #D1FAE5;
+}
+
 .sherah-btn {
 	padding: 18px 32px;
 	display: inline-block;
