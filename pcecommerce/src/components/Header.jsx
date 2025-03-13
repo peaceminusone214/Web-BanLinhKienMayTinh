@@ -38,7 +38,11 @@ function Header() {
               <a href="/" className="title-group title-group-hover">
                 <i className="fa fa-envelope" aria-hidden="true"></i> Liên hệ
               </a>
+<<<<<<< HEAD
               <a href="/" className="title-group title-group-hover">
+=======
+              <a href="/about" className="title-group title-group-hover">
+>>>>>>> main
                 <i className="fa fa-info-circle" aria-hidden="true"></i> Giới thiệu
               </a>
               <a href="/" className="title-group title-group-hover">

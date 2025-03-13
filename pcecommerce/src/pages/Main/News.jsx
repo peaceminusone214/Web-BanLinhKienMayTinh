@@ -1,6 +1,10 @@
 import React from "react";
 import { Link, Route, Routes, Outlet } from "react-router-dom"; 
+<<<<<<< HEAD
 import "./styleNews.css";
+=======
+import "./MainStyles/styleNews.css";
+>>>>>>> main
 import Tech from "./Tech";
 import SanPham from "./SanPham";
 import Game from "./Game";

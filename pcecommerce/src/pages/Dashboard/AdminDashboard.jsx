@@ -51,7 +51,7 @@ const AdminDashboard = () => {
                           </div>
                           <div className="sherah-progress-card__content">
                             <div className="sherah-progress-card__heading">
-                              <span className="sherah-pcolor">Total Sells</span>
+                              <span className="sherah-pcolor">Tổng doanh thu</span>
                               <h4 className="sherah-progress-card__title">
                                 <b className="count-animate">$654.66k</b>
                               </h4>
@@ -121,7 +121,7 @@ const AdminDashboard = () => {
                           <div className="sherah-progress-card__content">
                             <div className="sherah-progress-card__heading">
                               <span className="sherah-pcolor">
-                                Total Orders
+                                Tổng đơn hàng
                               </span>
                               <h4 className="sherah-progress-card__title">
                                 <b className="count-animate">$854.66k</b>
@@ -205,7 +205,7 @@ const AdminDashboard = () => {
                           <div className="sherah-progress-card__content">
                             <div className="sherah-progress-card__heading">
                               <span className="sherah-pcolor">
-                                Daily Visitors
+                                Số lượng truy cập
                               </span>
                               <h4 className="sherah-progress-card__title">
                                 <b className="count-animate">$987.21M</b>

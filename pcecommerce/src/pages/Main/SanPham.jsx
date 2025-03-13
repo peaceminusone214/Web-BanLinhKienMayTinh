@@ -1,7 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+<<<<<<< HEAD
 import "./styleNews.css";
 import "./styleSanPham.css";
+=======
+import "./MainStyles/styleNews.css";
+import "./MainStyles/styleSanPham.css";
+>>>>>>> main
 
 const newProducts = [
   {

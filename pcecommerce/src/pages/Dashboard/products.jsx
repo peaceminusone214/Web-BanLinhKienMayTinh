@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Products() {
   return (
@@ -18,14 +19,14 @@ function Products() {
                           {/* Sherah Breadcrumb */}
                           <div className="sherah-breadcrumb">
                             <h2 className="sherah-breadcrumb__title">
-                              Products
+                              Sản phẩm
                             </h2>
                             <ul className="sherah-breadcrumb__list">
                               <li>
-                                <a href="#">Home</a>
+                                <a href="#">admin</a>
                               </li>
                               <li className="active">
-                                <a href="products.html">Shop</a>
+                                <Link to = "/admin/products">products</Link>
                               </li>
                             </ul>
                           </div>
@@ -37,14 +38,14 @@ function Products() {
                           {/* Product Category Sidebar */}
                           <div className="sherah-product-sidebar sherah-default-bg mg-top-30">
                             <h4 className="sherah-product-sidebar__title sherah-border-btm">
-                              Product Categories
+                              Danh mục sản phẩm
                             </h4>
                             <ul className="sherah-product-sidebar__list">
                               <li>
                                 <a href="#">
                                   <span>
                                     <i className="fa-solid fa-chevron-right" />
-                                    Women’s Bag
+                                    Bộ PC
                                   </span>
                                   <span className="count">15</span>
                                 </a>
@@ -53,7 +54,7 @@ function Products() {
                                 <a href="#">
                                   <span>
                                     <i className="fa-solid fa-chevron-right" />
-                                    Men’s Accessories
+                                    MAIN
                                   </span>
                                   <span className="count">20</span>
                                 </a>
@@ -62,7 +63,7 @@ function Products() {
                                 <a href="#">
                                   <span>
                                     <i className="fa-solid fa-chevron-right" />
-                                    School Bag
+                                    CPU
                                   </span>
                                   <span className="count">33</span>
                                 </a>
@@ -71,7 +72,7 @@ function Products() {
                                 <a href="#">
                                   <span>
                                     <i className="fa-solid fa-chevron-right" />
-                                    Boots
+                                    RAM
                                   </span>
                                   <span className="count">40</span>
                                 </a>
@@ -80,7 +81,7 @@ function Products() {
                                 <a href="#">
                                   <span>
                                     <i className="fa-solid fa-chevron-right" />
-                                    Boy’s Dress
+                                    VGA
                                   </span>
                                   <span className="count">44</span>
                                 </a>
@@ -89,7 +90,7 @@ function Products() {
                                 <a href="#">
                                   <span>
                                     <i className="fa-solid fa-chevron-right" />
-                                    Women’s Fashion
+                                    Ổ cứng
                                   </span>
                                   <span className="count">50</span>
                                 </a>
@@ -98,7 +99,7 @@ function Products() {
                                 <a href="#">
                                   <span>
                                     <i className="fa-solid fa-chevron-right" />
-                                    Fashion Accessories
+                                    PSU
                                   </span>
                                   <span className="count">33</span>
                                 </a>
@@ -107,7 +108,7 @@ function Products() {
                                 <a href="#">
                                   <span>
                                     <i className="fa-solid fa-chevron-right" />
-                                    Leather Bags
+                                    Case
                                   </span>
                                   <span className="count">31</span>
                                 </a>
@@ -116,8 +117,25 @@ function Products() {
                                 <a href="#">
                                   <span>
                                     <i className="fa-solid fa-chevron-right" />
-                                    Makeup Corner
+                                    Màn hình
                                   </span>
+                                  <span className="count">25</span>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="#">
+                                  <span>
+                                    <i className="fa-solid fa-chevron-right" />
+                                    Gaming Gear
+                                  </span>
+                                  <span className="count">25</span>
+                                </a>
+                              </li>
+                              <li>
+                                <a href="#">
+                                  <span>
+                                    <i className="fa-solid fa-chevron-right" />
+                                    Tản nhiệt                                  </span>
                                   <span className="count">25</span>
                                 </a>
                               </li>
@@ -127,7 +145,7 @@ function Products() {
                           {/* Product Price Range Sidebar */}
                           <div className="sherah-product-sidebar sherah-default-bg mg-top-30">
                             <h4 className="sherah-product-sidebar__title sherah-border-btm">
-                              Price Range
+                              Khoảng Giá
                             </h4>
                             <div className="price-filter">
                               <div className="price-filter-inner">
@@ -150,14 +168,14 @@ function Products() {
                           {/* Product Brand Sidebar */}
                           <div className="sherah-product-sidebar sherah-default-bg mg-top-30">
                             <h4 className="sherah-product-sidebar__title sherah-border-btm">
-                              Product Brands
+                              Thương hiệu
                             </h4>
                             <ul className="sherah-product-sidebar__list">
                               <li>
                                 <a href="#">
                                   <span>
                                     <i className="fa-solid fa-chevron-right" />
-                                    Nike
+                                    Asus
                                   </span>
                                 </a>
                               </li>
@@ -165,7 +183,7 @@ function Products() {
                                 <a href="#">
                                   <span>
                                     <i className="fa-solid fa-chevron-right" />
-                                    Zara
+                                    Asrock
                                   </span>
                                 </a>
                               </li>
@@ -173,7 +191,7 @@ function Products() {
                                 <a href="#">
                                   <span>
                                     <i className="fa-solid fa-chevron-right" />
-                                    Denim
+                                    Intel
                                   </span>
                                 </a>
                               </li>
@@ -181,7 +199,7 @@ function Products() {
                                 <a href="#">
                                   <span>
                                     <i className="fa-solid fa-chevron-right" />
-                                    Madame
+                                    Amd
                                   </span>
                                 </a>
                               </li>
@@ -189,7 +207,7 @@ function Products() {
                                 <a href="#">
                                   <span>
                                     <i className="fa-solid fa-chevron-right" />
-                                    Arong
+                                    Kingston
                                   </span>
                                 </a>
                               </li>
@@ -254,7 +272,7 @@ function Products() {
                                     name="s"
                                     defaultValue=""
                                     type="text"
-                                    placeholder="Search"
+                                    placeholder="Tìm theo tên"
                                   />
                                 </form>
                               </div>

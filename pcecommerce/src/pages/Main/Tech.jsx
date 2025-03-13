@@ -1,7 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+<<<<<<< HEAD
 import "./styleNews.css";
 import "./styleTech.css";
+=======
+import "./MainStyles/styleNews.css";
+import "./MainStyles/styleTech.css";
+>>>>>>> main
 const techArticles = [
   {
     title: "ASRock tinh chỉnh hệ thống làm mát GPU Arc Alchemist",

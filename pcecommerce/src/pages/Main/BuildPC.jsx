@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
 import { FaTrash, FaPlus, FaSync } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -72,6 +73,41 @@ const BuildPC = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   // Mở popup chọn sản phẩm
+=======
+import React, { useState, useEffect } from "react";
+import { FaTrash, FaPlus, FaSync } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import "./MainStyles/styleBuildPC.css";
+
+const BuildPC = () => {
+  const [categories, setCategories] = useState([]); // Danh sách danh mục
+  const [products, setProducts] = useState([]); // Sản phẩm theo danh mục
+  const [selectedComponents, setSelectedComponents] = useState([]); // Sản phẩm đã chọn
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  // ✅ Lấy danh sách danh mục từ API bằng fetch
+  useEffect(() => {
+    fetch("http://localhost:5000/api/product/categories")
+      .then((response) => response.json())
+      .then((data) => setCategories(data))
+      .catch((error) => console.error("Lỗi khi lấy danh mục:", error));
+  }, []);
+
+  // ✅ Lấy sản phẩm theo danh mục từ API bằng fetch
+  useEffect(() => {
+    if (selectedCategory) {
+      fetch(
+        `http://localhost:5000/api/product/get-products?category_id=${selectedCategory._id}`
+      )
+        .then((response) => response.json())
+        .then((data) => setProducts(data))
+        .catch((error) => console.error("Lỗi khi lấy sản phẩm:", error));
+    }
+  }, [selectedCategory]);
+
+  // Mở popup chọn sản phẩm theo danh mục
+>>>>>>> main
   const openPopup = (category) => {
     setSelectedCategory(category);
     setIsPopupOpen(true);
@@ -84,29 +120,54 @@ const BuildPC = () => {
 
   // Thêm sản phẩm từ popup
   const handleAddPopupProduct = (prod) => {
+<<<<<<< HEAD
     const newItem = { ...prod, quantity: 1, category: selectedCategory };
     const existing = selectedComponents.find((item) => item.id === newItem.id);
     if (existing) {
       setSelectedComponents(
         selectedComponents.map((item) =>
           item.id === newItem.id ? { ...item, quantity: item.quantity + 1 } : item
+=======
+    const newItem = { ...prod, quantity: 1, category: selectedCategory.name };
+    const existing = selectedComponents.find((item) => item._id === newItem._id);
+  
+    if (existing) {
+      setSelectedComponents(
+        selectedComponents.map((item) =>
+          item._id === newItem._id ? { ...item, quantity: item.quantity + 1 } : item
+>>>>>>> main
         )
       );
     } else {
       setSelectedComponents([...selectedComponents, newItem]);
     }
+<<<<<<< HEAD
   };
 
   // Xoá sản phẩm khỏi cấu hình
   const removeComponent = (id) => {
     setSelectedComponents(selectedComponents.filter((item) => item.id !== id));
+=======
+  
+    // Tắt popup sau khi chọn sản phẩm
+    closePopup();
+  };  
+
+  // Xoá sản phẩm khỏi cấu hình
+  const removeComponent = (id) => {
+    setSelectedComponents(selectedComponents.filter((item) => item._id !== id));
+>>>>>>> main
   };
 
   // Cập nhật số lượng sản phẩm
   const updateQuantity = (id, quantity) => {
     setSelectedComponents(
       selectedComponents.map((item) =>
+<<<<<<< HEAD
         item.id === id ? { ...item, quantity } : item
+=======
+        item._id === id ? { ...item, quantity } : item
+>>>>>>> main
       )
     );
   };
@@ -131,6 +192,7 @@ const BuildPC = () => {
       </div>
 
       <div className="buildpc-layout">
+<<<<<<< HEAD
         {/* Cột bên trái: Danh sách linh kiện */}
         <div className="components">
           <h2>Tự Build Cấu Hình</h2>
@@ -144,10 +206,26 @@ const BuildPC = () => {
                   <div className="component-left">
                     <span className="component-index">{index + 1}.</span>
                     <span className="component-title">{component.name}</span>
+=======
+        {/* Cột bên trái: Danh sách danh mục linh kiện */}
+        <div className="components">
+          <h2>Tự Build Cấu Hình</h2>
+          <div className="component-table">
+            {categories.map((category, index) => {
+              const selectedItem = selectedComponents.find(
+                (item) => item.category === category.name
+              );
+              return (
+                <div className="component-row" key={category._id}>
+                  <div className="component-left">
+                    <span className="component-index">{index + 1}.</span>
+                    <span className="component-title">{category.name}</span>
+>>>>>>> main
                   </div>
                   {selectedItem ? (
                     <div className="selected-product-row">
                       <img
+<<<<<<< HEAD
                         src={selectedItem.image}
                         alt={selectedItem.name}
                         className="selected-product-image"
@@ -158,6 +236,17 @@ const BuildPC = () => {
                         <p className="in-stock">
                           Kho hàng: <span>còn hàng</span>
                         </p>
+=======
+                        src={selectedItem.image_url}
+                        alt={selectedItem.product_name}
+                        className="selected-product-image"
+                      />
+                      <div className="selected-product-info">
+                        <strong className="product-name">
+                          {selectedItem.product_name}
+                        </strong>
+                        <p>Bảo hành: {selectedItem.warranty}</p>
+>>>>>>> main
                       </div>
                       <div className="selected-product-price">
                         {selectedItem.price.toLocaleString()} đ
@@ -168,13 +257,24 @@ const BuildPC = () => {
                           min="1"
                           value={selectedItem.quantity}
                           onChange={(e) =>
+<<<<<<< HEAD
                             updateQuantity(selectedItem.id, parseInt(e.target.value, 10))
+=======
+                            updateQuantity(
+                              selectedItem._id,
+                              parseInt(e.target.value, 10)
+                            )
+>>>>>>> main
                           }
                         />
                       </div>
                       <button
                         className="delete-button"
+<<<<<<< HEAD
                         onClick={() => removeComponent(selectedItem.id)}
+=======
+                        onClick={() => removeComponent(selectedItem._id)}
+>>>>>>> main
                       >
                         <FaTrash />
                       </button>
@@ -182,9 +282,15 @@ const BuildPC = () => {
                   ) : (
                     <button
                       className="select-button vip-button"
+<<<<<<< HEAD
                       onClick={() => openPopup(component.name)}
                     >
                       <FaPlus /> Chọn {component.name}
+=======
+                      onClick={() => openPopup(category)}
+                    >
+                      <FaPlus /> Chọn {category.name}
+>>>>>>> main
                     </button>
                   )}
                 </div>
@@ -193,6 +299,7 @@ const BuildPC = () => {
           </div>
         </div>
 
+<<<<<<< HEAD
         {/* Cột bên phải: Panel tóm tắt cấu hình */}
         <div className="summary-panel">
           <div className="summary-header">
@@ -209,6 +316,26 @@ const BuildPC = () => {
                   <div className="selected-summary-info">
                     <span className="selected-summary-name">{item.name}</span>
                     <span className="selected-summary-quantity">SL: {item.quantity}</span>
+=======
+        {/* Cột bên phải: Tóm tắt cấu hình */}
+        <div className="summary-panel">
+          <h2>Tóm tắt cấu hình</h2>
+          <button className="btn-refresh" onClick={clearAll}>
+            <FaSync />
+          </button>
+          <div className="selected-summary-list">
+            {selectedComponents.length > 0 ? (
+              selectedComponents.map((item) => (
+                <div key={item._id} className="selected-summary-item">
+                  <img src={item.image_url} alt={item.product_name} />
+                  <div className="selected-summary-info">
+                    <span className="selected-summary-name">
+                      {item.product_name}
+                    </span>
+                    <span className="selected-summary-quantity">
+                      SL: {item.quantity}
+                    </span>
+>>>>>>> main
                     <span className="selected-summary-price">
                       {(item.price * item.quantity).toLocaleString()} đ
                     </span>
@@ -237,7 +364,11 @@ const BuildPC = () => {
         <div className="popup-overlay">
           <div className="popup-content vip-popup-content">
             <div className="popup-header">
+<<<<<<< HEAD
               <h2>Chọn {selectedCategory}</h2>
+=======
+              <h2>Chọn {selectedCategory?.name}</h2>
+>>>>>>> main
               <button className="close-button" onClick={closePopup}>
                 ✖
               </button>
@@ -289,12 +420,23 @@ const BuildPC = () => {
                 </div>
               </div>
               <div className="product-list">
+<<<<<<< HEAD
                 {(categoryProducts[selectedCategory] || []).map((prod) => (
                   <div className="product-item vip-product-item" key={prod.id}>
                     <img src={prod.image} alt={prod.name} />
                     <div>
                       <h3>{prod.name}</h3>
                       <p>Bảo hành: {prod.warranty}</p>
+=======
+                {Array.isArray(products) && products.length > 0 ? (
+                  products.map((prod) => (
+                    <div
+                      className="product-item vip-product-item"
+                      key={prod._id}
+                    >
+                      <img src={prod.image_url} alt={prod.product_name} />
+                      <h3>{prod.product_name}</h3>
+>>>>>>> main
                       <p>
                         Giá: <strong>{prod.price.toLocaleString()}đ</strong>
                       </p>
@@ -305,10 +447,18 @@ const BuildPC = () => {
                         Thêm vào cấu hình
                       </button>
                     </div>
+<<<<<<< HEAD
                   </div>
                 ))}
                 {(categoryProducts[selectedCategory] || []).length === 0 && (
                   <p>Chưa có sản phẩm cho danh mục này.</p>
+=======
+                  ))
+                ) : (
+                  <p className="no-products">
+                    Không có sản phẩm nào trong danh mục này.
+                  </p>
+>>>>>>> main
                 )}
               </div>
             </div>
@@ -320,6 +470,7 @@ const BuildPC = () => {
 };
 
 export default BuildPC;
+<<<<<<< HEAD
 
 
 
@@ -562,3 +713,5 @@ export default BuildPC;
 // };
 
 // export default BuildPC;
+=======
+>>>>>>> main

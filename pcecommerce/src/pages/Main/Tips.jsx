@@ -1,7 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+<<<<<<< HEAD
 import "./styleNews.css";
 import "./styleTips.css";
+=======
+import "./MainStyles/styleNews.css";
+import "./MainStyles/styleTips.css";
+>>>>>>> main
 
 const ThuThuat = [
   {

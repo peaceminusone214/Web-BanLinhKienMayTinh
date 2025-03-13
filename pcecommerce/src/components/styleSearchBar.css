@@ -1,14 +1,22 @@
 /* Container */
 .search-bar {
+<<<<<<< HEAD
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 15px;
     
+=======
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+  
+>>>>>>> main
 }
 
 
 
 .header-left-group {
+<<<<<<< HEAD
     display: flex;
     align-items: center;
     gap: 20px;
@@ -16,12 +24,22 @@
 
 .header-left-logo img {
     height: 40px;
+=======
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-left-logo img {
+  height: 40px;
+>>>>>>> main
 }
 
 
 
 /* Container chính */
 .header-search {
+<<<<<<< HEAD
     position: relative;
     width: 500px;
     height: 42px;
@@ -31,12 +49,28 @@
     background-color: #fff;
     box-shadow: 0 0 5px rgba(252, 92, 0, 0.5);
     transition: all 0.3s ease-in-out;
+=======
+  position: relative;
+  width: 500px;
+  height: 42px;
+  border: 2px solid #6176FE;
+  border-radius: 50px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(17, 132, 182, 0.5);
+  transition: all 0.3s ease-in-out;
+>>>>>>> main
 }
 
 /* Khi người dùng nhập vào */
 .header-search:focus-within {
+<<<<<<< HEAD
     border-color: #ff6f00;
     box-shadow: 0 0 10px rgba(252, 92, 0, 0.8);
+=======
+  border-color: #6176FE;
+  box-shadow: 0 0 10px  rgba(17, 132, 182, 0.5);
+>>>>>>> main
 }
 
 
@@ -46,11 +80,16 @@
 
 
 .search-bar-remove:hover {
+<<<<<<< HEAD
     color: #ff6f00;
+=======
+  color: #6176FE;
+>>>>>>> main
 }
 
 /* Nút tìm kiếm*/
 .search-bar-btn {
+<<<<<<< HEAD
     position: absolute;
     top: 39%;
     right: 1px;
@@ -66,21 +105,48 @@
     display: flex;
     align-items: center;
     justify-content: center;
+=======
+  position: absolute;
+  top: 39%;
+  right: 1px;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  background-color: #6176FE;
+  border: none;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+>>>>>>> main
 }
 
 /* Hover vào nút tìm kiếm */
 .search-bar-btn:hover {
+<<<<<<< HEAD
     background-color: #e45400;
     transform: translateY(-50%) scale(1.1);
+=======
+  background-color: #6176FE;
+  transform: translateY(-50%) scale(1.1);
+>>>>>>> main
 }
 
 /* Icon tìm kiếm */
 .search-bar-btn i {
+<<<<<<< HEAD
     font-size: 16px;
+=======
+  font-size: 16px;
+>>>>>>> main
 }
 
 
 .search-bar-btn:hover {
+<<<<<<< HEAD
     background-color: #cb4b02;
 }
 
@@ -95,6 +161,22 @@
 
 .search-bar-remove:hover {
     color: #ff6f00;
+=======
+  background-color: #6176FE;
+}
+
+.search-bar-remove {
+  position: absolute;
+  right: 90px;
+  top: 40%;
+  transform: translateY(-40%);
+  cursor: pointer;
+  color: #999;
+}
+
+.search-bar-remove:hover {
+  color: #6176FE;
+>>>>>>> main
 }
 
 
@@ -102,24 +184,39 @@
 
 /* Header Right Group (Hotline, Build PC, Cart) */
 .header-right-group {
+<<<<<<< HEAD
     display: flex;
     align-items: center;
     gap: 20px;
+=======
+  display: flex;
+  align-items: center;
+  gap: 20px;
+>>>>>>> main
 }
 
 
 
 .build-pc,
 .cart-header {
+<<<<<<< HEAD
     display: flex;
     align-items: center;
     text-decoration: none;
     color: #333;
     gap: 8px;
+=======
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  gap: 8px;
+>>>>>>> main
 }
 
 .build-pc:hover,
 .cart-header:hover {
+<<<<<<< HEAD
     color: #ff6f00;
 }
 
@@ -146,10 +243,39 @@
     font-size: 12px;
     padding: 2px 6px;
     border-radius: 50%;
+=======
+  color: #6176FE;
+}
+
+.header-right-group-icon {
+  height: 30px;
+  filter: brightness(0) saturate(100%) invert(58%) sepia(90%) saturate(2000%) hue-rotate(350deg) brightness(100%) contrast(90%);
+  /* Chuyển đổi màu icon thành cam */
+}
+
+.cart-header {
+  position: relative;
+}
+
+.box-cart-header {
+  position: relative;
+}
+
+.amount-cart {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: #6176FE;
+  color: rgb(43, 152, 185);
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+>>>>>>> main
 }
 
 /* Cart Tooltip */
 .cart-ttip {
+<<<<<<< HEAD
     position: absolute;
     top: 100%;
     right: 0;
@@ -205,5 +331,62 @@
 .header-right-group span {
     font-weight: 500;
     line-height: 1.2;
+=======
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 300px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: none;
+  z-index: 1000;
+}
+
+.cart-header:hover .cart-ttip {
+  display: block;
+}
+
+.cart-ttip-item-container {
+  padding: 10px;
+}
+
+.header-null-cart {
+  font-size: 15px;
+  color: #444444;
+  text-align: center;
+}
+
+.cart-ttip-price {
+  padding: 10px;
+  border-top: 2px solid #6176FE;
+  text-align: center;
+}
+
+.cart-ttip-price p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.cart-ttip-price-button {
+  padding: 10px;
+  background-color: #6176FE;
+  text-align: center;
+}
+
+.cart-ttip-price-button a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.cart-ttip-price-button a:hover {
+  text-decoration: underline;
+}
+
+.header-right-group span {
+  font-weight: 500;
+  line-height: 1.2;
+>>>>>>> main
 
 }

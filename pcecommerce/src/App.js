@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import About from './pages/Main/About';
@@ -42,25 +43,46 @@ import Vendor from './pages/Dashboard/vendor';
 import Wishlist from './pages/Dashboard/wishlist';
 import AdminMenu from './components/AdminMenu';
 import AdminHeader from './components/AdminHeader';
+=======
+import React from "react";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import About from "./pages/Main/About";
+import Contact from "./pages/Main/Contact";
+import Home from "./pages/Main/Home";
+import Product from "./pages/Main/Product";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Login from "./pages/Dashboard/login";
+import Createaccount from "./pages/Dashboard/create-account";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+import Cart from './pages/Main/Cart';
+import CheckOut from './pages/Main/CheckOut';
+
+import News from './pages/Main/News';
+import Tech from './pages/Main/Tech';
+import BuildPC from './pages/Main/BuildPC';
+import Game from './pages/Main/Game';
+import SanPham from './pages/Main/SanPham';
+import Tips from './pages/Main/Tips';
+import Software from './pages/Main/Software';
+>>>>>>> main
 
 function App() {
   const location = useLocation();
-  
-  // Check if the current route is part of the admin section or the login route
-  const isAdminPath = location.pathname.startsWith('/admin');
-  const isLoginPage = location.pathname === '/login';
+  const isAdminPath = location.pathname.startsWith("/admin");
+  const isLoginPage = location.pathname === "/login";
 
   return (
     <div>
       {/* Conditionally render Header and Footer based on the route */}
       {!isAdminPath && !isLoginPage && <Header />}
-      {isAdminPath && <AdminMenu />}
-      {isAdminPath && <AdminHeader />}
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/computer" element={<Computer />} />
         <Route path="/contact" element={<Contact />} />
+<<<<<<< HEAD
         <Route path="/laptop" element={<Laptop />} />
         <Route path="/products" element={<Product />} />
         <Route path="/buildpc" element={<BuildPC/>} />
@@ -72,30 +94,27 @@ function App() {
         <Route path="News/san-pham" element={<SanPham />} />
         <Route path="News/tips" element={<Tips />} />
         <Route path="News/software" element={<Software />} />
+=======
+>>>>>>> main
         <Route path="/login" element={<Login />} />
-        
-        {/* Admin Routes (including sub-routes) */}
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/admin/chat" element={<Chatmessages />} />
-        <Route path="/admin/createaccount" element={<Createaccount />} />
-        <Route path="/admin/customerlist" element={<Customerlist />} />
-        <Route path="/admin/customers" element={<Customers />} />
-        <Route path="/admin/faq" element={<Faq />} />
-        <Route path="/admin/history" element={<History />} />
-        <Route path="/admin/invoiceprint" element={<Invoiceprint />} />
-        <Route path="/admin/languages" element={<Languages />} />
-        <Route path="/admin/notifications" element={<Notifications />} />
-        <Route path="/admin/orderdetails" element={<Orderdetails />} />
-        <Route path="/admin/orderlist" element={<Orderlist />} />
-        <Route path="/admin/productlist" element={<Productlist />} />
-        <Route path="/admin/products" element={<Products />} />
-        <Route path="/admin/profileinfo" element={<Profileinfo />} />
-        <Route path="/admin/termsconditions" element={<Termsconditions />} />
-        <Route path="/admin/uploadproduct" element={<Uploadproduct />} />
-        <Route path="/admin/vendorlist" element={<Vendorlist />} />
-        <Route path="/admin/vendorprofile" element={<Vendorprofile />} />
-        <Route path="/admin/vendor" element={<Vendor />} />
-        <Route path="/admin/wishlist" element={<Wishlist />} />
+        <Route path="/register" element={<Createaccount />} />
+        <Route path="/product/:id" element={<Product />} />
+
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<CheckOut />} />
+
+        <Route path="/news" element={<News />} />
+        <Route path="/tech" element={<Tech />} />
+        <Route path="/buildpc" element={<BuildPC/>} />
+        <Route path="News/tech" element={<Tech />} />
+        <Route path="News/game" element={<Game />} />
+        <Route path="News/san-pham" element={<SanPham />} />
+        <Route path="News/tips" element={<Tips />} />
+        <Route path="News/software" element={<Software />} /> 
+        {/* Admin Routes (protected) */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/admin/*" element={<ProtectedRoute />} />
+        </Route>
       </Routes>
 
       {/* Conditionally render Footer based on the route */}
