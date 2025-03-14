@@ -4,25 +4,83 @@ import { Link } from "react-router-dom";
 import "./MainStyles/styleBuildPC.css";
 
 const BuildPC = () => {
-  const [categories, setCategories] = useState([]); // Danh sách danh mục
-  const [products, setProducts] = useState([]); // Sản phẩm theo danh mục
-  const [selectedComponents, setSelectedComponents] = useState([]); // Sản phẩm đã chọn
+  const API_URL = process.env.REACT_APP_API_URL;
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [selectedComponents, setSelectedComponents] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [brands, setBrands] = useState([]);
+  const [selectedBrands, setSelectedBrands] = useState([]);
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
+  const [sortOption, setSortOption] = useState("default");
 
-  // ✅ Lấy danh sách danh mục từ API bằng fetch
+  const handleSortChange = (e) => {
+    setSortOption(e.target.value);
+  };
+
+  const filteredProducts = products.filter((prod) => {
+    const price = prod.price;
+
+    const matchesBrand =
+      selectedBrands.length === 0 || selectedBrands.includes(prod.brand);
+
+    const matchesPrice =
+      selectedPriceRanges.length === 0 ||
+      selectedPriceRanges.some((range) => {
+        if (range === "under1") return price < 1000000;
+        if (range === "1to5") return price >= 1000000 && price <= 5000000;
+        if (range === "5to10") return price > 5000000 && price <= 10000000;
+        if (range === "above10") return price > 10000000;
+        return false;
+      });
+
+    return matchesBrand && matchesPrice;
+  });
+
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortOption === "price-asc") return a.price - b.price;
+    if (sortOption === "price-desc") return b.price - a.price;
+    if (sortOption === "newest")
+      return new Date(b.updated_at) - new Date(a.updated_at);
+    return 0;
+  });
+
+  const handlePriceFilterChange = (range) => {
+    setSelectedPriceRanges((prev) =>
+      prev.includes(range) ? prev.filter((r) => r !== range) : [...prev, range]
+    );
+  };
+
+  const handleBrandChange = (brand) => {
+    setSelectedBrands((prevBrands) =>
+      prevBrands.includes(brand)
+        ? prevBrands.filter((b) => b !== brand)
+        : [...prevBrands, brand]
+    );
+  };
+
+  // Lấy danh sách hãng sản xuất từ API
   useEffect(() => {
-    fetch("http://localhost:5000/api/product/categories")
+    fetch(`${API_URL}/product/get-brands`)
+      .then((response) => response.json())
+      .then((data) => setBrands(data))
+      .catch((error) => console.error("Lỗi khi lấy hãng sản xuất:", error));
+  }, []);
+
+  // Lấy danh sách danh mục từ API bằng fetch
+  useEffect(() => {
+    fetch(`${API_URL}/product/categories`)
       .then((response) => response.json())
       .then((data) => setCategories(data))
       .catch((error) => console.error("Lỗi khi lấy danh mục:", error));
   }, []);
 
-  // ✅ Lấy sản phẩm theo danh mục từ API bằng fetch
+  // Lấy sản phẩm theo danh mục từ API bằng fetch
   useEffect(() => {
     if (selectedCategory) {
       fetch(
-        `http://localhost:5000/api/product/get-products?category_id=${selectedCategory._id}`
+        `${API_URL}/product/get-products?category_id=${selectedCategory._id}`
       )
         .then((response) => response.json())
         .then((data) => setProducts(data))
@@ -44,21 +102,25 @@ const BuildPC = () => {
   // Thêm sản phẩm từ popup
   const handleAddPopupProduct = (prod) => {
     const newItem = { ...prod, quantity: 1, category: selectedCategory.name };
-    const existing = selectedComponents.find((item) => item._id === newItem._id);
-  
+    const existing = selectedComponents.find(
+      (item) => item._id === newItem._id
+    );
+
     if (existing) {
       setSelectedComponents(
         selectedComponents.map((item) =>
-          item._id === newItem._id ? { ...item, quantity: item.quantity + 1 } : item
+          item._id === newItem._id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
         )
       );
     } else {
       setSelectedComponents([...selectedComponents, newItem]);
     }
-  
+
     // Tắt popup sau khi chọn sản phẩm
     closePopup();
-  };  
+  };
 
   // Xoá sản phẩm khỏi cấu hình
   const removeComponent = (id) => {
@@ -216,7 +278,7 @@ const BuildPC = () => {
                   placeholder="Bạn cần tìm linh kiện gì?"
                   className="search-bar1"
                 />
-                <select className="sort-select">
+                <select className="sort-select" onChange={handleSortChange}>
                   <option value="default">Sắp xếp</option>
                   <option value="price-asc">Giá thấp đến cao</option>
                   <option value="price-desc">Giá cao đến thấp</option>
@@ -226,38 +288,52 @@ const BuildPC = () => {
               <div className="filter-options vip-filter-options">
                 <div className="filter-group">
                   <h4>Hãng sản xuất</h4>
-                  <label>
-                    <input type="checkbox" /> AMD
-                  </label>
-                  <label>
-                    <input type="checkbox" /> Intel
-                  </label>
-                  <label>
-                    <input type="checkbox" /> Asus
-                  </label>
-                  <label>
-                    <input type="checkbox" /> MSI
-                  </label>
+                  {brands.map((brand) => (
+                    <label key={brand}>
+                      <input
+                        type="checkbox"
+                        checked={selectedBrands.includes(brand)}
+                        onChange={() => handleBrandChange(brand)}
+                      />{" "}
+                      {brand}
+                    </label>
+                  ))}
                 </div>
                 <div className="filter-group">
                   <h4>Khoảng giá</h4>
                   <label>
-                    <input type="checkbox" /> Dưới 1 triệu
+                    <input
+                      type="checkbox"
+                      onChange={() => handlePriceFilterChange("under1")}
+                    />{" "}
+                    Dưới 1 triệu
                   </label>
                   <label>
-                    <input type="checkbox" /> 1 - 5 triệu
+                    <input
+                      type="checkbox"
+                      onChange={() => handlePriceFilterChange("1to5")}
+                    />{" "}
+                    1 - 5 triệu
                   </label>
                   <label>
-                    <input type="checkbox" /> 5 - 10 triệu
+                    <input
+                      type="checkbox"
+                      onChange={() => handlePriceFilterChange("5to10")}
+                    />{" "}
+                    5 - 10 triệu
                   </label>
                   <label>
-                    <input type="checkbox" /> Trên 10 triệu
+                    <input
+                      type="checkbox"
+                      onChange={() => handlePriceFilterChange("above10")}
+                    />{" "}
+                    Trên 10 triệu
                   </label>
                 </div>
               </div>
               <div className="product-list">
-                {Array.isArray(products) && products.length > 0 ? (
-                  products.map((prod) => (
+                {sortedProducts.length > 0 ? (
+                  sortedProducts.map((prod) => (
                     <div
                       className="product-item vip-product-item"
                       key={prod._id}
@@ -276,9 +352,7 @@ const BuildPC = () => {
                     </div>
                   ))
                 ) : (
-                  <p className="no-products">
-                    Không có sản phẩm nào trong danh mục này.
-                  </p>
+                  <p className="no-products">Không có sản phẩm nào phù hợp.</p>
                 )}
               </div>
             </div>

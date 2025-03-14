@@ -78,7 +78,7 @@
 .box-collection {
     max-width: 1200px;
     height: 100%;
-    background-image: url("../../../../public/assets/interface-main/images/banner-home.jpg");
+    background-image: url("../../../public//assets//interface-main//images/banner-home.jpg");
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 20px 10px 20px 10px;

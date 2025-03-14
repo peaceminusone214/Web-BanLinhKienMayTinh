@@ -17,6 +17,7 @@ import Game from './pages/Main/Game';
 import SanPham from './pages/Main/SanPham';
 import Tips from './pages/Main/Tips';
 import Software from './pages/Main/Software';
+import Checkout from './pages/Main/CheckOut';
 
 function App() {
   const location = useLocation();
@@ -44,6 +45,8 @@ function App() {
         <Route path="News/san-pham" element={<SanPham />} />
         <Route path="News/tips" element={<Tips />} />
         <Route path="News/software" element={<Software />} /> 
+        <Route path="/checkout" element={<Checkout />} /> 
+
         {/* Admin Routes (protected) */}
         <Route element={<ProtectedRoute />}>
           <Route path="/admin/*" element={<ProtectedRoute />} />

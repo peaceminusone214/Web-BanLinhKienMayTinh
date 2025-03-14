@@ -1,6 +1,6 @@
 import React from 'react'
 
-import './MainStyles/styleHome.css';
+import '../Main/styleHome.css';
 
 import BannerShowcase from '../../components/Banner';
 import News from '../../components/NewsSections';
