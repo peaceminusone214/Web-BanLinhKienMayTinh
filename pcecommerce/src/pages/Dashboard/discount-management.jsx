@@ -6,6 +6,46 @@ function Discount() {
   const [discounts, setDiscounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [discountToDelete, setDiscountToDelete] = useState(null);
+  const [editingDiscountId, setEditingDiscountId] = useState(null);
+  const [editedDiscount, setEditedDiscount] = useState({});
+
+  const handleConfirmDelete = () => {
+    // Make DELETE request to the server to delete the product
+    fetch(`${API_URL}/discount/delete-discounts`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ids: [discountToDelete], // Send the product ID to delete
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message) {
+          // Remove the product from the list after successful deletion
+          setDiscounts(
+            discounts.filter((discount) => discount._id !== discountToDelete)
+          );
+        }
+        setDiscountToDelete(null); // Reset the productToDelete state after confirmation
+      })
+      .catch((error) => {
+        setError("Có lỗi xảy ra khi xóa sản phẩm.");
+        setDiscountToDelete(null);
+      });
+  };
+
+  const handleCancelDelete = () => {
+    // Reset productToDelete to null to cancel the delete operation
+    setDiscountToDelete(null);
+  };
+
+  const handleDeleteClick = (discountId) => {
+    // Set the productToDelete to the current product ID
+    setDiscountToDelete(discountId);
+  };
 
   const statusColors = {
     expired: "6",
@@ -48,6 +88,56 @@ function Discount() {
         setLoading(false);
       });
   }, []);
+
+  const handleEditClick = (discount) => {
+    setEditingDiscountId(discount._id);
+    setEditedDiscount({ ...discount });
+  };
+
+  const handleInputChange = (e, field) => {
+    setEditedDiscount({ ...editedDiscount, [field]: e.target.value });
+  };
+
+  const handleSaveClick = () => {
+    handleUpdateDiscount(editingDiscountId);
+    setEditingDiscountId(null);
+  };
+
+  const handleUpdateDiscount = (discountId) => {
+    if (!editedDiscount || !discountId) {
+      console.error("Không có dữ liệu giảm giá cần cập nhật.");
+      return;
+    }
+
+    const updatedDiscount = {
+      _id: discountId,
+      code: editedDiscount.code,
+      description: editedDiscount.description,
+      discount_value: parseFloat(editedDiscount.discount_value) || 0,
+      min_order_value: parseFloat(editedDiscount.min_order_value) || 0,
+      start_date: editedDiscount.start_date,
+      end_date: editedDiscount.end_date,
+    };
+
+    fetch(`${API_URL}/discount/update-discount`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedDiscount),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message) {
+          setDiscounts(
+            discounts.map((discount) =>
+              discount._id === discountId
+                ? { ...discount, ...updatedDiscount }
+                : discount
+            )
+          );
+        }
+      })
+      .catch((error) => console.error("Lỗi khi cập nhật giảm giá:", error));
+  };
 
   if (loading) {
     return <div>Đang tải mã giảm giá ...</div>;
@@ -134,29 +224,51 @@ function Discount() {
                             <tr key={discount._id}>
                               <td className="sherah-table__column-1 sherah-table__data-1">
                                 <p className="crany-table__order--number">
-                                  <a
-                                    href="#"
-                                    className="sherah-color1"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      const target = e.target;
-                                      target.textContent =
-                                        target.textContent === discount.code
-                                          ? discount.code.slice(0, 3) + "..."
-                                          : discount.code;
-                                    }}
-                                  >
-                                    {discount.code.slice(0, 3) + "..."}
-                                  </a>
+                                  {editingDiscountId === discount._id ? (
+                                    <input
+                                      type="text"
+                                      value={editedDiscount.code}
+                                      onChange={(e) =>
+                                        handleInputChange(e, "code")
+                                      }
+                                    />
+                                  ) : (
+                                    <a
+                                      href="#"
+                                      className="sherah-color1"
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        const target = e.target;
+                                        target.textContent =
+                                          target.textContent === discount.code
+                                            ? discount.code.slice(0, 3) + "..."
+                                            : discount.code;
+                                      }}
+                                    >
+                                      {discount.code.slice(0, 3) + "..."}
+                                    </a>
+                                  )}
                                 </p>
                               </td>
+
                               <td className="sherah-table__column-2 sherah-table__data-2">
                                 <div className="sherah-table__order-content">
-                                  <p className="sherah-table__order-desc">
-                                    {discount.description}
-                                  </p>
+                                  {editingDiscountId === discount._id ? (
+                                    <input
+                                      type="text"
+                                      value={editedDiscount.description}
+                                      onChange={(e) =>
+                                        handleInputChange(e, "description")
+                                      }
+                                    />
+                                  ) : (
+                                    <p className="sherah-table__order-desc">
+                                      {discount.description}
+                                    </p>
+                                  )}
                                 </div>
                               </td>
+
                               <td className="sherah-table__column-5 sherah-table__data-5">
                                 <p className="sherah-table__order-desc">
                                   {discount.discount_type === "percentage"
@@ -164,88 +276,167 @@ function Discount() {
                                     : "Giảm thẳng"}
                                 </p>
                               </td>
+
                               <td className="sherah-table__column-5 sherah-table__data-5">
-                                <p className="sherah-table__order-value">
-                                  {discount.discount_value}
-                                  {discount.discount_type === "percentage"
-                                    ? "%"
-                                    : " VNĐ"}
-                                </p>
+                                {editingDiscountId === discount._id ? (
+                                  <input
+                                    type="number"
+                                    value={editedDiscount.discount_value}
+                                    onChange={(e) =>
+                                      handleInputChange(e, "discount_value")
+                                    }
+                                  />
+                                ) : (
+                                  <p className="sherah-table__order-value">
+                                    {discount.discount_value}
+                                    {discount.discount_type === "percentage"
+                                      ? "%"
+                                      : " VNĐ"}
+                                  </p>
+                                )}
                               </td>
+
                               <td className="sherah-table__column-5 sherah-table__data-5">
-                                <p className="sherah-table__order-desc">
-                                  {discount.min_order_value}
-                                </p>
+                                {editingDiscountId === discount._id ? (
+                                  <input
+                                    type="number"
+                                    value={editedDiscount.min_order_value}
+                                    onChange={(e) =>
+                                      handleInputChange(e, "min_order_value")
+                                    }
+                                  />
+                                ) : (
+                                  <p className="sherah-table__order-desc">
+                                    {discount.min_order_value}
+                                  </p>
+                                )}
                               </td>
+
                               <td className="sherah-table__column-6 sherah-table__data-6">
                                 {discount.max_uses}
                               </td>
+
                               <td className="sherah-table__column-6 sherah-table__data-6">
-                                {formatDateTime(discount.start_date)}
+                                {editingDiscountId === discount._id ? (
+                                  <input
+                                    type="date"
+                                    value={editedDiscount.start_date}
+                                    onChange={(e) =>
+                                      handleInputChange(e, "start_date")
+                                    }
+                                  />
+                                ) : (
+                                  formatDateTime(discount.start_date)
+                                )}
                               </td>
+
                               <td className="sherah-table__column-6 sherah-table__data-6">
-                                {formatDateTime(discount.end_date)}
+                                {editingDiscountId === discount._id ? (
+                                  <input
+                                    type="date"
+                                    value={editedDiscount.end_date}
+                                    onChange={(e) =>
+                                      handleInputChange(e, "end_date")
+                                    }
+                                  />
+                                ) : (
+                                  formatDateTime(discount.end_date)
+                                )}
                               </td>
+
                               <td className="sherah-table__column-6 sherah-table__data-6">
-                              <div
-                                  className={getStatusClass(
-                                    discount.status
-                                  )}
+                                <div
+                                  className={getStatusClass(discount.status)}
                                 >
-                                {discount.status === "active"
-                                  ? "Hoạt động"
-                                  : discount.status === "expired"
-                                  ? "Hết hạn"
-                                  : "Đã tắt"}
-                                  </div>
+                                  {discount.status === "active"
+                                    ? "Hoạt động"
+                                    : discount.status === "expired"
+                                    ? "Hết hạn"
+                                    : "Đã tắt"}
+                                </div>
                               </td>
 
                               <td className="sherah-table__column-8 sherah-table__data-8">
                                 <div className="sherah-table__status__group">
-                                  <a
-                                    href="#"
-                                    className="sherah-table__action sherah-color2 sherah-color3__bg--opactity"
-                                  >
-                                    {/* Edit icon */}
-                                    <svg
-                                      className="sherah-color3__fill"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="18.29"
-                                      height="18.252"
-                                      viewBox="0 0 18.29 18.252"
-                                    >
-                                      <g
-                                        id="Group_132"
-                                        data-name="Group 132"
-                                        transform="translate(-234.958 -37.876)"
+                                {editingDiscountId === discount._id ? (
+                                    <>
+                                      <button
+                                        onClick={handleSaveClick}
+                                        className="sherah-color3"
+                                        style={{
+                                          borderRadius: "8px",
+                                          padding: "8px 16px",
+                                          border: "none",
+                                          cursor: "pointer",
+                                        }}
                                       >
-                                        <path
-                                          id="Path_481"
-                                          data-name="Path 481"
-                                          d="M242.545,95.779h-5.319a2.219,2.219,0,0,1-2.262-2.252c-.009-1.809,0-3.617,0-5.426q0-2.552,0-5.1a2.3,2.3,0,0,1,2.419-2.419q2.909,0,5.818,0c.531,0,.87.274.9.715a.741.741,0,0,1-.693.8c-.3.026-.594.014-.892.014q-2.534,0-5.069,0c-.7,0-.964.266-.964.976q0,5.122,0,10.245c0,.687.266.955.946.955q5.158,0,10.316,0c.665,0,.926-.265.926-.934q0-2.909,0-5.818a.765.765,0,0,1,.791-.853.744.744,0,0,1,.724.808c.007,1.023,0,2.047,0,3.07s.012,2.023-.006,3.034A2.235,2.235,0,0,1,248.5,95.73a1.83,1.83,0,0,1-.458.048Q245.293,95.782,242.545,95.779Z"
-                                          transform="translate(0 -39.652)"
-                                          fill="#09ad95"
-                                        />
-                                        <path
-                                          id="Path_482"
-                                          data-name="Path 482"
-                                          d="M332.715,72.644l2.678,2.677c-.05.054-.119.133-.194.207q-2.814,2.815-5.634,5.625a1.113,1.113,0,0,1-.512.284c-.788.177-1.582.331-2.376.48-.5.093-.664-.092-.564-.589.157-.781.306-1.563.473-2.341a.911.911,0,0,1,.209-.437q2.918-2.938,5.853-5.86A.334.334,0,0,1,332.715,72.644Z"
-                                          transform="translate(-84.622 -32.286)"
-                                          fill="#09ad95"
-                                        />
-                                        <path
-                                          id="Path_483"
-                                          data-name="Path 483"
-                                          d="M433.709,42.165l-2.716-2.715a15.815,15.815,0,0,1,1.356-1.248,1.886,1.886,0,0,1,2.579,2.662A17.589,17.589,0,0,1,433.709,42.165Z"
-                                          transform="translate(-182.038)"
-                                          fill="#09ad95"
-                                        />
-                                      </g>
-                                    </svg>
-                                  </a>
+                                        Lưu
+                                      </button>
+                                      <button
+                                        onClick={() =>
+                                          setEditingDiscountId(null)
+                                        }
+                                        className="sherah-color2"
+                                        style={{
+                                          borderRadius: "8px",
+                                          padding: "8px 16px",
+                                          border: "none",
+                                          cursor: "pointer",
+                                        }}
+                                      >
+                                        Hủy
+                                      </button>
+                                    </>
+                                  ) : (
+                                    <a
+                                      href="#"
+                                      className="sherah-table__action sherah-color2 sherah-color3__bg--opactity"
+                                      onClick={() => handleEditClick(discount)}
+                                    >
+                                      {/* Edit icon */}
+                                      <svg
+                                        className="sherah-color3__fill"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="18.29"
+                                        height="18.252"
+                                        viewBox="0 0 18.29 18.252"
+                                      >
+                                        <g
+                                          id="Group_132"
+                                          data-name="Group 132"
+                                          transform="translate(-234.958 -37.876)"
+                                        >
+                                          <path
+                                            id="Path_481"
+                                            data-name="Path 481"
+                                            d="M242.545,95.779h-5.319a2.219,2.219,0,0,1-2.262-2.252c-.009-1.809,0-3.617,0-5.426q0-2.552,0-5.1a2.3,2.3,0,0,1,2.419-2.419q2.909,0,5.818,0c.531,0,.87.274.9.715a.741.741,0,0,1-.693.8c-.3.026-.594.014-.892.014q-2.534,0-5.069,0c-.7,0-.964.266-.964.976q0,5.122,0,10.245c0,.687.266.955.946.955q5.158,0,10.316,0c.665,0,.926-.265.926-.934q0-2.909,0-5.818a.765.765,0,0,1,.791-.853.744.744,0,0,1,.724.808c.007,1.023,0,2.047,0,3.07s.012,2.023-.006,3.034A2.235,2.235,0,0,1,248.5,95.73a1.83,1.83,0,0,1-.458.048Q245.293,95.782,242.545,95.779Z"
+                                            transform="translate(0 -39.652)"
+                                            fill="#09ad95"
+                                          />
+                                          <path
+                                            id="Path_482"
+                                            data-name="Path 482"
+                                            d="M332.715,72.644l2.678,2.677c-.05.054-.119.133-.194.207q-2.814,2.815-5.634,5.625a1.113,1.113,0,0,1-.512.284c-.788.177-1.582.331-2.376.48-.5.093-.664-.092-.564-.589.157-.781.306-1.563.473-2.341a.911.911,0,0,1,.209-.437q2.918-2.938,5.853-5.86A.334.334,0,0,1,332.715,72.644Z"
+                                            transform="translate(-84.622 -32.286)"
+                                            fill="#09ad95"
+                                          />
+                                          <path
+                                            id="Path_483"
+                                            data-name="Path 483"
+                                            d="M433.709,42.165l-2.716-2.715a15.815,15.815,0,0,1,1.356-1.248,1.886,1.886,0,0,1,2.579,2.662A17.589,17.589,0,0,1,433.709,42.165Z"
+                                            transform="translate(-182.038)"
+                                            fill="#09ad95"
+                                          />
+                                        </g>
+                                      </svg>
+                                    </a>
+                                  )}
                                   <a
                                     href="#"
                                     className="sherah-table__action sherah-color2 sherah-color2__bg--offset"
+                                    onClick={() =>
+                                      handleDeleteClick(discount._id)
+                                    }
                                   >
                                     {/* Delete icon */}
                                     <svg
@@ -287,6 +478,70 @@ function Discount() {
                                     </svg>
                                   </a>
                                 </div>
+                                {discountToDelete === discount._id && (
+                                  <div
+                                    style={{
+                                      background: "#fff",
+                                      padding: "20px",
+                                      borderRadius: "12px",
+                                      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                                      textAlign: "center",
+                                      width: "300px",
+                                      margin: "0 auto",
+                                    }}
+                                  >
+                                    <p
+                                      style={{
+                                        fontSize: "16px",
+                                        marginBottom: "15px",
+                                        color: "#333",
+                                      }}
+                                    >
+                                      Bạn có chắc chắn muốn xóa sản phẩm này?
+                                    </p>
+                                    <button
+                                      onClick={handleConfirmDelete}
+                                      style={{
+                                        background: "#e74c3c",
+                                        color: "white",
+                                        border: "none",
+                                        padding: "10px 16px",
+                                        marginRight: "10px",
+                                        borderRadius: "6px",
+                                        cursor: "pointer",
+                                        transition: "0.2s",
+                                      }}
+                                      onMouseOver={(e) =>
+                                        (e.target.style.background = "#c0392b")
+                                      }
+                                      onMouseOut={(e) =>
+                                        (e.target.style.background = "#e74c3c")
+                                      }
+                                    >
+                                      Tôi chắc chắn
+                                    </button>
+                                    <button
+                                      onClick={handleCancelDelete}
+                                      style={{
+                                        background: "#bdc3c7",
+                                        color: "white",
+                                        border: "none",
+                                        padding: "10px 16px",
+                                        borderRadius: "6px",
+                                        cursor: "pointer",
+                                        transition: "0.2s",
+                                      }}
+                                      onMouseOver={(e) =>
+                                        (e.target.style.background = "#95a5a6")
+                                      }
+                                      onMouseOut={(e) =>
+                                        (e.target.style.background = "#bdc3c7")
+                                      }
+                                    >
+                                      Không
+                                    </button>
+                                  </div>
+                                )}
                               </td>
                             </tr>
                           ))}

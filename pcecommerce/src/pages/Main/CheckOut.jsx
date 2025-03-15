@@ -140,7 +140,7 @@ function Checkout() {
           </div>
 
           {/* Họ tên, SĐT, Email, Địa chỉ cụ thể */}
-          <div className="form-group">
+          <div className="form-group-CO">
             <label>Họ và tên</label>
             <input
               type="text"
@@ -149,7 +149,7 @@ function Checkout() {
               onChange={(e) => setFullName(e.target.value)}
             />
           </div>
-          <div className="form-group">
+          <div className="form-group-CO">
             <label>Số điện thoại</label>
             <input
               type="text"
@@ -158,7 +158,7 @@ function Checkout() {
               onChange={(e) => setPhone(e.target.value)}
             />
           </div>
-          <div className="form-group">
+          <div className="form-group-CO">
             <label>Email</label>
             <input
               type="email"
@@ -167,7 +167,7 @@ function Checkout() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          <div className="form-group">
+          <div className="form-group-CO">
             <label>Địa chỉ cụ thể</label>
             <input
               type="text"
@@ -179,7 +179,7 @@ function Checkout() {
 
           {/* Location Selector */}
           <div className="location-selector">
-            <div className="form-group">
+            <div className="form-group-CO">
               <label>Tỉnh/Thành phố</label>
               <select
                 value={selectedProvince}
@@ -198,7 +198,7 @@ function Checkout() {
                 ))}
               </select>
             </div>
-            <div className="form-group">
+            <div className="form-group-CO">
               <label>Quận/Huyện</label>
               <select
                 value={selectedDistrict}
@@ -216,7 +216,7 @@ function Checkout() {
                 ))}
               </select>
             </div>
-            <div className="form-group">
+            <div className="form-group-CO">
               <label>Phường/Xã</label>
               <select
                 value={selectedWard}

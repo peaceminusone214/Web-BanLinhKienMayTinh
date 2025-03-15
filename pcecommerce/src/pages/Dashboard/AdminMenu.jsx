@@ -324,7 +324,7 @@ function AdminMenu() {
                     >
                       <ul className="menu-bar__one-dropdown">
                         <li>
-                          <Link to="/admin/customerslist">
+                          <Link to="/admin/customerlist">
                             <span className="menu-bar__text">
                               <span className="menu-bar__name">
                                 Danh sách khách hàng
@@ -333,7 +333,7 @@ function AdminMenu() {
                           </Link>
                         </li>
                         <li>
-                          <Link to="/admin/customer">
+                          <Link to="/admin/customers">
                             <span className="menu-bar__text">
                               <span className="menu-bar__name">Thông tin khách hàng</span>
                             </span>

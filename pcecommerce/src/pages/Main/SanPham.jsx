@@ -67,7 +67,7 @@ const SanPham = () => {
             <img src={product.image} alt={product.title} />
             <div className="product-info">
               <h2>{product.title}</h2>
-              <p className="date">📅 {product.date}</p>
+              <p className="dateSanPham">📅 {product.date}</p>
               <p>{product.description}</p>
             </div>
           </div>

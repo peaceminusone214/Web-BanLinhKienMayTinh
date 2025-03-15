@@ -26,6 +26,8 @@ import Wishlist from "../pages/Dashboard/wishlist";
 import Discount from "../pages/Dashboard/discount-management"
 import AdminMenu from "./AdminMenu";
 import AdminHeader from "./AdminHeader";
+import Customerslist from "../pages/Dashboard/customer-list copy";
+import Customer from "../pages/Dashboard/customers copy";
 
 const ProtectedRoute = () => {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -97,6 +99,8 @@ const ProtectedRoute = () => {
           <Route path="/admin/vendor" element={<Vendor />} />
           <Route path="/admin/wishlist" element={<Wishlist />} />
           <Route path="/admin/discount" element={<Discount />} />
+          <Route path="/admin/customerslist" element={<Customerslist />} />
+          <Route path="/admin/customer" element={<Customer />} />
         </Routes>
       </div>
     );

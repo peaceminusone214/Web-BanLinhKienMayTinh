@@ -176,7 +176,7 @@
   font-weight: bold;
 }
 
-.latest-news-item .date {
+.latest-news-item .datenews {
   font-size: 12px;
   color: gray;
 }
@@ -278,7 +278,7 @@
   color: #222;
 }
 
-.news-game .game-item .date {
+.news-game .game-item .datenews {
   font-size: 13px;
   color: #777;
   margin: 0 10px 10px;

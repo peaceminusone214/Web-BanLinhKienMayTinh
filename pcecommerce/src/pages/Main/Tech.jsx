@@ -98,7 +98,7 @@ const Tech = () => {
             <div key={index} className="tech-item">
               <img src={article.image} alt={article.title} />
               <h3>{article.title}</h3>
-              <p className="date">📅 {article.date} &bull; 👁 {article.views}</p>
+              <p className="datetech">📅 {article.date} &bull; 👁 {article.views}</p>
             </div>
           ))}
         </div>

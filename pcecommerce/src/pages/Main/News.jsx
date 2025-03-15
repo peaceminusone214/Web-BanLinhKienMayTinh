@@ -1,17 +1,6 @@
 import React from "react";
-import { Link, Route, Routes, Outlet } from "react-router-dom"; 
+import { Link, Outlet } from "react-router-dom"; 
 import "./MainStyles/styleNews.css";
-import Tech from "./Tech";
-import SanPham from "./SanPham";
-import Game from "./Game";
-import Tips from "./Tips";
-import Software from "./Software";
-
-const TechContent = () => <div>Thông tin về Tin Công Nghệ</div>;
-const ProductContent = () => <div>Thông tin về Sản Phẩm Mới</div>;
-const GameContent = () => <div>Thông tin về Chủ Đề Game</div>;
-const TipsContent = () => <div>Thông tin về Thủ Thuật</div>;
-const SoftwareContent = () => <div>Thông tin về Build PC</div>;
 
 const News = () => {
   const featuredArticle = {
@@ -79,7 +68,7 @@ const News = () => {
               <img src={article.image} alt={article.title} />
               <div>
                 <h4>{article.title}</h4>
-                <p className="date">{article.date}</p>
+                <p className="datenews">{article.date}</p>
                 <p className="description">{article.description}</p>
               </div>
             </div>
@@ -156,19 +145,11 @@ const News = () => {
             <div key={index} className="game-item">
               <img src={article.image} alt={article.title} />
               <h4>{article.title}</h4>
-              <p className="date">📅 {article.date} &bull; 👁 {article.views}</p>
+              <p className="datenews">📅 {article.date} &bull; 👁 {article.views}</p>
             </div>
           ))}
         </div>
       </div>
-
-      <Routes>
-        <Route path="tin-cong-nghe" element={<Tech />} />
-        <Route path="san-pham-moi" element={<ProductContent />} />
-        <Route path="chu-de-game" element={<GameContent />} />
-        <Route path="thu-thuat" element={<TipsContent />} />
-        <Route path="phan-mem-crack" element={<SoftwareContent />} />
-      </Routes>
 
       {/* Outlet để hiển thị nội dung trang con */}
       <Outlet />
