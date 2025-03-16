@@ -44,6 +44,9 @@ function App() {
         <Route path="News/san-pham" element={<SanPham />} />
         <Route path="News/tips" element={<Tips />} />
         <Route path="News/software" element={<Software />} /> 
+
+
+
         {/* Admin Routes (protected) */}
         <Route element={<ProtectedRoute />}>
           <Route path="/admin/*" element={<ProtectedRoute />} />

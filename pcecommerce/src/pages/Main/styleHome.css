@@ -1,33 +1,21 @@
-
-
-
-
-
-
 /* Tổng thể Homepage */
 .homepage-showcase {
     width: 100%;
     position: relative;
 }
 
-/* Showcase Section */
-.homepage-showcase {
-    position: relative;
-}
-
-.swiper-showcase {
-    position: relative;
+.container{
+    padding: 0px;
 }
 
 .homepage-banner {
     position: absolute;
-    top: 9%;
     left: 50%;
+    top: 4%;
     transform: translateX(-50%);
     width: 100%;
-    max-width: 1200px;
+    max-width: 1220px;
     z-index: 2;
-    padding: 10px 20px;
     border-radius: 10px;
 
 
@@ -76,7 +64,7 @@
 
 /* ===== Box Collection (Ưu Đãi Dành Cho Bạn) ===== */
 .box-collection {
-    max-width: 1200px;
+    max-width: 1220px;
     height: 100%;
     background-image: url("../../../public//assets//interface-main//images/banner-home.jpg");
     border-radius: 10px;
@@ -122,7 +110,7 @@
     font-weight: 600;
 }
 
-.font-weight-bold:hover{
+.font-weight-bold:hover {
     color: #f8f8f8;
 
 }
@@ -153,72 +141,11 @@
     gap: 15px;
 }
 
-/* ===== Product Card (Sản phẩm) ===== */
-.p-item {
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
-}
 
-.p-item:hover {
-    transform: scale(1.05);
-}
 
-.p-img img {
-    width: 100%;
-    border-radius: 10px;
-}
 
-/* ===== Product Content ===== */
-.p-content {
-    padding: 10px;
-    text-align: center;
-}
 
-.p-name {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 8px;
-}
 
-.p-price {
-    color: #0072FF;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.p-market-price {
-    text-decoration: line-through;
-    color: gray;
-}
-
-.p-box {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 12px;
-}
-
-.p-compare {
-    color: #0072FF;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.btn-cart-sp {
-    background: #0072FF;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-}
-
-.btn-cart-sp:hover {
-    background: #0056B3;
-}
 
 /* ===== Xem tất cả Button ===== */
 .box-bottom {
@@ -233,8 +160,8 @@
     transition: all 0.3s ease-in-out;
 }
 
-.btn-view-more:hover {
-    color: #0056B3;
+.btn-view-more {
+    color: #d5e9ff;
 }
 
 
@@ -258,7 +185,7 @@
 /* ===== Banner Box (Cấu trúc chính) ===== */
 .box-category-big-image {
     margin-top: 5px;
-    width: 1200px;
+    width: 1220px;
     overflow: hidden;
     border-radius: 10px;
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -281,12 +208,10 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-        120deg,
-        rgba(255, 255, 255, 0) 30%,
-        rgba(255, 255, 255, 0.4) 50%,
-        rgba(255, 255, 255, 0) 70%
-    );
+    background: linear-gradient(120deg,
+            rgba(255, 255, 255, 0) 30%,
+            rgba(255, 255, 255, 0.4) 50%,
+            rgba(255, 255, 255, 0) 70%);
     transition: left 1.0s ease-in-out;
 }
 
@@ -308,7 +233,7 @@
 /* box header */
 /* ===== Header Section ===== */
 .pc-header {
-    max-width: 1200px;
+    max-width: 1220px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -371,7 +296,8 @@
 .pc-heading {
     font-size: 24px;
     font-weight: bold;
-    color: #0072FF; /* Màu xanh hiện đại */
+    color: #0072FF;
+    /* Màu xanh hiện đại */
     margin: 0;
 }
 
@@ -420,8 +346,12 @@
 
 .btn-view-all:hover {
     color: #333;
-    background-color: #127beb; /* Màu nền đậm hơn khi hover */
+    background-color: #127beb;
+    /* Màu nền đậm hơn khi hover */
 }
+
+
+
 
 
 
@@ -429,9 +359,9 @@
 
 /* box content */
 .section-news {
-    background: #f4f4f4; /* Màu nền cho phần tin tức */
+    background: #f4f4f4;
     padding: 20px 0;
-    max-width: 1200px;
+    max-width: 1220px;
     margin: auto;
 }
 
@@ -473,7 +403,8 @@
     color: #0b0b0b;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2; /* Giới hạn*/
+    -webkit-line-clamp: 2;
+    /* Giới hạn*/
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -527,18 +458,19 @@
 .article-title {
     margin: 10px 0 5px;
     font-size: 18px;
-    color: #242424; 
+    color: #242424;
 }
 
 .article-title:hover {
-    color: #0f62fd; 
+    color: #0f62fd;
 }
 
 
 .article-description {
     font-size: 14px;
     color: #666;
-    height: 50px; /* Giới hạn chiều cao mô tả */
+    height: 50px;
+    /* Giới hạn chiều cao mô tả */
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -564,6 +496,16 @@
 
 
 
+
+
+
+
+.swiper-slide, .swiper-wrapper {
+    height: 100%;
+    position: relative;
+    transition-property: transform;
+    width: 100%;
+}
 
 
 

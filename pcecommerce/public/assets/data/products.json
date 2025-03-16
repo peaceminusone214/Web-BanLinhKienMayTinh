@@ -1,53 +1,584 @@
 [
-    {
-      "id": "1",
-      "product_name": "Gaming CPU Ryzen 7 5800X",
-      "description": "8-core, 16-thread processor with high performance for gaming and productivity.",
-      "category_id": "65d2c4a8f1a2b3c4d5e6f7pc1",
-      "price": 399.99,
-      "cutprice": 349.99,
-      "stock_quantity": 20,
-      "image_url": "https://bizweb.dktcdn.net/100/329/122/files/amd-5700g-02.jpg?v=1633579298069",
-      "brand": "AMD",
-      "condition": "New",
-      "specifications": {
-        "cores": 8,
-        "threads": 16,
-        "base_clock": "3.8 GHz",
-        "boost_clock": "4.7 GHz"
-      },
-      "warranty": "3 years",
-      "compatibility": {
-        "motherboards": ["AM4"]
-      },
-      "created_at": "2025-02-19T10:30:00Z",
-      "updated_at": "2025-02-19T12:15:00Z",
-      "status": "Active"
-    },
+  {
+    "id": 1,
+    "name": "PC Gaming KCC i5-12400F RTX 3060",
+    "category_id": 1,
+    "img": "https://kccshop.vn/media/product/250-10521-pc-kcc-intel-i5-12400f-vga-rtx-3060.jpg",
+    "price": "18.500.000 ₫",
+    "oldPrice": "19.990.000 ₫",
+    "discount": "-8%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "CPU: Intel Core i5-12400F",
+      "GPU: RTX 3060",
+      "RAM: 16GB DDR4",
+      "SSD: 512GB NVMe",
+      "Nguồn: 650W"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "PC Gaming KCC Ryzen 5 5600X RTX 3070",
+    "category_id": 1,
+    "img": "https://kccshop.vn/media/product/250-10597-pc-kcc-amd-r5-7500f-msi-vga-rtx-3060.jpg",
+    "price": "25.990.000 ₫",
+    "oldPrice": "27.990.000 ₫",
+    "discount": "-7%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "CPU: Ryzen 5 5600X",
+      "GPU: RTX 3070",
+      "RAM: 16GB DDR4",
+      "SSD: 1TB NVMe",
+      "Nguồn: 750W"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "PC Văn Phòng KCC i3-12100",
+    "category_id": 1,
+    "img": "https://kccshop.vn/media/product/250-10580-pc-kcc-intel-i5-10400f--vga-gtx-1650.jpg",
+    "price": "9.500.000 ₫",
+    "oldPrice": "10.490.000 ₫",
+    "discount": "-9%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "CPU: Intel Core i3-12100",
+      "RAM: 8GB DDR4",
+      "SSD: 256GB NVMe",
+      "Nguồn: 400W"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "PC Gaming KCC i7-12700F RTX 3080",
+    "category_id": 1,
+    "img": "https://kccshop.vn/media/product/250-10531-pc-kcc-intel-i7-13700kf-vga-rtx-3060.jpg",
+    "price": "35.000.000 ₫",
+    "oldPrice": "37.990.000 ₫",
+    "discount": "-8%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "CPU: Intel Core i7-12700F",
+      "GPU: RTX 3080",
+      "RAM: 32GB DDR4",
+      "SSD: 1TB NVMe",
+      "Nguồn: 850W"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "PC Gaming KCC Ryzen 7 5800X RTX 3080 Ti",
+    "category_id": 1,
+    "img": "https://kccshop.vn/media/product/250-10603-pc-kcc-amd-r7-7800x3d-vga-rtx-4070-super.jpg",
+    "price": "42.000.000 ₫",
+    "oldPrice": "45.990.000 ₫",
+    "discount": "-9%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "CPU: Ryzen 7 5800X",
+      "GPU: RTX 3080 Ti",
+      "RAM: 32GB DDR4",
+      "SSD: 2TB NVMe",
+      "Nguồn: 1000W"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "PC Văn Phòng KCC Ryzen 3 3200G",
+    "category_id": 1,
+    "img": "https://kccshop.vn/media/product/250-12093-r3-gt-1030.jpg",
+    "price": "7.990.000 ₫",
+    "oldPrice": "8.490.000 ₫",
+    "discount": "-6%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "CPU: Ryzen 3 3200G",
+      "RAM: 8GB DDR4",
+      "SSD: 256GB NVMe",
+      "Nguồn: 350W"
+    ]
+  },
+  {
+    "id": 7,
+    "name": "PC Gaming KCC i5-13600KF RTX 4060 Ti",
+    "category_id": 1,
+    "img": "https://kccshop.vn/media/product/250-10524-pc-kcc-intel-i5-14600kf-vga-rtx-3060.jpg",
+    "price": "29.500.000 ₫",
+    "oldPrice": "31.990.000 ₫",
+    "discount": "-8%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "CPU: Intel Core i5-13600KF",
+      "GPU: RTX 4060 Ti",
+      "RAM: 16GB DDR5",
+      "SSD: 1TB NVMe",
+      "Nguồn: 750W"
+    ]
+  },
+  {
+    "id": 8,
+    "name": "PC Gaming KCC i9-13900KF RTX 4090",
+    "category_id": 1,
+    "img": "https://kccshop.vn/media/product/250-11908-i9-5080.jpg",
+    "price": "80.000.000 ₫",
+    "oldPrice": "85.990.000 ₫",
+    "discount": "-7%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "CPU: Intel Core i9-13900KF",
+      "GPU: RTX 4090",
+      "RAM: 64GB DDR5",
+      "SSD: 2TB NVMe",
+      "Nguồn: 1200W"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "PC Văn Phòng KCC i5-12400",
+    "category_id": 1,
+    "img": "https://kccshop.vn/media/product/250-12148-pc-kcc-intel-i5-13400f--vga-rtx-3060-.jpg",
+    "price": "12.000.000 ₫",
+    "oldPrice": "13.490.000 ₫",
+    "discount": "-10%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "CPU: Intel Core i5-12400",
+      "RAM: 16GB DDR4",
+      "SSD: 512GB NVMe",
+      "Nguồn: 500W"
+    ]
+  },
+  {
+    "id": 10,
+    "name": "PC Gaming KCC Ryzen 7 5900X RTX 3070",
+    "category_id": 1,
+    "img": "https://kccshop.vn/media/product/250-10604-pc-kcc-amd-r7-7800x3d-vga-rtx-4060-ti.jpg",
+    "price": "32.000.000 ₫",
+    "oldPrice": "34.990.000 ₫",
+    "discount": "-8%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "CPU: Ryzen 9 5900X",
+      "GPU: RTX 3070",
+      "RAM: 32GB DDR4",
+      "SSD: 1TB NVMe",
+      "Nguồn: 850W"
+    ]
+  },
+  {
+    "name": "Mainboard ASUS TUF GAMING B760M-PLUS",
+    "category_id": 2,
+    "img": "https://kccshop.vn/media/product/250-4149-b760m-pro-rs.jpg",
+    "price": "3.990.000 ₫",
+    "oldPrice": "4.500.000 ₫",
+    "discount": "-11%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Socket: LGA 1700",
+      "Chipset: B760",
+      "Hỗ trợ RAM: 4x DDR4 (128GB)",
+      "Kích thước: Micro-ATX"
+    ],
+    "id": 11
+  },
+  {
+    "name": "Mainboard GIGABYTE B760 DS3H DDR4",
+    "category_id": 2,
+    "img": "https://kccshop.vn/media/product/250-5297-a--nh-chu--p-ma--n-hi--nh-2024-04-04-lu--c-12-52-30.png",
+    "price": "3.500.000 ₫",
+    "oldPrice": "3.900.000 ₫",
+    "discount": "-10%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Socket: LGA 1700",
+      "Chipset: B760",
+      "Hỗ trợ RAM: 4x DDR4 (128GB)",
+      "Kích thước: ATX"
+    ],
+    "id": 12
+  },
+  {
+    "name": "Mainboard ASUS TUF GAMING B760M-PLUS",
+    "category_id": 2,
+    "img": "https://kccshop.vn/media/product/250-3803-b760m-p.jpg",
+    "price": "3.990.000 ₫",
+    "oldPrice": "4.500.000 ₫",
+    "discount": "-11%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Socket: LGA 1700",
+      "Chipset: B760",
+      "Hỗ trợ RAM: 4x DDR4 (128GB)",
+      "Kích thước: Micro-ATX"
+    ],
+    "id": 13
+  },
+  {
+    "name": "Mainboard GIGABYTE B760 DS3H DDR4",
+    "category_id": 2,
+    "img": "https://kccshop.vn/media/product/250-4085-gigabyteb760mds3hddr401.jpg",
+    "price": "3.500.000 ₫",
+    "oldPrice": "3.900.000 ₫",
+    "discount": "-10%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Socket: LGA 1700",
+      "Chipset: B760",
+      "Hỗ trợ RAM: 4x DDR4 (128GB)",
+      "Kích thước: ATX"
+    ],
+    "id": 14
+  },
+  {
+    "name": "Mainboard ASUS TUF GAMING B760M-PLUS",
+    "category_id": 2,
+    "img": "https://kccshop.vn/media/product/250-5547-1.jpg",
+    "price": "3.990.000 ₫",
+    "oldPrice": "4.500.000 ₫",
+    "discount": "-11%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Socket: LGA 1700",
+      "Chipset: B760",
+      "Hỗ trợ RAM: 4x DDR4 (128GB)",
+      "Kích thước: Micro-ATX"
+    ],
+    "id": 15
+  },
+  {
+    "name": "CPU Intel Core i5-13600KF",
+    "category_id": 3,
+    "img": "https://kccshop.vn/media/product/250-4164-i5-13400.jpg",
+    "price": "6.990.000 ₫",
+    "oldPrice": "7.500.000 ₫",
+    "discount": "-7%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Số nhân: 14",
+      "Số luồng: 20",
+      "Xung nhịp: 3.5GHz - 5.1GHz",
+      "Cache: 24MB"
+    ],
+    "id": 16
+  },
+  {
+    "name": "CPU AMD Ryzen 9 7900X3D Chính hãng (4.4 GHz Upto 5.6GHz / 140MB / 12 Cores, 24 Threads / 120W / Socket AM5) ",
+    "category_id": 3,
+    "img": "https://kccshop.vn/media/product/250-8684-cpu-amd-ryzen-9-7900x3d-01.jpg",
+    "price": "9.990.000 ₫",
+    "oldPrice": "10.500.000 ₫",
+    "discount": "-5%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Số nhân: 8",
+      "Số luồng: 16",
+      "Xung nhịp: 4.2GHz - 5.0GHz",
+      "Cache: 96MB"
+    ],
+    "id": 17
+  },
+  {
+    "name": "CPU Intel Core i5-13600KF",
+    "category_id": 3,
+    "img": "https://kccshop.vn/media/product/250-2777-core-i5-12400f.jpg",
+    "price": "6.990.000 ₫",
+    "oldPrice": "7.500.000 ₫",
+    "discount": "-7%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Số nhân: 14",
+      "Số luồng: 20",
+      "Xung nhịp: 3.5GHz - 5.1GHz",
+      "Cache: 24MB"
+    ],
+    "id": 18
+  },
+  {
+    "name": "CPU AMD Ryzen 7 7800X3D",
+    "category_id": 3,
+    "img": "https://kccshop.vn/media/product/250-4724-231804955-a_ryzen7_7800x3d_3dpib_front_pl_compressed.jpg",
+    "price": "9.990.000 ₫",
+    "oldPrice": "10.500.000 ₫",
+    "discount": "-5%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Số nhân: 8",
+      "Số luồng: 16",
+      "Xung nhịp: 4.2GHz - 5.0GHz",
+      "Cache: 96MB"
+    ],
+    "id": 19
+  },
+  {
+    "name": "CPU Intel Core i5-13600KF",
+    "category_id": 3,
+    "img": "https://kccshop.vn/media/product/250-160-58403_cpu_intel_core_i5_11400f_2_6ghz_turbo_up_to_4_4ghz_6_nhan_12_luong_12mb_cache_65w_socket_intel_lga_1200_1.jpg",
+    "price": "6.990.000 ₫",
+    "oldPrice": "7.500.000 ₫",
+    "discount": "-7%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Số nhân: 14",
+      "Số luồng: 20",
+      "Xung nhịp: 3.5GHz - 5.1GHz",
+      "Cache: 24MB"
+    ],
+    "id": 20
+  },
+  {
+    "name": "CPU AMD Ryzen 7 7800X3D",
+    "category_id": 3,
+    "img": "https://kccshop.vn/media/product/250-8688-cpu-amd-ryzen-7-7800x3d.jpg",
+    "price": "9.990.000 ₫",
+    "oldPrice": "10.500.000 ₫",
+    "discount": "-5%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Số nhân: 8",
+      "Số luồng: 16",
+      "Xung nhịp: 4.2GHz - 5.0GHz",
+      "Cache: 96MB"
+    ],
+    "id": 21
+  },
+  {
+    "name": "CPU Amd Ryzen 5 3600 Tray (3.6GHz turbo up to 4.2GHz, 6 nhân",
+    "category_id": 3,
+    "img": "https://kccshop.vn/media/product/250-2484-3600-tray.jpg",
+    "price": "6.990.000 ₫",
+    "oldPrice": "7.500.000 ₫",
+    "discount": "-7%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Số nhân: 14",
+      "Số luồng: 20",
+      "Xung nhịp: 3.5GHz - 5.1GHz",
+      "Cache: 24MB"
+    ],
+    "id": 22
+  },
+  {
+    "name": "CPU Intel Core Ultra 7 265K (3.9 Ghz, up to 5.5GHz, 20 Nhân 20",
+    "category_id": 3,
+    "img": "https://kccshop.vn/media/product/250-9955-250-9483-cpu-intel-core-ultra-7-265k-bx80768265k-01.jpg",
+    "price": "9.990.000 ₫",
+    "oldPrice": "10.500.000 ₫",
+    "discount": "-5%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Số nhân: 8",
+      "Số luồng: 16",
+      "Xung nhịp: 4.2GHz - 5.0GHz",
+      "Cache: 96MB"
+    ],
+    "id": 23
+  },
+  {
+    "name": "CPU Intel Core i5 14600K (3.50 Ghz, up to 5.30GHz, 14 Nhân 20",
+    "category_id": 3,
+    "img": "https://kccshop.vn/media/product/250-6483-14600k-min.jpg",
+    "price": "5.709.000 ₫",
+    "oldPrice": "6.500.000 ₫",
+    "discount": "-7%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Số nhân: 14",
+      "Số luồng: 20",
+      "Xung nhịp: 3.5GHz - 5.1GHz",
+      "Cache: 24MB"
+    ],
+    "id": 24
+  },
+  {
+    "name": "CPU Intel Core i7-12700 Chính Hãng (3.6GHz turbo up to 4.9Ghz,",
+    "category_id": 3,
+    "img": "https://kccshop.vn/media/product/250-2901-64217_cpu_intel_core_i7_12700_1.jpeg",
+    "price": "9.990.000 ₫",
+    "oldPrice": "10.500.000 ₫",
+    "discount": "-5%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Số nhân: 8",
+      "Số luồng: 16",
+      "Xung nhịp: 4.2GHz - 5.0GHz",
+      "Cache: 96MB"
+    ],
+    "id": 25
+  },
+  {
+    "name": "RAM Kingston Fury Beast DDR5 32GB (2x16GB) 6000MHz",
+    "category_id": 4,
+    "img": "https://kccshop.vn/media/product/250-4275-1.jpg",
+    "price": "4.290.000 ₫",
+    "oldPrice": "4.790.000 ₫",
+    "discount": "-10%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Dung lượng: 32GB (2x16GB)",
+      "Chuẩn: DDR5",
+      "Bus: 6000MHz",
+      "CAS Latency: CL36",
+      "Điện áp: 1.35V"
+    ],
+    "id": 26
+  },
+  {
+    "name": "RAM Desktop Gskill Trident Z RGB (F4-3600C18D-64GTZR) 64GB (2x32GB) DDR4 3600MHz",
+    "category_id": 4,
+    "img": "https://kccshop.vn/media/product/250-296-884f168f7b83f943a368b13a23a8e345.jpg",
+    "price": "4.489.000 đ",
+    "oldPrice": "5.030.000 đ",
+    "discount": "-10%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Dung lượng: 32GB (2x16GB)",
+      "Chuẩn: DDR5",
+      "Bus: 6000MHz",
+      "CAS Latency: CL36",
+      "Điện áp: 1.35V"
+    ],
+    "id": 27
+  },
+  {
+    "name": "Ram Kingston FURY Beast RGB 64GB (2x32GB) DDR5 bus 5200Mhz (KF552C40BBAK2-64)",
+    "category_id": 4,
+    "img": "https://kccshop.vn/media/product/250-4275-1.jpg",
+    "price": "4.770.000 đ",
+    "oldPrice": "5.250.000 đ",
+    "discount": "-10%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Dung lượng: 32GB (2x16GB)",
+      "Chuẩn: DDR5",
+      "Bus: 6000MHz",
+      "CAS Latency: CL36",
+      "Điện áp: 1.35V"
+    ],
+    "id": 28
+  },
+  {
+    "name": "RAM Corsair DOMINATOR PLATINUM RGB 32GB (2x16GB) DDR5 6200MHz Black (CMT32GX5M2X6200C36)",
+    "category_id": 4,
+    "img": "https://kccshop.vn/media/product/250-3104-corsairdominatorplatinumrgbheatspreader64gb-2x32-5200mhz01.jpg",
+    "price": "4.830.000 đ",
+    "oldPrice": "5.260.000 đ",
+    "discount": "-10%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Dung lượng: 32GB (2x16GB)",
+      "Chuẩn: DDR5",
+      "Bus: 6000MHz",
+      "CAS Latency: CL36",
+      "Điện áp: 1.35V"
+    ],
+    "id": 29
+  },
+  {
+    "name": "Ram G.Skill Ripjaws M5 RGB 64GB (2x32GB) 5200MHz DDR5 (F5-5200J4040A32GX2-RM5RW)",
+    "category_id": 4,
+    "img": "https://kccshop.vn/media/product/250-8148-ram-g-skill-ripjaws-m5-rgb-32gb--2x16gb--5200mhz-ddr5--f5-5200j4040a16gx2-rm5rw--01.png",
+    "price": "4.799.000 đ",
+    "oldPrice": "5.420.000 đ",
+    "discount": "-10%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "Dung lượng: 32GB (2x16GB)",
+      "Chuẩn: DDR5",
+      "Bus: 6000MHz",
+      "CAS Latency: CL36",
+      "Điện áp: 1.35V"
+    ],
+    "id": 30
+  },
+  {
+    "id": 31,
+    "name": "VGA ASUS TUF Gaming RTX 4060 Ti OC 8GB",
+    "category_id": 5,
+    "img": "https://kccshop.vn/media/product/250-12193-15.jpg",
+    "price": "10.990.000 ₫",
+    "oldPrice": "12.500.000 ₫",
+    "discount": "-12%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "GPU: NVIDIA GeForce RTX 4060 Ti",
+      "Dung lượng VRAM: 8GB GDDR6",
+      "Bus: 128-bit",
+      "Cổng kết nối: HDMI 2.1, DisplayPort 1.4a",
+      "Tản nhiệt: Dual Fan"
+    ]
+  },
+  {
+    "id": 32,
+    "name": "VGA MSI GeForce RTX 4070 Ventus 2X 12GB",
+    "category_id": 5,
+    "img": "https://kccshop.vn/media/product/250-3766-334dssaa.jpg",
+    "price": "15.890.000 ₫",
+    "oldPrice": "17.500.000 ₫",
+    "discount": "-9%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "GPU: NVIDIA GeForce RTX 4070",
+      "Dung lượng VRAM: 12GB GDDR6X",
+      "Bus: 192-bit",
+      "Cổng kết nối: HDMI 2.1, DisplayPort 1.4a",
+      "Tản nhiệt: Twin Frozr 8"
+    ]
+  },
+  {
+    "id": 33,
+    "name": "VGA GIGABYTE AORUS Radeon RX 6800 XT 16GB",
+    "category_id": 5,
+    "img": "https://kccshop.vn/media/product/250-3523-dfs.jpg",
+    "price": "13.750.000 ₫",
+    "oldPrice": "15.990.000 ₫",
+    "discount": "-14%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "GPU: AMD Radeon RX 6800 XT",
+      "Dung lượng VRAM: 16GB GDDR6",
+      "Bus: 256-bit",
+      "Cổng kết nối: HDMI 2.1, DisplayPort 1.4a",
+      "Tản nhiệt: Windforce 3X"
+    ]
+  },
+  {
+    "id": 34,
+    "name": "VGA ZOTAC GAMING RTX 3060 Ti Twin Edge OC 8GB",
+    "category_id": 5,
+    "img": "https://kccshop.vn/media/product/250-4502-21213edw12ew.jpg",
+    "price": "8.990.000 ₫",
+    "oldPrice": "10.500.000 ₫",
+    "discount": "-14%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "GPU: NVIDIA GeForce RTX 3060 Ti",
+      "Dung lượng VRAM: 8GB GDDR6",
+      "Bus: 256-bit",
+      "Cổng kết nối: HDMI 2.1, DisplayPort 1.4a",
+      "Tản nhiệt: IceStorm 2.0"
+    ]
+  },
+  {
+    "id": 35,
+    "name": "VGA Sapphire PULSE Radeon RX 6700 XT 12GB",
+    "category_id": 5,
+    "img": "https://kccshop.vn/media/product/250-7500-1.png",
+    "price": "9.500.000 ₫",
+    "oldPrice": "11.000.000 ₫",
+    "discount": "-14%",
+    "status": "✓ Còn hàng",
+    "description": [
+      "GPU: AMD Radeon RX 6700 XT",
+      "Dung lượng VRAM: 12GB GDDR6",
+      "Bus: 192-bit",
+      "Cổng kết nối: HDMI 2.1, DisplayPort 1.4a",
+      "Tản nhiệt: Dual-X Cooling"
+    ]
+  }
+]
 
-    {
-      "id": "2",
-      "product_name": "NVIDIA RTX 3080 Graphics Card",
-      "description": "High-end gaming GPU with real-time ray tracing and AI-enhanced graphics.",
-      "category_id": "65d2c4a8f1a2b3c4d5e6f7pc2",
-      "price": 799.99,
-      "cutprice": 749.99,
-      "stock_quantity": 15,
-      "image_url": "https://www.tncstore.vn/media/product/250-4569-card-man-hinh-gigabyte-rtx-3080-gaming-oc-10gd-1.jpg",
-      "brand": "NVIDIA",
-      "condition": "New",
-      "specifications": {
-        "memory": "10GB GDDR6X",
-        "core_clock": "1440 MHz",
-        "boost_clock": "1710 MHz"
-      },
-      "warranty": "3 years",
-      "compatibility": {
-        "power_supply": "750W+ recommended"
-      },
-      "created_at": "2025-02-18T16:00:00Z",
-      "updated_at": "2025-02-19T09:50:00Z",
-      "status": "Active"
-    }
-  ]
-  
+
+
+
+
