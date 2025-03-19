@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 
-import './MainStyles/styleHome.css';
+import "./MainStyles/styleHome.css";
 
 import BannerShowcase from '../../components/Banner';
 import News from '../../components/NewsSections';
+import ProductList from '../../components/ProductList';
 
+import CompCategoryHeader from '../../components/CompCategoryHeader';
+import { fetchCategories } from '../../api/categoriesApi';
+
+import CompBannerSections from '../../components/CompBannerSections';
 
 function Home() {
 
@@ -136,6 +141,22 @@ function Home() {
   ];
 
 
+  //categories
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      const data = await fetchCategories();
+      setCategories(data);
+    };
+
+    loadCategories();
+  }, []);
+
+
+
+
+
   return (
     <div className="homepage">
 
@@ -222,6 +243,8 @@ function Home() {
             </li>
           </ul>
         </div>
+
+
         {/* BOX CONTENT */}
         <div className="box-content">
           <div className="homepage-collection-swiper">
@@ -232,6 +255,12 @@ function Home() {
                   <div className="product p-item" data-id={product.id} data-type="product">
                     <a href={`/product/${product.id}`} className="p-img">
                       <img src={product.img} alt={product.name} />
+                      <div class="p-sale-off ms-2">
+                        <p class="font-weight-500 text-uppercase">
+                          Tiết kiệm
+                          <span class="d-block text-12 font-weight-bold color-white">320,000 ₫</span>
+                        </p>
+                      </div>
                     </a>
                     <div className="p-content">
                       <a href={`/product/${product.id}`}>
@@ -241,7 +270,7 @@ function Home() {
                         {product.price}
                       </p>
                       <span className="p-market-price">{product.oldPrice}</span>
-                      <span className="color-secondary" style={{ marginLeft: "4px" }}>
+                      <span className="p-market-sale color-secondary" style={{ marginLeft: "4px", fontSize: "13px", color: "blue" }}>
                         {product.discount}
                       </span>
                       <div className="p-box d-flex align-items-center justify-content-between">
@@ -251,8 +280,8 @@ function Home() {
                             <span>+</span> So sánh
                           </a>
                         </div>
-                        <a href="javascript:;" className="btn-cart-sp d-flex align-items-center justify-content-center">
-                          <i className="static-icon static-icon-cart"></i>
+                        <a href="javascript:;" className="btn-cart-sp d-flex align-items-center justify-content-center" >
+                          <i class="static-icon static-icon-cart"></i>
                         </a>
                       </div>
                     </div>
@@ -262,6 +291,7 @@ function Home() {
             </div>
           </div>
         </div>
+
         {/* BOX BOTTOM */}
         <div className="box-bottom">
           <a href="/collection/gia-shock" className="font-weight-500 color-white btn-view-more" id="js-collection-path">
@@ -272,226 +302,30 @@ function Home() {
 
 
 
-      <section className='banner-section'>
-        <a
-          href="/bo-pc-kcc-lap-rap/"
-          className="box-category-big-image banner-hover"
-          target="_blank"
-          rel="nofollow"
-        >
-          <img
-            src="/assets/interface-main/imgHome/banner_1.png"
-            alt="Banner category"
-            className="lazy-cat-img"
-            data-src="/media/category/cat_big_2.png"
-          />
-        </a>
 
-      </section>
+      {/* Product Section */}
+      <section>
+        {categories.map(category => (
 
+          <section key={category.id}>
+            <CompBannerSections category={category} />
+            <CompCategoryHeader category={category} />
 
-
-
-
-      {/* Box Header */}
-      <div className="pc-header d-flex align-center space-between">
-        <h2 className="pc-heading">Bộ PC</h2>
-
-        <div className="pc-sub-header d-flex align-center">
-          <ul className="pc-list d-flex align-center">
-            <li><a href="/bo-pc-kcc-cho-thue/"><p>Bộ PC cho thuê</p></a></li>
-            <li><a href="/pc-server-kcc/"><p>PC Server</p></a></li>
-            <li><a href="/pc-may-bo-kcc-i3-r3/"><p>PC Máy bộ I3 / R3</p></a></li>
-            <li><a href="/pc-may-bo-kcc-i5-r5/"><p>PC Máy bộ I5 / R5</p></a></li>
-            <li><a href="/pc-may-bo-kcc-i7-r7/"><p>PC Máy bộ I7 / R7</p></a></li>
-          </ul>
-          <a href="/bo-pc-kcc-lap-rap/" className="btn-view-all">XEM TẤT CẢ +</a>
-        </div>
-      </div>
-
-      {/* card */}
-
-      {/* <div className="box-content">
-        <div className="homepage-cat-swiper">
-          <div className="grid grid--6-cols" id="js-product-2">
-            <div className="swiper-slide min-width-0">
-              <div className="product p-item" data-id="10521" data-type="product">
-                <a href="/pc-kcc-intel-i5-12400f-vga-rtx-3060/" className="p-img">
-                  <img src="https://kccshop.vn/media/product/250-10521-pc-kcc-intel-i5-12400f-vga-rtx-3060.jpg" alt="PC KCC Intel i5-12400F/13400F / VGA RTX 3060" />
-                  <div className="p-sale-off">
-                    <p className="font-weight-500 text-uppercase">
-                      Tiết kiệm
-                      <span className="d-block text-12 font-weight-bold color-white">1,440,000 ₫</span>
-                    </p>
-                  </div>
-                </a>
-
-                <div className="p-content">
-                  <a href="/pc-kcc-intel-i5-12400f-vga-rtx-3060/">
-                    <h3 className="p-name line-clamp-2">PC KCC Intel i5-12400F/13400F / VGA RTX 3060</h3>
-                  </a>
-                  <p className="p-price color-secondary font-weight-bold text-20">
-                    14.400.000 ₫
-                  </p>
-
-                  <span className="p-market-price">15.840.000 ₫</span>
-                  <span className="color-secondary" style={{ marginLeft: "4px" }}>-9%</span>
-
-                  <div className="p-box d-flex align-items-center justify-content-between">
-                    <div className="wrapper">
-                      <p className="color-green">✓ Còn hàng</p>
-                      <a href="#" className="p-compare color-primary" >
-                        <span>+</span> So sánh
-                      </a>
-                    </div>
-
-                    <a href="#" className="btn-cart-sp d-flex align-items-center justify-content-center" >
-                      <i className="static-icon static-icon-cart"></i>
-                    </a>
-                  </div>
-                </div>
+            <div class="box-content">
+              <div class="swiper-slide min-width-0">
+                <ProductList categoryId={category.id} />
               </div>
             </div>
-          </div>
-        </div>
-      </div> */}
 
-
-
-
-
-      <section className='banner-section'>
-        <a
-          href="/bo-pc-kcc-lap-rap/"
-          className="box-category-big-image banner-hover"
-          target="_blank"
-          rel="nofollow"
-        >
-          <img
-            src="/assets/interface-main/imgHome/banner_2.png"
-            alt="Banner category"
-            className="lazy-cat-img"
-            data-src="/media/category/cat_big_2.png"
-          />
-        </a>
+          </section>
+        ))}
       </section>
 
-
-
-      {/* Box Header */}
-      <div className="pc-header d-flex align-center space-between">
-        <h2 className="pc-heading">MAIN</h2>
-
-        <div className="pc-sub-header d-flex align-center">
-          <ul className="pc-list d-flex align-center">
-            <li><a href="/bo-pc-kcc-cho-thue/"><p>Mainboard ASROCK</p></a></li>
-            <li><a href="/pc-server-kcc/"><p>Mainboard ASUS</p></a></li>
-            <li><a href="/pc-may-bo-kcc-i3-r3/"><p>Mainboard INTEL</p></a></li>
-            <li><a href="/pc-may-bo-kcc-i5-r5/"><p>Mainboard MSI</p></a></li>
-            <li><a href="/pc-may-bo-kcc-i7-r7/"><p>Mainboard GIGABYTE</p></a></li>
-          </ul>
-          <a href="/bo-pc-kcc-lap-rap/" className="btn-view-all">XEM TẤT CẢ +</a>
-        </div>
-      </div>
-
-
-
-      <section className='banner-section'>
-        <a
-          href="/bo-pc-kcc-lap-rap/"
-          className="box-category-big-image banner-hover"
-          target="_blank"
-          rel="nofollow"
-        >
-          <img
-            src="/assets/interface-main/imgHome/banner_3.png"
-            alt="Banner category"
-            className="lazy-cat-img"
-            data-src="/media/category/cat_big_2.png"
-          />
-        </a>
-      </section>
-
-
-
-      {/* Box Header */}
-      <div className="pc-header d-flex align-center space-between">
-        <h2 className="pc-heading">CPU</h2>
-
-        <div className="pc-sub-header d-flex align-center">
-          <ul className="pc-list d-flex align-center">
-            <li><a href="/bo-pc-kcc-cho-thue/"><p>CPU Intel Core i3</p></a></li>
-            <li><a href="/pc-server-kcc/"><p>CPU Intel Core i5</p></a></li>
-            <li><a href="/pc-may-bo-kcc-i3-r3/"><p>CPU Intel Core i7</p></a></li>
-            <li><a href="/pc-may-bo-kcc-i5-r5/"><p>CPU Intel Core i9</p></a></li>
-            <li><a href="/pc-may-bo-kcc-i7-r7/"><p>Ryzen 3</p></a></li>
-          </ul>
-          <a href="/bo-pc-kcc-lap-rap/" className="btn-view-all">XEM TẤT CẢ +</a>
-        </div>
-      </div>
-
-
-      <section className='banner-section'>
-        <a
-          href="/bo-pc-kcc-lap-rap/"
-          className="box-category-big-image banner-hover"
-          target="_blank"
-          rel="nofollow"
-        >
-          <img
-            src="/assets/interface-main/imgHome/banner_4.png"
-            alt="Banner category"
-            className="lazy-cat-img"
-            data-src="/media/category/cat_big_2.png"
-          />
-        </a>
-      </section>
-
-
-
-
-
-      {/* Box Header */}
-      <div className="pc-header d-flex align-center space-between">
-        <h2 className="pc-heading">RAM</h2>
-
-        <div className="pc-sub-header d-flex align-center">
-          <ul className="pc-list d-flex align-center">
-            <li><a href="/bo-pc-kcc-cho-thue/"><p>RAM CORSAIR</p></a></li>
-            <li><a href="/pc-server-kcc/"><p>RAM GSKILL</p></a></li>
-            <li><a href="/pc-may-bo-kcc-i3-r3/"><p>RAM KINGMAX</p></a></li>
-            <li><a href="/pc-may-bo-kcc-i5-r5/"><p>RAM KINGSTON</p></a></li>
-            <li><a href="/pc-may-bo-kcc-i7-r7/"><p>RAM T-Force</p></a></li>
-          </ul>
-          <a href="/bo-pc-kcc-lap-rap/" className="btn-view-all">XEM TẤT CẢ +</a>
-        </div>
-      </div>
-
-
-
-      {/* Box Header */}
-      <div className="pc-header d-flex align-center space-between">
-        <h2 className="pc-heading">VGA</h2>
-
-        <div className="pc-sub-header d-flex align-center">
-          <ul className="pc-list d-flex align-center">
-            <li><a href="/bo-pc-kcc-cho-thue/"><p>NVIDIA RTX 5000 Series</p></a></li>
-            <li><a href="/pc-server-kcc/"><p>NVIDIA RTX 4000 Series</p></a></li>
-            <li><a href="/pc-may-bo-kcc-i3-r3/"><p>AMD RX 7000 Series</p></a></li>
-            <li><a href="/pc-may-bo-kcc-i5-r5/"><p>AMD RX 9000 Series</p></a></li>
-            <li><a href="/pc-may-bo-kcc-i7-r7/"><p>VGA THEO HÃNG</p></a></li>
-          </ul>
-          <a href="/bo-pc-kcc-lap-rap/" className="btn-view-all">XEM TẤT CẢ +</a>
-        </div>
-      </div>
 
 
 
       {/* News Section home */}
       <News articles={articles} />
-
-
-
 
 
 
