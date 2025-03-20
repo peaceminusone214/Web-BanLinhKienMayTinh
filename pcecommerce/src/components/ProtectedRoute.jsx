@@ -28,6 +28,7 @@ import AdminMenu from "./AdminMenu";
 import AdminHeader from "./AdminHeader";
 import Customerslist from "../pages/Dashboard/customer-list copy";
 import Customer from "../pages/Dashboard/customers copy";
+import Uploaddiscount from "../pages/Dashboard/upload-discount";
 
 const ProtectedRoute = () => {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -94,6 +95,7 @@ const ProtectedRoute = () => {
           <Route path="/admin/profileinfo" element={<Profileinfo />} />
           <Route path="/admin/termsconditions" element={<Termsconditions />} />
           <Route path="/admin/uploadproduct" element={<Uploadproduct />} />
+          <Route path="/admin/uploaddiscount" element={<Uploaddiscount />} />
           <Route path="/admin/vendorlist" element={<Vendorlist />} />
           <Route path="/admin/vendorprofile" element={<Vendorprofile />} />
           <Route path="/admin/vendor" element={<Vendor />} />

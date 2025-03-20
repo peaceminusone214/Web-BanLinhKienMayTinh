@@ -1,10 +1,33 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import './css/styleHeader.css'
 import SearchBar from '../components/SearchBar.jsx';
 
-
 function Header() {
+  const API_URL = process.env.REACT_APP_API_URL;
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    fetch(`${API_URL}/auth/session`, {
+      credentials: "include", // Gửi cookie session
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Chưa đăng nhập");
+        return res.json();
+      })
+      .then((data) => setUser(data.user))
+      .catch(() => setUser(null));
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await fetch(`${API_URL}/auth/logout`, { method: "POST", credentials: "include" });
+      navigate("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   return (
     <div>
@@ -50,11 +73,23 @@ function Header() {
 
             </div>
             <div className="item-right d-flex align-items-center">
-              <i className="fa fa-user-circle" aria-hidden="true"></i>
-              <a href="/" className="title-group">Đăng nhập</a>
-              <span className="pl-chia">|</span>
-              <a href="/" className="title-group">Đăng ký</a>
-            </div>
+      <i className="fa fa-user-circle" aria-hidden="true"></i>
+      {user ? (
+        <>
+          <span className="title-group">Xin chào, {user.username}</span>
+          <span className="pl-chia">|</span>
+          <a href="/" className="title-group" onClick={handleLogout}>
+            Đăng xuất
+          </a>
+        </>
+      ) : (
+        <>
+          <a href="/login" className="title-group">Đăng nhập</a>
+          <span className="pl-chia">|</span>
+          <a href="/register" className="title-group">Đăng ký</a>
+        </>
+      )}
+    </div>
           </div>
         </div>
       </section>

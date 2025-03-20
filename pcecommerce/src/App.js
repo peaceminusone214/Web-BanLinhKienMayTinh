@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import About from "./pages/Main/About";
-import Contact from "./pages/Main/Contact";
 import Home from "./pages/Main/Home";
 import Product from "./pages/Main/Product";
 import Header from "./components/Header";
@@ -32,7 +31,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Createaccount />} />
         <Route path="/product/:id" element={<Product />} />

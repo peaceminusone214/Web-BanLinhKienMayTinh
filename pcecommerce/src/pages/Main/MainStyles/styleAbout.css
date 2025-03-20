@@ -1,183 +1,182 @@
 /* ========== Breadcrumb ========== */
 .breadcrumb-container1 {
-    background-color: #fff;
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee;
-    padding: 10px 0;
+  background-color: #fff;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+  font-size: 20px;
+}
+
+.breadcrumb2 {
+  max-width: 1200px;
+  margin-left: 10px;
+  color: #6c757d;
+}
+
+.breadcrumb2 a {
+  color: #007bff;
+  text-decoration: none;
+  margin-right: 5px;
+}
+
+.breadcrumb2 a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb2 .current {
+  color: #6c757d;
+  margin-left: 5px;
+}
+
+/* ========== Phần nội dung giới thiệu ========== */
+.about-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
+
+.about-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+ .about-intro-box {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;  
+  margin-bottom: 40px;
+}
+
+.about-intro-text {
+  flex: 1; 
+  font-size: 16px;
+  line-height: 1.6;
+  color: #555;
+  text-align: justify;
+}
+
+.about-intro-text ul {
+  margin-left: 20px;
+  margin-bottom: 20px;
+  list-style: disc;
+}
+
+.about-intro-text li {
+  margin-bottom: 8px;
+}
+
+.about-intro-image {
+  flex: 1; 
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+}
+
+.about-intro-image img {
+  width: 50%;
+  max-width: 300px;
+  border-radius: 10px;
+}
+
+/* ========== KHUNG GIÁ TRỊ CỐT LÕI ========== */
+.core-values-box {
+  background: #fff;
+  border-radius: 12px;  
+  box-shadow: 0 0 15px rgba(0,0,0,0.1); 
+  padding: 30px 20px;   
+  margin: 0 auto;
+  margin-bottom: 40px;
+  max-width: 1000px;
+  text-align: center;
+}
+
+.about-subtitle {
+  font-size: 24px;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.core-values {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);  
+  gap: 20px;
+  justify-items: center; 
+}
+
+.core-value-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 15px 20px;
+  border: 1px solid #ddd;
+  width: 100%;            
+  max-width: 400px;       
+  justify-content: flex-start;
+}
+
+.core-value-item img {
+  width: 40px;
+  height: 40px;
+}
+
+.core-value-item span {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  text-align: left;
+}
+
+/* ========== Responsive (dưới 768px) ========== */
+@media (max-width: 768px) {
+  .breadcrumb-container1 {
+    font-size: 16px;
+  }
+
+  .about-title {
     font-size: 20px;
   }
-  
-  .breadcrumb2 {
-    max-width: 1200px;
-    margin-left: 10px;
-    color: #6c757d;
+
+  .about-intro-box {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
   }
-  
-  .breadcrumb2 a {
-    color: #007bff;
-    text-decoration: none;
-    margin-right: 5px;
-  }
-  
-  .breadcrumb2 a:hover {
-    text-decoration: underline;
-  }
-  
-  .breadcrumb2 .current {
-    color: #6c757d;
-    margin-left: 5px;
-  }
-  
-  /* ========== Phần nội dung giới thiệu ========== */
-  .about-container {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 0 15px;
-  }
-  
-  .about-title {
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    color: #333;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-  }
-  
-   .about-intro-box {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;  
-    margin-bottom: 40px;
-  }
-  
+
   .about-intro-text {
-    flex: 1; 
-    font-size: 16px;
-    line-height: 1.6;
-    color: #555;
-    text-align: justify;
-  }
-  
-  .about-intro-text ul {
-    margin-left: 20px;
-    margin-bottom: 20px;
-    list-style: disc;
-  }
-  
-  .about-intro-text li {
-    margin-bottom: 8px;
-  }
-  
-  .about-intro-image {
-    flex: 1; 
-    display: flex;
-    justify-content: center; 
-    align-items: center;
-  }
-  
-  .about-intro-image img {
-    width: 50%;
-    max-width: 300px;
-    border-radius: 10px;
-  }
-  
-  /* ========== KHUNG GIÁ TRỊ CỐT LÕI ========== */
-  .core-values-box {
-    background: #fff;
-    border-radius: 12px;  
-    box-shadow: 0 0 15px rgba(0,0,0,0.1); 
-    padding: 30px 20px;   
-    margin: 0 auto;
-    margin-bottom: 40px;
-    max-width: 1000px;
-    text-align: center;
-  }
-  
-  .about-subtitle {
-    font-size: 24px;
-    color: #333;
-    font-weight: bold;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-  }
-  
-  .core-values {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);  
-    gap: 20px;
-    justify-items: center; 
-  }
-  
-  .core-value-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    padding: 15px 20px;
-    border: 1px solid #ddd;
-    width: 100%;            
-    max-width: 400px;       
-    justify-content: flex-start;
-  }
-  
-  .core-value-item img {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .core-value-item span {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
     text-align: left;
   }
-  
-  /* ========== Responsive (dưới 768px) ========== */
-  @media (max-width: 768px) {
-    .breadcrumb-container1 {
-      font-size: 16px;
-    }
-  
-    .about-title {
-      font-size: 20px;
-    }
-  
-    .about-intro-box {
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-    }
-  
-    .about-intro-text {
-      text-align: left;
-    }
-  
-    .about-intro-image {
-      margin-bottom: 20px;
-    }
-  
-    .core-values-box {
-      padding: 20px 15px;
-    }
-  
-    .about-subtitle {
-      font-size: 20px;
-    }
-  
-    .core-values {
-      grid-template-columns: 1fr;
-    }
-  
-    .core-value-item {
-      margin: 0 auto;
-      max-width: 100%;
-      padding: 10px;
-    }
-  
-    .core-value-item span {
-      font-size: 14px;
-    }
+
+  .about-intro-image {
+    margin-bottom: 20px;
   }
-  
+
+  .core-values-box {
+    padding: 20px 15px;
+  }
+
+  .about-subtitle {
+    font-size: 20px;
+  }
+
+  .core-values {
+    grid-template-columns: 1fr;
+  }
+
+  .core-value-item {
+    margin: 0 auto;
+    max-width: 100%;
+    padding: 10px;
+  }
+
+  .core-value-item span {
+    font-size: 14px;
+  }
+}

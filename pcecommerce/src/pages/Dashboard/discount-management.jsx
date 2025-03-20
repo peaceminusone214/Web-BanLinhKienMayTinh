@@ -171,12 +171,12 @@ function Discount() {
                             </li>
                           </ul>
                         </div>
-                        <a
+                        <Link to ="/admin/uploaddiscount"
                           href="discount-details"
                           className="sherah-btn sherah-gbcolor"
                         >
-                          Add New Vendor
-                        </a>
+                          Thêm mã giảm giá mới
+                        </Link>
                       </div>
                     </div>
                     <div className="sherah-table sherah-page-inner sherah-border sherah-default-bg mg-top-25">

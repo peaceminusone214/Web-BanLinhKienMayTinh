@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./MainStyles/styleCheckOut.css";
 
 function Checkout() {
+  const API_URL = process.env.REACT_APP_API_URL;
+  const [user, setUser] = useState(null);
   // Thông tin người mua
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
@@ -13,6 +15,18 @@ function Checkout() {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedWard, setSelectedWard] = useState(""); 
+
+  useEffect(() => {
+    fetch(`${API_URL}/auth/session`, {
+      credentials: "include",
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Chưa đăng nhập");
+        return res.json();
+      })
+      .then((data) => setUser(data.user))
+      .catch(() => setUser(null)); // Nếu chưa đăng nhập, user sẽ là null
+  }, []);
 
   useEffect(() => {
     fetch("./assets/data/locations.json")
@@ -135,9 +149,15 @@ function Checkout() {
         {/* Cột trái: Form */}
         <div className="checkout-left">
           <h2 className="checkout-section-title">Thông tin giao hàng</h2>
-          <div className="checkout-login-notice">
-            Bạn có tài khoản? <a href="/login">Đăng nhập</a>
-          </div>
+          
+          {user ? (
+        <h2></h2>
+      ) : (
+        <div className="checkout-login-notice">
+          Bạn có tài khoản? <a href="/login">Đăng nhập</a>
+        </div>
+      )}
+
 
           {/* Họ tên, SĐT, Email, Địa chỉ cụ thể */}
           <div className="form-group-CO">
