@@ -18,6 +18,9 @@ import SanPham from './pages/Main/SanPham';
 import Tips from './pages/Main/Tips';
 import Software from './pages/Main/Software';
 
+import CategoryPage from "./pages/Main/CategoryPage";
+
+
 function App() {
   const location = useLocation();
   const isAdminPath = location.pathname.startsWith("/admin");
@@ -38,14 +41,15 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/news" element={<News />} />
         <Route path="/tech" element={<Tech />} />
-        <Route path="/buildpc" element={<BuildPC/>} />
+        <Route path="/buildpc" element={<BuildPC />} />
         <Route path="News/tech" element={<Tech />} />
         <Route path="News/game" element={<Game />} />
         <Route path="News/san-pham" element={<SanPham />} />
         <Route path="News/tips" element={<Tips />} />
-        <Route path="News/software" element={<Software />} /> 
+        <Route path="News/software" element={<Software />} />
 
-
+        <Route path="News/software" element={<Software />} />
+        <Route path="/category/:slug" element={<CategoryPage />} />
 
         {/* Admin Routes (protected) */}
         <Route element={<ProtectedRoute />}>
@@ -63,8 +67,8 @@ function AppWrapper() {
   return (
     <BrowserRouter>
       <App />
-      
-      <Footer/>
+
+      <Footer />
 
     </BrowserRouter>
   );
