@@ -613,6 +613,31 @@ function AdminMenu() {
                       </ul>
                     </div>
                   </li>
+                  
+                  {/*Quản lý tin tức item */}
+                  <li>
+                    <Link to="/admin/news-management" className="collapsed">
+                      <span className="menu-bar__text">
+                        <span className="sherah-menu-icon sherah-svg-icon__v1">
+                          <svg
+                            className="sherah-svg-icon"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="19.434"
+                            height="19.432"
+                            viewBox="0 0 19.434 19.432"
+                          >
+                            {/* Icon SVG tùy chọn cho tin tức */}
+                            <g id="Icon" transform="translate(0 0)">
+                              <path d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm0 18.182c-4.516 0-8.182-3.666-8.182-8.182S5.484 1.818 10 1.818 18.182 5.484 18.182 10 14.516 18.182 10 18.182z" />
+                              <path d="M10 5.455a4.545 4.545 0 1 0 4.545 4.545A4.55 4.55 0 0 0 10 5.455z" />
+                            </g>
+                          </svg>
+                        </span>
+                        <span className="menu-bar__name">Quản lý tin tức</span>
+                      </span>
+                    </Link>
+                  </li>
+
                   {/* Invoice menu item */}
                   <li>
                     <Link to="/admin/invoiceprint" className="collapsed">

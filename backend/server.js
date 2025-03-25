@@ -11,11 +11,13 @@ const buildRoutes = require("./routes/build");
 const discountRoutes = require("./routes/discount");
 const cartRoutes = require("./routes/cart");
 const newsRoutes = require("./routes/news");
+// Import router thanh toán VNPay
+const paymentRouter = require("./routes/payment");
 
 const app = express();
 require("dotenv").config();
 
-// Kết nối MongoDB
+//Kết nối MongoDB
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
@@ -23,7 +25,25 @@ mongoose
     console.log("MongoDB connection error:", err);
     process.exit(1);
   });
+// mongoose
+//   .connect(process.env.MONGO_URI, {
+//     dbName: "pcshop",
+//     serverSelectionTimeoutMS: 30000,
+//     socketTimeoutMS: 360000,
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   })
+//   .then(() => console.log("MongoDB connected"))
+//   .catch((err) => {
+//     console.log("MongoDB connection error:", err);
+//     process.exit(1);
+//   });
 
+
+
+
+
+  
 // Cấu hình session middleware
 app.use(
   session({
@@ -64,9 +84,14 @@ app.use("/api/build", buildRoutes);
 app.use("/api/discount", discountRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/news", newsRoutes);
+app.use("/api/payment", paymentRouter);
+
 
 // Khởi động server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+
+

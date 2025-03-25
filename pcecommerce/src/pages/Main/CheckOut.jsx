@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./MainStyles/styleCheckOut.css";
+import { useNavigate } from "react-router-dom"; 
 
 function Checkout() {
   const API_URL = process.env.REACT_APP_API_URL;
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
   // Thông tin người mua
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
@@ -99,8 +101,34 @@ function Checkout() {
   // Tính tổng
   const totalOrder = calculateSubtotal() - discountValue + shippingFee;
 
-  // Xử lý đặt hàng (demo)
+  // Hàm xử lý tích hợp VNPAY
+  const handleVnpayPayment = (orderData) => {
+    // Gửi thông tin đơn hàng đến endpoint của backend xử lý VNPay
+    fetch(`${API_URL}/payment/vnpay`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(orderData),
+    })   
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.url) {
+          // Chuyển hướng người dùng đến trang thanh toán VNPay
+          window.location.href = data.url;
+        } else {
+          alert("Có lỗi xảy ra khi tạo yêu cầu thanh toán VNPay!");
+        }
+      })
+      .catch((error) => {
+        console.error("Lỗi thanh toán VNPay:", error);
+        alert("Có lỗi xảy ra trong quá trình thanh toán!");
+      });
+  };
+  
+
+
+  // Xử lý đặt hàng
   const handlePlaceOrder = () => {
+    const orderId = Date.now().toString();
     const orderData = {
       fullName,
       phone,
@@ -114,9 +142,19 @@ function Checkout() {
       paymentMethod,
       cartItems,
       total: totalOrder,
+      orderId,
     };
-    console.log("Order Data:", orderData);
-    alert("Đặt hàng thành công! (Demo)");
+
+    // Lưu orderData vào localStorage
+    localStorage.setItem("orderData", JSON.stringify(orderData));
+
+    if (paymentMethod === "vnpay") {
+      // Nếu thanh toán qua VNPAY, chuyển hướng đến trang thanh toán VNPAY
+      handleVnpayPayment(orderData);
+    } else {
+      // Với các phương thức khác, chuyển hướng sang trang xác nhận
+      navigate("/order-confirm");
+    }
   };
 
   // Nếu giỏ hàng trống
@@ -323,7 +361,23 @@ function Checkout() {
               Chuyển khoản qua ngân hàng
             </label>
           </div>
-
+          <div className="form-group-radio">
+            <label>
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="vnpay"
+                checked={paymentMethod === "vnpay"}
+                onChange={() => setPaymentMethod("vnpay")}
+              />
+              <img 
+                src="./assets/icons/vnpay-icon.svg" 
+                alt="VNPAY Icon" 
+                className="payment-icon" 
+              />
+              Thanh toán qua VNPAY
+            </label>
+          </div>
 
           <button className="checkout-button" onClick={handlePlaceOrder}>
             Hoàn tất đơn hàng

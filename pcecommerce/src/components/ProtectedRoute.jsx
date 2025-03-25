@@ -23,12 +23,14 @@ import Vendorlist from "../pages/Dashboard/vendor-list";
 import Vendorprofile from "../pages/Dashboard/vendor-profile";
 import Vendor from "../pages/Dashboard/vendor";
 import Wishlist from "../pages/Dashboard/wishlist";
-import Discount from "../pages/Dashboard/discount-management"
+import Discount from "../pages/Dashboard/discount-management";
 import AdminMenu from "./AdminMenu";
 import AdminHeader from "./AdminHeader";
 import Customerslist from "../pages/Dashboard/customer-list copy";
 import Customer from "../pages/Dashboard/customers copy";
 import Uploaddiscount from "../pages/Dashboard/upload-discount";
+import NewsManagement from "../pages/Dashboard/news-management";
+import AddNews from "../pages/Dashboard/add-news";
 
 const ProtectedRoute = () => {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -58,7 +60,7 @@ const ProtectedRoute = () => {
     };
 
     checkSession();
-  }, []);
+  }, [API_URL]);
 
   if (loading) return <p>Loading...</p>;
 
@@ -103,6 +105,8 @@ const ProtectedRoute = () => {
           <Route path="/admin/discount" element={<Discount />} />
           <Route path="/admin/customerslist" element={<Customerslist />} />
           <Route path="/admin/customer" element={<Customer />} />
+          <Route path="/admin/news-management" element={<NewsManagement />} />
+          <Route path="/admin/add-news" element={<AddNews />} />
         </Routes>
       </div>
     );

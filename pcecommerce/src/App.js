@@ -17,6 +17,7 @@ import SanPham from './pages/Main/SanPham';
 import Tips from './pages/Main/Tips';
 import Software from './pages/Main/Software';
 import Checkout from './pages/Main/CheckOut';
+import OrderConfirm from './pages/Main/OrderConfirm';
 
 function App() {
   const location = useLocation();
@@ -44,6 +45,7 @@ function App() {
         <Route path="News/tips" element={<Tips />} />
         <Route path="News/software" element={<Software />} /> 
         <Route path="/checkout" element={<Checkout />} /> 
+        <Route path="/order-confirm" element={<OrderConfirm />} />
 
         {/* Admin Routes (protected) */}
         <Route element={<ProtectedRoute />}>
