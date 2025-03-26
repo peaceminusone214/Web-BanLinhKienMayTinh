@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác nhận đơn hàng</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; }
+        h2 { color: #4CAF50; }
+        .details { margin-top: 20px; padding: 10px; background: #f9f9f9; border-radius: 5px; }
+        .footer { margin-top: 20px; font-size: 14px; color: #777; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Cảm ơn {{fullName}} đã đặt hàng tại PC Shop!</h2>
+        <p>Đơn hàng của bạn đã được xác nhận.</p>
+        <div class="details">
+            <p><strong>Mã đơn hàng:</strong> {{orderId}}</p>
+            <p><strong>Tổng tiền:</strong> {{totalAmount}} đ</p>
+            <p><strong>Địa chỉ giao hàng:</strong> {{shippingAddress}}</p>
+        </div>
+        <h3>Chi tiết đơn hàng:</h3>
+        <ul>
+            {{#each products}}
+                <li>{{this.product_name}} (x{{this.quantity}}) - {{this.total_price}} đ</li>
+            {{/each}}
+        </ul>
+        <p>Nếu có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi.</p>
+        <div class="footer">PC Shop - Phụ kiện Máy Tính | Build PC</div>
+    </div>
+</body>
+</html>

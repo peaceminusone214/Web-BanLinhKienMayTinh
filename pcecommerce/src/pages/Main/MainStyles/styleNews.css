@@ -1,0 +1,311 @@
+/* Tổng thể */
+.news-container {
+  max-width: 1200px;
+  margin: auto;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background-color: #f7f7f7;
+  box-sizing: border-box;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  font-size: 18px;
+  color: rgb(160, 111, 111);
+  margin: 20px 0;
+  padding: 15px 0;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+}
+
+.breadcrumb a {
+  color: black;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 0 10px;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.breadcrumb a:hover {
+  color: #007BFF;
+  transform: scale(1.05);
+}
+
+.breadcrumb .current {
+  font-weight: bold;
+  color: #333;
+  padding: 0 10px;
+}
+
+.breadcrumb a:not(:last-child)::after {
+  content: " / ";
+  padding-left: 10px;
+  color: rgb(160, 111, 111);
+}
+
+/* Danh mục */
+.news-categories {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin: 20px 0;
+  border-bottom: 3px solid #f6c899;
+  padding-bottom: 10px;
+}
+
+.news-categories a {
+  text-decoration: none;
+  color: black;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.news-categories a:hover {
+  color: #007BFF;
+  transform: scale(1.1);
+}
+
+/* Nội dung chính */
+.news-content {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+/* Tin nổi bật */
+.featured-article {
+  flex: 2;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.featured-article:hover {
+  transform: scale(1.05);
+}
+
+.featured-article img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  transition: opacity 0.5s ease;
+}
+
+.featured-article:hover img {
+  opacity: 0.8;
+}
+
+.featured-article .overlay {
+  position: absolute;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  width: 100%;
+  padding: 15px;
+  transition: background 0.3s ease;
+}
+
+.featured-article:hover .overlay {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.featured-article h2 {
+  font-size: 20px;
+  margin: 0;
+  color: #ddd;
+  font-weight: bold;
+}
+
+.featured-article p {
+  font-size: 14px;
+  margin-top: 5px;
+  color: #ddd;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Bài viết mới nhất */
+.latest-news {
+  flex: 1;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.latest-news:hover {
+  transform: scale(1.03);
+}
+
+.latest-news h3 {
+  font-size: 18px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.latest-news .highlight {
+  color: #007BFF;
+}
+
+.latest-news-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.latest-news-item:hover {
+  transform: translateX(10px);
+}
+
+.latest-news-item img {
+  width: 80px;
+  height: 80px;
+  border-radius: 5px;
+}
+
+.latest-news-item h4 {
+  font-size: 14px;
+  margin: 0;
+  font-weight: bold;
+}
+
+.latest-news-item .datenews {
+  font-size: 12px;
+  color: gray;
+}
+
+.latest-news-item .description {
+  font-size: 12px;
+  color: black;
+  line-height: 1.4;
+}
+
+/* Tin công nghệ */
+.news-experience {
+  margin-top: 30px;
+}
+
+.news-experience h3 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 5px;
+}
+
+.news-experience-list {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.news-item {
+  display: flex;
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+  align-items: center;
+  gap: 10px;
+  transition: transform 0.3s ease;
+}
+
+.news-item:hover {
+  transform: translateY(-5px);
+}
+
+.news-item img {
+  width: 100px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.news-item h4 {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.news-item .author {
+  font-size: 12px;
+  color: gray;
+}
+
+/* Game */
+.news-game {
+  margin-top: 30px;
+}
+
+.news-game h3 {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  text-transform: uppercase;
+  border-bottom: 2px solid #007bff;
+  margin-bottom: 15px;
+}
+
+.news-game .news-game-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.news-game .game-item {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.news-game .game-item img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.news-game .game-item h4 {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 10px;
+  color: #222;
+}
+
+.news-game .game-item .datenews {
+  font-size: 13px;
+  color: #777;
+  margin: 0 10px 10px;
+}
+
+.news-game .game-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .news-content {
+    flex-direction: column;
+  }
+
+  .featured-article,
+  .latest-news {
+    flex: 1;
+  }
+
+  .news-categories {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .news-game .news-game-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}

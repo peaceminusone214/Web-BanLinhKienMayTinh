@@ -1,0 +1,77 @@
+/* Tech */
+.tech-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+
+/* Nội dung chính */
+.tech-content h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Grid hiển thị bài viết */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  
+  .tech-item {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+  }
+  
+  .tech-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .tech-item img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+  }
+  
+  .tech-item h3 {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+    color: #333;
+  }
+  
+  .tech-item .datetech {
+    font-size: 14px;
+    color: #777;
+    padding: 0 10px 10px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .tech-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .tech-grid {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  
+    .news-categories {
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  
+    .news-categories a {
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+  }
