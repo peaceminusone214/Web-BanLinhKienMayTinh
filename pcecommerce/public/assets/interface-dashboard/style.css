@@ -2224,7 +2224,14 @@ Version:	1.0.0
 }
 .sherah-table__main .sherah-table__head tr th, 
 .sherah-table__main .sherah-table__body tr td {
-	width: 22.28%;
+	/* width: 22.28%; */
+	vertical-align: middle;
+	text-align: left;
+	padding: 20px 40px;
+}
+.sherah-table__main .sherah-table__body tr .sherah-table__column-10, 
+.sherah-table__main .sherah-table__head tr .sherah-table__column-10 {
+	width: 20% !important;
 	vertical-align: middle;
 	text-align: left;
 	padding: 20px 40px;
@@ -6143,7 +6150,7 @@ width: 100%;
 	display: flex;
 	gap: 12px;
 	align-items: center;
-	justify-content: space-between;
+	justify-content: flex-start;
 }
 .sherah-table__action {
 	min-width: 42px;

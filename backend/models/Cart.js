@@ -24,16 +24,19 @@ const CartSchema = new mongoose.Schema({
     },
   ],
   deliveryDate: {
-    type: String, // Lưu theo định dạng YYYY-MM-DD
+    type: String,
     required: false,
   },
   deliveryTime: {
-    type: String, // Lưu khung giờ: "10:00 AM - 12:00 PM"
+    type: String,
     required: false,
   },
   total_price: {
     type: Number,
     default: 0,
+  },
+  note: {
+    type: String,
   },
   created_at: {
     type: Date,

@@ -74,7 +74,7 @@ function Footer() {
             <h3>THÔNG TIN KHÁC</h3>
             <p>Fan Page PC Parts Store</p>
             <p>📞 0987654321 (8:00 - 21:00)</p>
-            <p>📧 oitroioilatroi@luadao.vip</p>
+            <p>📧 example@email.com.vn</p>
           </div>
         </div>
 

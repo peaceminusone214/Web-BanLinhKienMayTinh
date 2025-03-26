@@ -402,7 +402,7 @@ function Productslist() {
                                   />
                                 ) : (
                                   <p className="sherah-table__product-desc">
-                                    {product.price} VND
+                                  {product.price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}
                                   </p>
                                 )}
                               </td>

@@ -103,9 +103,9 @@ function Login() {
               <div className="sherah-wc__form">
                 <div className="sherah-wc__form-inner">
                   <h3 className="sherah-wc__form-title sherah-wc__form-title__one">
-                    Login Your Account{" "}
+                    Đăng nhập vào tài khoản của bạn{" "}
                     <span>
-                      Please enter your username and password to continue
+                      Vui lòng nhập tài khoản và mật khẩu
                     </span>
                   </h3>
                   {/* Sign in Form */}
@@ -114,13 +114,13 @@ function Login() {
                     onSubmit={handleLogin} // Gọi handleLogin khi submit form
                   >
                     <div className="form-group">
-                      <label className="sherah-wc__form-label">Username</label>
+                      <label className="sherah-wc__form-label">Tài khoản</label>
                       <div className="form-group__input">
                         <input
                           className="sherah-wc__form-input"
                           type="text"
                           name="username"
-                          placeholder="Enter your username"
+                          placeholder="Nhập tài khoản của bạn"
                           required
                           value={username} // Liên kết với state
                           onChange={(e) => setUsername(e.target.value)} // Cập nhật username khi thay đổi
@@ -128,7 +128,7 @@ function Login() {
                       </div>
                     </div>
                     <div className="form-group">
-                      <label className="sherah-wc__form-label">Password</label>
+                      <label className="sherah-wc__form-label">Mật khẩu</label>
                       <div className="form-group__input">
                         <input
                           className="sherah-wc__form-input"
@@ -146,15 +146,15 @@ function Login() {
                     <div className="form-group form-mg-top25">
                       <div className="sherah-wc__button sherah-wc__button--bottom">
                         <button className="ntfmax-wc__btn" type="submit">
-                          Login
+                          Đăng nhập
                         </button>
                       </div>
                     </div>
                     <div className="form-group mg-top-20">
                       <div className="sherah-wc__bottom">
                         <p className="sherah-wc__text">
-                          Don’t have an account?{" "}
-                          <Link to ="/register">Sign up free</Link>
+                          Bạn chưa có tài khoản?{" "}
+                          <Link to ="/register">Đăng ký ngay</Link>
                         </p>
                       </div>
                     </div>

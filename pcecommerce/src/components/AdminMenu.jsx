@@ -6,6 +6,7 @@ function AdminMenu() {
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [isOrdersOpen, setIsOrdersOpen] = useState(false);
   const [isPagesOpen, setIsPagesOpen] = useState(false);
+  const [isNewsOpen, setIsNewsOpen] = useState(false);
 
   const toggleVendorsDropdown = () => {
     setIsVendorsOpen(!isVendorsOpen);
@@ -22,6 +23,10 @@ function AdminMenu() {
   const togglePagesDropdown = () => {
     setIsPagesOpen(!isPagesOpen);
   };
+  const toggleNewsDropdown = () => {
+    setIsNewsOpen(!isNewsOpen);
+  };
+
 
   return (
     <div>
@@ -613,6 +618,52 @@ function AdminMenu() {
                       </ul>
                     </div>
                   </li>
+                  {/*Quản lý tin tức item */}
+                  <li>
+                    <a
+                      className={`collapsed ${isPagesOpen ? "show" : ""}`}
+                      onClick={toggleNewsDropdown} // Gọi hàm toggle của isNewssOpen
+                    >
+                      <span className="menu-bar__text">
+                        <span className="sherah-menu-icon sherah-svg-icon__v1">
+                          <svg
+                            className="sherah-svg-icon"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="22.259"
+                            height="19.146"
+                            viewBox="0 0 22.259 19.146"
+                          >
+                            <path d="M2 3h18v2H2zM2 8h18v2H2zM2 13h18v2H2z" />
+                          </svg>
+                        </span>
+                        <span className="menu-bar__name">Quản lý tin tức</span>
+                      </span>
+                      <span className="sherah__toggle" />
+                    </a>
+                    <div
+                      className={`collapse sherah__dropdown ${isNewsOpen ? "show" : ""}`}
+                      id="menu-item__news"
+                      data-bs-parent="#sherahMenu"
+                    >
+                      <ul className="menu-bar__one-dropdown">
+                        <li>
+                          <Link to="/admin/news-management">
+                            <span className="menu-bar__text">
+                              <span className="menu-bar__name">Danh sách tin tức</span>
+                            </span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/admin/add-news">
+                            <span className="menu-bar__text">
+                              <span className="menu-bar__name">Cài đặt giao diện</span>
+                            </span>
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+
                   {/* Invoice menu item */}
                   <li>
                     <Link to="/admin/invoiceprint" className="collapsed">

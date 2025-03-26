@@ -5,7 +5,7 @@ const Cart = require("../models/Cart");
 // Route đồng bộ giỏ hàng khi đăng nhập
 router.post("/sync", async (req, res) => {
   try {
-    const { user_id, cartItems, deliveryDate, deliveryTime } = req.body;
+    const { user_id, cartItems, deliveryDate, deliveryTime, note } = req.body;
 
     if (!user_id || !cartItems) {
       return res.status(400).json({ message: "Thiếu user_id hoặc cartItems" });
@@ -22,7 +22,7 @@ router.post("/sync", async (req, res) => {
       quantity: item.quantity,
       price: item.price,
     }));
-
+    cart.note = note;
     cart.deliveryDate = deliveryDate || null;
     cart.deliveryTime = deliveryTime || null;
 

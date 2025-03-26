@@ -171,7 +171,8 @@ function Discount() {
                             </li>
                           </ul>
                         </div>
-                        <Link to ="/admin/uploaddiscount"
+                        <Link
+                          to="/admin/uploaddiscount"
                           href="discount-details"
                           className="sherah-btn sherah-gbcolor"
                         >
@@ -288,10 +289,12 @@ function Discount() {
                                   />
                                 ) : (
                                   <p className="sherah-table__order-value">
-                                    {discount.discount_value}
+                                    {discount.discount_value.toLocaleString(
+                                      "vi-VN"
+                                    )}{" "}
                                     {discount.discount_type === "percentage"
                                       ? "%"
-                                      : " VNĐ"}
+                                      : "₫"}
                                   </p>
                                 )}
                               </td>
@@ -307,7 +310,10 @@ function Discount() {
                                   />
                                 ) : (
                                   <p className="sherah-table__order-desc">
-                                    {discount.min_order_value}
+                                    {discount.min_order_value.toLocaleString(
+                                      "vi-VN",
+                                      { style: "currency", currency: "VND" }
+                                    )}
                                   </p>
                                 )}
                               </td>
@@ -358,7 +364,7 @@ function Discount() {
 
                               <td className="sherah-table__column-8 sherah-table__data-8">
                                 <div className="sherah-table__status__group">
-                                {editingDiscountId === discount._id ? (
+                                  {editingDiscountId === discount._id ? (
                                     <>
                                       <button
                                         onClick={handleSaveClick}

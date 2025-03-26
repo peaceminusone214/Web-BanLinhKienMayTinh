@@ -9,6 +9,9 @@ const OrderSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Build",
   },
+  fullName: { type: String },
+  phone: { type: String },
+  email: { type: String },
   products: [
     {
       product_id: {
@@ -38,18 +41,37 @@ const OrderSchema = new mongoose.Schema({
       "Failed",
     ],
   },
-  total_amount: {
-    type: Number,
-    required: true,
-  },
   payment_status: {
     type: String,
     enum: ["Unpaid", "Paid", "Refund"],
   },
   payment_method: {
     type: String,
-    enum: ["Credit Card", "PayPal", "Bank Transfer"],
+    enum: ["COD", "Bank Transfer"],
   },
+  shipping_address: {
+    street: { type: String },
+    province: { type: String },
+    city: { type: String },
+    ward: { type: String },
+  },
+  deliveryDate: {
+    type: String,
+    required: false,
+  },
+  deliveryTime: {
+    type: String,
+    required: false,
+  },
+  note: {
+    type: String,
+  },
+  discount_code: { type: String },
+  discount_amount: { type: Number, default: 0 },
+  shipping_fee: { type: Number, default: 0 },
+  VAT: { type: Number, required: true, default: 0 },
+  subtotal: { type: Number },
+  total_amount: { type: Number },
   created_at: {
     type: Date,
     default: Date.now,

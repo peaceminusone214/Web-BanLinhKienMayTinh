@@ -3,7 +3,7 @@
   background-color: #f1f1f1;
   color: black;
   font-family: Arial, sans-serif;
-  margin-top: 500px;
+  margin-top: 100px;
 }
 
 /* Dịch vụ hỗ trợ */
@@ -112,10 +112,6 @@
 
 .payment-methods img {
   height: 40px;
-}
-
-.service-item img {
-  filter: invert(48%) sepia(91%) saturate(1352%) hue-rotate(188deg) brightness(99%) contrast(88%);
 }
 
 .footer-copy-right{

@@ -62,11 +62,13 @@ const BuildPC = () => {
 
   // Lấy danh sách hãng sản xuất từ API
   useEffect(() => {
-    fetch(`${API_URL}/product/get-brands`)
-      .then((response) => response.json())
-      .then((data) => setBrands(data))
-      .catch((error) => console.error("Lỗi khi lấy hãng sản xuất:", error));
-  }, []);
+    if (selectedCategory) {
+      fetch(`${API_URL}/product/get-brands-category?category_id=${selectedCategory._id}`)
+        .then((response) => response.json())
+        .then((data) => setBrands(data))
+        .catch((error) => console.error("Lỗi khi lấy hãng sản xuất:", error));
+    }
+  }, [selectedCategory]);  
 
   // Lấy danh sách danh mục từ API bằng fetch
   useEffect(() => {

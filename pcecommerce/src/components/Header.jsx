@@ -10,7 +10,7 @@ function Header() {
 
   useEffect(() => {
     fetch(`${API_URL}/auth/session`, {
-      credentials: "include", // Gửi cookie session
+      credentials: "include",
     })
       .then((res) => {
         if (!res.ok) throw new Error("Chưa đăng nhập");
@@ -35,7 +35,7 @@ function Header() {
       <section className="header-banner-top">
         <a href="/">
           <img
-            src="/assets/interface-main/imgComp/bannerHeader.png" alt="#" />
+            src="" alt="#" />
         </a>
       </section>
 
@@ -58,7 +58,7 @@ function Header() {
               <a href="/" className="title-group title-group-hover">
                 <i className="fa fa-users" aria-hidden="true"></i> Tuyển dụng
               </a>
-              <a href="/" className="title-group title-group-hover">
+              <a href="/contact" className="title-group title-group-hover">
                 <i className="fa fa-envelope" aria-hidden="true"></i> Liên hệ
               </a>
               <a href="/about" className="title-group title-group-hover">
@@ -146,70 +146,70 @@ function Header() {
                 </li> */}
 
                 <li class="header-nav-item" data-id="5">
-                  <a href="https://kccshop.vn/main-bo-mach-chu/" class="header-nav-link">
+                  <a href="#" class="header-nav-link">
                     <img src="assets/interface-main/category/cat_icon_5_1666946989.png" class="lazy" alt="MAIN" />
                     MAIN
                   </a>
                 </li>
 
                 <li class="header-nav-item" data-id="6">
-                  <a href="https://kccshop.vn/cpu-bo-vi-xu-ly/" class="header-nav-link">
+                  <a href="#" class="header-nav-link">
                     <img src="assets/interface-main/category/cat_icon_6_1666947154.png" class="lazy" alt="CPU" />
                     CPU
                   </a>
                 </li>
 
                 <li class="header-nav-item" data-id="7">
-                  <a href="https://kccshop.vn/ram-bo-nho-trong/" class="header-nav-link">
+                  <a href="#" class="header-nav-link">
                     <img src="/assets/interface-main/category/cat_icon_7_1666947261.png" class="lazy" alt="RAM" />
                     RAM
                   </a>
                 </li>
 
                 <li class="header-nav-item" data-id="8">
-                  <a href="https://kccshop.vn/vga-card-man-hinh/" class="header-nav-link">
+                  <a href="#" class="header-nav-link">
                     <img src="/assets/interface-main/category/cat_icon_8_1666947758.png" class="lazy" alt="VGA" />
                     VGA
                   </a>
                 </li>
 
                 <li class="header-nav-item" data-id="9">
-                  <a href="https://kccshop.vn/o-cung-hdd-ssd/" class="header-nav-link">
+                  <a href="#" class="header-nav-link">
                     <img src="/assets/interface-main/category/cat_icon_9_1666947423.png" class="lazy" alt="Ổ cứng" />
                     Ổ cứng
                   </a>
                 </li>
 
                 <li class="header-nav-item" data-id="10">
-                  <a href="https://kccshop.vn/psu-nguon-may-tinh/" class="header-nav-link">
+                  <a href="#" class="header-nav-link">
                     <img src="/assets/interface-main/category/cat_icon_10_1666948930.png" class="lazy" alt="PSU" />
                     PSU
                   </a>
                 </li>
 
                 <li class="header-nav-item" data-id="11">
-                  <a href="https://kccshop.vn/case-vo-may-tinh/" class="header-nav-link">
+                  <a href="#" class="header-nav-link">
                     <img src="/assets/interface-main/category/cat_icon_11_1666948005.png" class="lazy" alt="Case" />
                     Case
                   </a>
                 </li>
 
                 <li class="header-nav-item" data-id="12">
-                  <a href="https://kccshop.vn/man-hinh-may-tinh/" class="header-nav-link">
+                  <a href="#" class="header-nav-link">
                     <img src="/assets/interface-main/category/cat_icon_12_1666948799.png" class="lazy" alt="Màn hình" />
                     Màn hình
                   </a>
                 </li>
 
                 <li class="header-nav-item" data-id="13">
-                  <a href="https://kccshop.vn/phu-kien-may-tinh/" class="header-nav-link">
+                  <a href="#" class="header-nav-link">
                     <img src="/assets/interface-main/category/cat_icon_13_1666948138.png" class="lazy" alt="Gaming Gear" />
                     Gaming Gear
                   </a>
                 </li>
 
                 <li class="header-nav-item" data-id="14">
-                  <a href="https://kccshop.vn/tan-nhiet/" class="header-nav-link">
+                  <a href="#" class="header-nav-link">
                     <img src="/assets/interface-main/category/cat_icon_14_1666948072.png" class="lazy" alt="Tản Nhiệt" />
                     Tản Nhiệt
                   </a>

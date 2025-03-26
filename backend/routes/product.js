@@ -307,6 +307,31 @@ router.get("/get-brands", async (req, res) => {
   }
 });
 
+// Route lấy danh sách thương hiệu (brand) theo danh mục
+router.get("/get-brands-category", async (req, res) => {
+  try {
+    const { category_id } = req.query;
+
+    // Nếu có category_id, chỉ lấy thương hiệu của danh mục đó
+    let query = {};
+    if (category_id) {
+      query = { category_id };
+    }
+
+    // Lấy danh sách các thương hiệu từ các sản phẩm theo danh mục (nếu có)
+    const brands = await Product.distinct("brand", query);
+
+    if (brands.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy thương hiệu nào" });
+    }
+
+    res.status(200).json(brands);
+  } catch (err) {
+    console.error("Lỗi:", err);
+    res.status(500).json({ message: "Lỗi máy chủ khi lấy thương hiệu" });
+  }
+});
+
 // Route lấy danh sách các trường của Specification
 router.get("/get-specifications", async (req, res) => {
   try {

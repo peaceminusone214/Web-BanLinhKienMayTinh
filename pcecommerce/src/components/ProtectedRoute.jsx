@@ -16,7 +16,7 @@ import Orderslist from "../pages/Dashboard/orders-list";
 import Productlist from "../pages/Dashboard/product-list";
 import Productslist from "../pages/Dashboard/products-list";
 import Products from "../pages/Dashboard/products";
-import Profileinfo from "../pages/Dashboard/profile-info";
+import ProfileinfoAdmin from "../pages/Dashboard/profile-info";
 import Termsconditions from "../pages/Dashboard/terms-conditions";
 import Uploadproduct from "../pages/Dashboard/upload-product";
 import Vendorlist from "../pages/Dashboard/vendor-list";
@@ -29,6 +29,8 @@ import AdminHeader from "./AdminHeader";
 import Customerslist from "../pages/Dashboard/customer-list copy";
 import Customer from "../pages/Dashboard/customers copy";
 import Uploaddiscount from "../pages/Dashboard/upload-discount";
+import NewsManagement from "../pages/Dashboard/news-management";
+import AddNews from "../pages/Dashboard/add-news";
 
 const ProtectedRoute = () => {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -86,13 +88,13 @@ const ProtectedRoute = () => {
           <Route path="/admin/languages" element={<Languages />} />
           <Route path="/admin/notifications" element={<Notifications />} />
           <Route path="/admin/orderdetails" element={<Orderdetails />} />
-          <Route path="/admin/ordersdetails" element={<Ordersdetails />} />
+          <Route path="/admin/ordersdetails/:id" element={<Ordersdetails />} />
           <Route path="/admin/orderlist" element={<Orderlist />} />
           <Route path="/admin/orderslist" element={<Orderslist />} />
           <Route path="/admin/productlist" element={<Productlist />} />
           <Route path="/admin/productslist" element={<Productslist />} />
           <Route path="/admin/products" element={<Products />} />
-          <Route path="/admin/profileinfo" element={<Profileinfo />} />
+          <Route path="/admin/profileinfo" element={<ProfileinfoAdmin />} />
           <Route path="/admin/termsconditions" element={<Termsconditions />} />
           <Route path="/admin/uploadproduct" element={<Uploadproduct />} />
           <Route path="/admin/uploaddiscount" element={<Uploaddiscount />} />
@@ -103,6 +105,8 @@ const ProtectedRoute = () => {
           <Route path="/admin/discount" element={<Discount />} />
           <Route path="/admin/customerslist" element={<Customerslist />} />
           <Route path="/admin/customer" element={<Customer />} />
+          <Route path="/admin/news-management" element={<NewsManagement />} />
+          <Route path="/admin/add-news" element={<AddNews />} />
         </Routes>
       </div>
     );
@@ -117,7 +121,7 @@ const ProtectedRoute = () => {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/productlist" element={<Productlist />} />
           <Route path="/admin/products" element={<Products />} />
-          <Route path="/admin/profileinfo" element={<Profileinfo />} />
+          <Route path="/admin/profileinfo" element={<ProfileinfoAdmin />} />
         </Routes>
       </div>
     );

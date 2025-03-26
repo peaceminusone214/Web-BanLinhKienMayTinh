@@ -17,6 +17,8 @@ import SanPham from './pages/Main/SanPham';
 import Tips from './pages/Main/Tips';
 import Software from './pages/Main/Software';
 import Checkout from './pages/Main/CheckOut';
+import ProfileInfo from './pages/Main/Profile-info';
+import Contact from './pages/Main/Contact';
 
 function App() {
   const location = useLocation();
@@ -29,10 +31,12 @@ function App() {
       {!isAdminPath && !isLoginPage && <Header />}
 
       <Routes>
+      
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Createaccount />} />
+        <Route path="/info" element={<ProfileInfo />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/news" element={<News />} />
@@ -44,6 +48,7 @@ function App() {
         <Route path="News/tips" element={<Tips />} />
         <Route path="News/software" element={<Software />} /> 
         <Route path="/checkout" element={<Checkout />} /> 
+        <Route path="/contact" element={<Contact />} /> 
 
         {/* Admin Routes (protected) */}
         <Route element={<ProtectedRoute />}>

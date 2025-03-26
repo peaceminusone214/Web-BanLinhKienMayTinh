@@ -1,5 +1,6 @@
 const express = require("express");
 const Discount = require("../models/Discount");
+const Product = require("../models/Product");
 const router = express.Router();
 
 // Route thêm mã giảm giá (có thể thêm nhiều mã)
@@ -200,6 +201,57 @@ router.get("/get-discount-types", async (req, res) => {
   } catch (err) {
     console.error("Lỗi:", err);
     res.status(500).json({ message: "Lỗi máy chủ khi lấy loại giảm giá" });
+  }
+});
+
+// Route xử lý mã giảm giá
+router.post("/apply-discount", async (req, res) => {
+  try {
+    const { discount_code, products } = req.body;
+
+    if (!discount_code) {
+      return res.status(400).json({ message: "Vui lòng nhập mã giảm giá!" });
+    }
+
+    const discount = await Discount.findOne({ code: discount_code });
+
+    if (!discount || discount.status !== "active") {
+      return res.status(400).json({ message: "Mã giảm giá không hợp lệ hoặc đã hết hạn!" });
+    }
+
+    // Tính tổng giá trị giỏ hàng (subtotal)
+    let subtotal = 0;
+    for (const item of products) {
+      const product = await Product.findById(item.product_id);
+      if (!product) {
+        return res.status(400).json({ message: `Sản phẩm với ID ${item.product_id} không tồn tại!` });
+      }
+      subtotal += product.price * item.quantity;
+    }
+
+    // Kiểm tra giá trị tối thiểu của đơn hàng để áp dụng giảm giá
+    if (subtotal < discount.min_order_value) {
+      return res.status(400).json({ message: `Mã giảm giá chỉ áp dụng cho đơn hàng từ ${discount.min_order_value.toLocaleString()} đ!` });
+    }
+
+    // Tính số tiền giảm giá
+    let discountAmount = 0;
+    if (discount.discount_type === "percentage") {
+      discountAmount = (subtotal * discount.discount_value) / 100;
+    } else if (discount.discount_type === "fixed_amount") {
+      discountAmount = discount.discount_value;
+    }
+
+    res.status(200).json({
+      success: true,
+      discount_code,
+      discount_amount: discountAmount,
+      message: `Mã giảm giá hợp lệ! Giảm ${discountAmount.toLocaleString()} đ`,
+    });
+
+  } catch (error) {
+    console.error("Lỗi xử lý mã giảm giá:", error);
+    res.status(500).json({ message: "Lỗi máy chủ khi áp dụng mã giảm giá!" });
   }
 });
 

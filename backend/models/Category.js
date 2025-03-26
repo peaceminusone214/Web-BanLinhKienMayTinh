@@ -13,6 +13,15 @@ const CategorySchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  slug: {
+    type: String,
+  },
+  subCategories: [
+    {
+      name: { type: String, required: true },
+      slug: { type: String, required: true },
+    }
+  ],
 });
 
 module.exports = mongoose.model("Category", CategorySchema);

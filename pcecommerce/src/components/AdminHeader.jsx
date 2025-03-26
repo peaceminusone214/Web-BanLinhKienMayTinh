@@ -747,7 +747,7 @@ function AdminHeader() {
                                 />
                               </svg>
                               <h3 className="sherah-dropdown-card__title sherah-border-btm">
-                                My Profile
+                                Thông tin tài khoản
                               </h3>
                               {/* sherah Balance List */}
                               <ul className="sherah-dropdown-card_list">
@@ -788,7 +788,7 @@ function AdminHeader() {
                                         </svg>
                                       </div>
                                       <h4 className="sherah-dropdown-card-name">
-                                        <a>My Profile</a>
+                                        <a>Tài khoản</a>
                                       </h4>
                                     </div>
                                   </Link>
@@ -848,7 +848,7 @@ function AdminHeader() {
                                         </svg>
                                       </div>
                                       <h4 className="sherah-dropdown-card-name ">
-                                        <a>Message</a>
+                                        <a>Tin nhắn</a>
                                       </h4>
                                     </div>
                                   </Link>
@@ -899,7 +899,7 @@ function AdminHeader() {
                                         </svg>
                                       </div>
                                       <h4 className="sherah-dropdown-card-name">
-                                        <a>Settings</a>
+                                        <a>Cài đặt</a>
                                       </h4>
                                     </div>
                                   </Link>
@@ -923,7 +923,7 @@ function AdminHeader() {
                                         </svg>
                                       </div>
                                       <h4 className="sherah-dropdown-card-name">
-                                        Logout
+                                        Đăng xuất
                                       </h4>
                                     </div>
                                   </a>

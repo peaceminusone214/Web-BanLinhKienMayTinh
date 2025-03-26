@@ -2,8 +2,6 @@ import React from 'react'
 import { useState } from 'react';
 import '../components/css/styleSearchBar.css'
 
-
-
 function Header() {
 
     const [searchText, setSearchText] = useState("");
@@ -16,7 +14,6 @@ function Header() {
     const clearSearch = () => {
         setSearchText("");
     };
-
 
     return (
         <div>
@@ -40,6 +37,7 @@ function Header() {
                                     name="q"
                                     className="search-bar-input"
                                     placeholder="Nhập từ khóa cần tìm"
+                                    style={{fontSize:12}}
                                     autoComplete="off"
                                     value={searchText}
                                     onChange={handleSearchChange}
@@ -115,7 +113,7 @@ function Header() {
                                     <p>0₫</p>
                                 </div>
                                 <div className="cart-ttip-price-button">
-                                    <a href="/cart" className="color-white">
+                                    <a href="/checkout" className="color-white">
                                         THANH TOÁN NGAY
                                     </a>
                                 </div>

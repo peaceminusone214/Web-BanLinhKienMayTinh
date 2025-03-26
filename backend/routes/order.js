@@ -1,67 +1,35 @@
 const express = require("express");
 const Order = require("../models/Order");
 const Product = require("../models/Product");
+const Discount = require("../models/Discount");
+const sendOrderEmail = require("../utils/email");
 const router = express.Router();
 
 // Route thêm đơn hàng
 router.post("/add-order", async (req, res) => {
   try {
     let orders = req.body;
-
     if (!Array.isArray(orders) || orders.length === 0) {
-      return res
-        .status(400)
-        .json({ message: "Danh sách đơn hàng trống hoặc không hợp lệ" });
+      return res.status(400).json({ message: "Danh sách đơn hàng trống hoặc không hợp lệ" });
     }
 
     const newOrders = [];
 
     for (const order of orders) {
-      let totalAmount = 0;
+      let subtotal = 0;
       let productDetails = [];
 
-      // Lặp qua danh sách sản phẩm trong đơn hàng
       for (const item of order.products) {
         const product = await Product.findById(item.product_id);
+        if (!product) return res.status(404).json({ message: `Sản phẩm ${item.product_id} không tồn tại` });
 
-        if (!product) {
-          return res
-            .status(404)
-            .json({
-              message: `Sản phẩm với ID ${item.product_id} không tồn tại`,
-            });
-        }
-
-        if (!item.quantity || isNaN(item.quantity) || item.quantity <= 0) {
-          return res
-            .status(400)
-            .json({
-              message: `Số lượng không hợp lệ cho sản phẩm ${product.product_name}`,
-            });
-        }
-
-        if (!product.price || isNaN(product.price)) {
-          return res
-            .status(500)
-            .json({
-              message: `Giá sản phẩm ${product.product_name} không hợp lệ`,
-            });
-        }
-
-        // Kiểm tra stock_quantity
         if (product.stock_quantity < item.quantity) {
-          return res
-            .status(400)
-            .json({
-              message: `Sản phẩm ${product.product_name} chỉ còn ${product.stock_quantity} trong kho`,
-            });
+          return res.status(400).json({ message: `Sản phẩm ${product.product_name} chỉ còn ${product.stock_quantity} trong kho` });
         }
 
-        // Tính tổng tiền
         const productTotal = product.price * item.quantity;
-        totalAmount += productTotal;
+        subtotal += productTotal;
 
-        // Lưu thông tin sản phẩm trong đơn
         productDetails.push({
           product_id: product._id,
           product_name: product.product_name,
@@ -71,35 +39,60 @@ router.post("/add-order", async (req, res) => {
           total_price: productTotal,
         });
 
-        // Trừ số lượng tồn kho
         product.stock_quantity -= item.quantity;
         await product.save();
       }
 
-      // Xác định trạng thái thanh toán và đơn hàng
-      const paymentStatus = order.payment_status || "Unpaid"; // Mặc định chưa thanh toán
-      const orderStatus = order.order_status || "Pending"; // Mặc định chờ xác nhận
+      let discountAmount = 0;
+      if (order.discount_code) {
+        const discount = await Discount.findOne({ code: order.discount_code });
+        if (discount && discount.status === "active" && subtotal >= discount.min_order_value) {
+          discountAmount = discount.discount_type === "percentage"
+            ? (subtotal * discount.discount_value) / 100
+            : discount.discount_value;
+        }
+      }
 
-      // Tạo đơn hàng
+      const VAT = (subtotal - discountAmount) * 0.1;
+      const shippingFee = order.shipping_fee ?? 50000;
+      const totalAmount = subtotal - discountAmount + VAT + shippingFee;
+
       const newOrder = new Order({
         user_id: order.user_id,
         products: productDetails,
+        subtotal,
+        discount_code: order.discount_code || "",
+        discount_amount: discountAmount,
+        VAT,
+        shipping_fee: shippingFee,
         total_amount: totalAmount,
-        payment_method: order.payment_method || "Credit Card",
-        payment_status: paymentStatus,
-        order_status: orderStatus,
-        created_at: new Date(),
-        updated_at: new Date(),
+        fullName: order.fullName,
+        phone: order.phone,
+        email: order.email,
+        payment_method: order.payment_method || "COD",
+        payment_status: order.payment_status || "Unpaid",
+        order_status: order.order_status || "Pending",
+        note: order.note || "",
+        deliveryDate: order.deliveryDate || "",
+        deliveryTime: order.deliveryTime || "",
+        shipping_address: order.shipping_address,
       });
 
       await newOrder.save();
       newOrders.push(newOrder);
+
+      // Gửi email xác nhận đơn hàng
+      await sendOrderEmail({
+        fullName: order.fullName,
+        email: order.email,
+        orderId: newOrder._id,
+        totalAmount,
+        shippingAddress: `${order.shipping_address.street}, ${order.shipping_address.ward}, ${order.shipping_address.city}, ${order.shipping_address.province}`,
+        products: productDetails,
+      });
     }
 
-    res.status(201).json({
-      message: `Thêm thành công ${newOrders.length} đơn hàng`,
-      orders: newOrders,
-    });
+    res.status(201).json({ message: `Thêm thành công ${newOrders.length} đơn hàng`, orders: newOrders });
   } catch (err) {
     console.error("Lỗi:", err);
     res.status(500).json({ message: "Lỗi máy chủ khi thêm đơn hàng" });
@@ -182,6 +175,38 @@ router.delete("/delete-orders", async (req, res) => {
   } catch (err) {
     console.error("Lỗi:", err);
     res.status(500).json({ message: "Lỗi máy chủ khi xóa đơn hàng" });
+  }
+});
+
+// Route cập nhật trạng thái đơn hàng
+router.put("/update-order-status/:orderId", async (req, res) => {
+  try {
+    const { order_status } = req.body;
+    const { orderId } = req.params;
+
+    // Kiểm tra trạng thái hợp lệ
+    const validStatuses = [
+      "Pending", "Confirmed", "Processing", "Shipped", "OutForDelivery", "Delivered", "Cancelled", "Returned", "Refunded", "Failed"
+    ];
+    if (!validStatuses.includes(order_status)) {
+      return res.status(400).json({ message: "Trạng thái đơn hàng không hợp lệ" });
+    }
+
+    // Cập nhật đơn hàng
+    const updatedOrder = await Order.findByIdAndUpdate(
+      orderId,
+      { order_status, updated_at: Date.now() },
+      { new: true }
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
+    }
+
+    res.status(200).json({ message: "Cập nhật trạng thái thành công" });
+  } catch (err) {
+    console.error("Lỗi khi cập nhật trạng thái đơn hàng:", err);
+    res.status(500).json({ message: "Lỗi máy chủ khi cập nhật trạng thái đơn hàng" });
   }
 });
 

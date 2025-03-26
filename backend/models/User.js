@@ -37,8 +37,10 @@ const UserSchema = new mongoose.Schema({
     required: false,
   },
   address: {
-    type: String,
-    required: false,
+    street: { type: String },
+    province: { type: String },
+    city: { type: String },
+    ward: { type: String },
   },
   // Thông tin liên quan đến các Build đã lưu
   saved_builds: [{ type: mongoose.Schema.Types.ObjectId, ref: "Build" }],

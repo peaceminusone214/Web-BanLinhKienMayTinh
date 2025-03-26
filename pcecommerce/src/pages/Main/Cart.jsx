@@ -12,20 +12,22 @@ const Cart = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [products, setProducts] = useState([]);
+  const [note, setNote] = useState("");
 
   const syncCartWithServer = async (userId, cartItems) => {
     try {
       const payload = {
         user_id: userId,
-        cartItems: cartItems.map(item => ({
+        cartItems: cartItems.map((item) => ({
           id: item.id,
           quantity: item.quantity,
           price: item.price,
         })),
+        note: note,
         deliveryDate: deliveryOption === "schedule" ? selectedDate : null,
         deliveryTime: deliveryOption === "schedule" ? selectedTime : null,
       };
-  
+
       const response = await fetch(`${API_URL}/cart/sync`, {
         method: "POST",
         headers: {
@@ -33,15 +35,15 @@ const Cart = () => {
         },
         body: JSON.stringify(payload),
       });
-  
+
       if (!response.ok) {
         throw new Error("Lỗi đồng bộ giỏ hàng");
       }
     } catch (error) {
       console.error("Lỗi:", error);
     }
-  };  
-  
+  };
+
   const fetchUserFromSession = async () => {
     try {
       const response = await fetch(`${API_URL}/auth/session`, {
@@ -75,7 +77,7 @@ const Cart = () => {
 
       syncCartWithServer(user.userId, cartItemsWithPrice);
     }
-  }, [user, cartItems, products]); // Thêm `user` vào dependencies
+  }, [user, cartItems, products, note]);
 
   // Lấy giỏ hàng từ localStorage
   useEffect(() => {
@@ -96,9 +98,7 @@ const Cart = () => {
 
       for (let id of ids) {
         try {
-          const response = await fetch(
-            `${API_URL}/product/${id}`
-          );
+          const response = await fetch(`${API_URL}/product/${id}`);
           if (response.ok) {
             const product = await response.json();
             productDetails.push(product);
@@ -133,7 +133,7 @@ const Cart = () => {
         })
       );
     }
-  }, [deliveryOption, selectedDate, selectedTime]);  
+  }, [deliveryOption, selectedDate, selectedTime]);
 
   // Lưu giỏ hàng vào localStorage
   const updateLocalStorage = (updatedCart) => {
@@ -178,59 +178,72 @@ const Cart = () => {
   useEffect(() => {
     if (user) {
       const localCart = JSON.parse(localStorage.getItem("cart")) || [];
-  
+
       // Đảm bảo mỗi sản phẩm có quantity mặc định là 1
       const normalizedLocalCart = localCart.map((item) => ({
         id: item.id,
         quantity: item.quantity ?? 1,
       }));
-  
+
       const fetchUserCart = async () => {
         try {
           const response = await fetch(`${API_URL}/cart/get/${user.userId}`);
           if (!response.ok) throw new Error("Không thể lấy giỏ hàng từ server");
-  
+
           const serverCart = await response.json();
           const serverCartItems = serverCart.items.map((item) => ({
             id: item.product_id, // Chuyển đổi `product_id` từ server về `id`
             quantity: item.quantity,
           }));
-  
+
+          // Cập nhật note vào state
+          if (serverCart.note) {
+            setNote(serverCart.note);
+          }
+
           // Kiểm tra nếu localStorage đã được merge trước đó
-          const storedMergedCart = JSON.parse(localStorage.getItem("mergedCart"));
-          if (storedMergedCart && JSON.stringify(storedMergedCart) === JSON.stringify(serverCartItems)) {
+          const storedMergedCart = JSON.parse(
+            localStorage.getItem("mergedCart")
+          );
+          if (
+            storedMergedCart &&
+            JSON.stringify(storedMergedCart) === JSON.stringify(serverCartItems)
+          ) {
             setCartItems(storedMergedCart);
             return;
           }
-  
+
           // Merge giỏ hàng: Cộng dồn số lượng nếu bị trùng id
           const mergedCartMap = new Map();
-  
+
           // Thêm sản phẩm từ serverCart vào Map
           serverCartItems.forEach((item) => {
             mergedCartMap.set(item.id, item.quantity);
           });
-  
+
           // Thêm sản phẩm từ localStorage vào Map, cộng dồn số lượng nếu trùng id
           normalizedLocalCart.forEach((localItem) => {
             if (mergedCartMap.has(localItem.id)) {
-              mergedCartMap.set(localItem.id, mergedCartMap.get(localItem.id) + localItem.quantity);
+              mergedCartMap.set(
+                localItem.id,
+                mergedCartMap.get(localItem.id) + localItem.quantity
+              );
             } else {
               mergedCartMap.set(localItem.id, localItem.quantity);
             }
           });
-  
+
           // Chuyển Map thành array
           const mergedCart = Array.from(mergedCartMap, ([id, quantity]) => ({
             id,
             quantity,
           }));
-  
+
           // Lưu trạng thái merge để tránh merge lại khi refresh
           localStorage.setItem("mergedCart", JSON.stringify(mergedCart));
           localStorage.setItem("cart", JSON.stringify(mergedCart));
           setCartItems(mergedCart);
-  
+
           // Gửi giỏ hàng đã merge lên server
           await fetch(`${API_URL}/cart/sync`, {
             method: "POST",
@@ -241,16 +254,17 @@ const Cart = () => {
                 product_id: item.id,
                 quantity: item.quantity,
               })),
+              note: serverCart.note || "",
             }),
           });
         } catch (error) {
           console.error("Lỗi khi đồng bộ giỏ hàng:", error);
         }
       };
-  
+
       fetchUserCart();
     }
-  }, [user]);  
+  }, [user]);
 
   // Tính tổng tiền giỏ hàng
   const calculateTotal = () => {
@@ -320,6 +334,16 @@ const Cart = () => {
     }
   };
 
+  useEffect(() => {
+    const orderInfo = {
+      note: note,
+      deliveryDate: deliveryOption === "schedule" ? selectedDate : null,
+      deliveryTime: deliveryOption === "schedule" ? selectedTime : null,
+    };
+  
+    localStorage.setItem("orderInfo", JSON.stringify(orderInfo));
+  }, [note, deliveryOption, selectedDate, selectedTime]);
+  
   // Nếu giỏ hàng trống
   if (cartItems.length === 0) {
     return (
@@ -418,7 +442,11 @@ const Cart = () => {
           {/* Ghi chú đơn hàng */}
           <div className="cart-note">
             <label>Ghi chú đơn hàng</label>
-            <textarea placeholder="Ví dụ: Giao hàng giờ hành chính..." />
+            <textarea
+              placeholder="Ví dụ: Giao hàng giờ hành chính..."
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+            />
           </div>
         </div>
 
@@ -514,14 +542,19 @@ const Cart = () => {
               <strong>{calculateTotal().toLocaleString()} đ</strong>
             </div>
 
-            <button className="cart-checkout-button" onClick={() => navigate("/checkout")}>THANH TOÁN</button>
+            <button
+              className="cart-checkout-button"
+              onClick={() => navigate("/checkout")}
+            >
+              THANH TOÁN
+            </button>
             <div className="cart-policy">
               <p>
                 <strong>Chính sách mua hàng</strong>
               </p>
               <p>
                 Hiện chúng tôi có hỗ trợ giao hàng tận nơi với phí chỉ
-                40.000đ/đơn (tùy khu vực)
+              50.000đ/đơn (tùy khu vực)
               </p>
             </div>
           </div>

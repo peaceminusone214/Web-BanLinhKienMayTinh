@@ -8,6 +8,46 @@ function Orderslist() {
   const [error, setError] = useState(null);
   const [orderToDelete, setOrderToDelete] = useState(null);
 
+  const handleUpdateStatus = (orderId, newStatus) => {
+    fetch(`${API_URL}/order/update-order-status/${orderId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ order_status: newStatus }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.order) {
+          setOrders((prevOrders) =>
+            prevOrders.map((order) =>
+              order._id === orderId
+                ? { ...order, order_status: newStatus }
+                : order
+            )
+          );
+        }
+      })
+      .catch((error) => console.error("Lỗi khi cập nhật trạng thái:", error));
+  };
+
+  const statusMap = {
+    Pending: "Chờ xác nhận",
+    Confirmed: "Đã xác nhận",
+    Processing: "Đang xử lý",
+    Shipped: "Đã giao hàng",
+    OutForDelivery: "Đang giao hàng",
+    Delivered: "Đã nhận hàng",
+    Cancelled: "Đã hủy",
+    Returned: "Đã trả hàng",
+    Refunded: "Đã hoàn tiền",
+    Failed: "Thất bại",
+  };
+
+  const paymentMap = {
+    Unpaid: "Chưa thanh toán",
+    Paid: "Đã thanh toán",
+    Refund: "Hoàn tiền",
+  };
+
   const handleConfirmDelete = () => {
     // Make DELETE request to the server to delete the product
     fetch(`${API_URL}/order/delete-orders`, {
@@ -23,9 +63,7 @@ function Orderslist() {
       .then((data) => {
         if (data.message) {
           // Remove the product from the list after successful deletion
-          setOrders(
-            orders.filter((order) => order._id !== orderToDelete)
-          );
+          setOrders(orders.filter((order) => order._id !== orderToDelete));
         }
         setOrderToDelete(null); // Reset the productToDelete state after confirmation
       })
@@ -137,12 +175,6 @@ function Orderslist() {
                             </li>
                           </ul>
                         </div>
-                        <a
-                          href="order-details"
-                          className="sherah-btn sherah-gbcolor"
-                        >
-                          Add New Vendor
-                        </a>
                       </div>
                     </div>
                     <div className="sherah-table sherah-page-inner sherah-border sherah-default-bg mg-top-25">
@@ -168,7 +200,7 @@ function Orderslist() {
                             <th className="sherah-table__column-5 sherah-table__h5">
                               Tổng cộng
                             </th>
-                            <th className="sherah-table__column-6 sherah-table__h6">
+                            <th className="sherah-table__column-10 sherah-table__h6">
                               Trạng thái đơn hàng
                             </th>
                             <th className="sherah-table__column-7 sherah-table__h7">
@@ -200,7 +232,7 @@ function Orderslist() {
                               <td className="sherah-table__column-2 sherah-table__data-2">
                                 <div className="sherah-table__order-content">
                                   <p className="sherah-table__order-desc">
-                                    {order.user_id.name}
+                                    {order.fullName}
                                   </p>
                                 </div>
                               </td>
@@ -216,70 +248,58 @@ function Orderslist() {
                                     order.payment_status
                                   )}
                                 >
-                                  {order.payment_status}
+                                  {paymentMap[order.payment_status] ||
+                                    order.payment_status}
                                 </div>
                               </td>
                               <td className="sherah-table__column-5 sherah-table__data-5">
                                 <p className="sherah-table__order-desc">
-                                  {order.total_amount}
+                                {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(order.total_amount)}
                                 </p>
                               </td>
-                              <td className="sherah-table__column-6 sherah-table__data-6">
+                              <td className="sherah-table__column-10 sherah-table__data-10">
                                 <div
                                   className={getStatusClass(order.order_status)}
                                 >
-                                  {order.order_status}
+                                  {/* {statusMap[order.order_status] ||
+                                    order.order_status} */}
+                                  <select
+                                    value={order.order_status}
+                                    onChange={(e) =>
+                                      handleUpdateStatus(
+                                        order._id,
+                                        e.target.value
+                                      )
+                                    }
+                                    style={{
+                                      padding: "8px 12px",
+                                      borderRadius: "6px",
+                                      backgroundColor: "transparent",
+                                      fontSize: "14px",
+                                      cursor: "pointer",
+                                      outline: "none",
+                                      transition: "0.2s",
+                                      backgroundRepeat: "no-repeat",
+                                      backgroundPosition: "right 10px center",
+                                      backgroundSize: "12px",
+                                    }}
+                                  >
+                                    {Object.entries(statusMap).map(
+                                      ([english, vietnamese]) => (
+                                        <option key={english} value={english}>
+                                          {vietnamese}
+                                        </option>
+                                      )
+                                    )}
+                                  </select>
                                 </div>
                               </td>
                               <td className="sherah-table__column-8 sherah-table__data-8">
                                 <div className="sherah-table__status__group">
                                   <a
                                     href="#"
-                                    className="sherah-table__action sherah-color2 sherah-color3__bg--opactity"
-                                  >
-                                    {/* Edit icon */}
-                                    <svg
-                                      className="sherah-color3__fill"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      width="18.29"
-                                      height="18.252"
-                                      viewBox="0 0 18.29 18.252"
-                                    >
-                                      <g
-                                        id="Group_132"
-                                        data-name="Group 132"
-                                        transform="translate(-234.958 -37.876)"
-                                      >
-                                        <path
-                                          id="Path_481"
-                                          data-name="Path 481"
-                                          d="M242.545,95.779h-5.319a2.219,2.219,0,0,1-2.262-2.252c-.009-1.809,0-3.617,0-5.426q0-2.552,0-5.1a2.3,2.3,0,0,1,2.419-2.419q2.909,0,5.818,0c.531,0,.87.274.9.715a.741.741,0,0,1-.693.8c-.3.026-.594.014-.892.014q-2.534,0-5.069,0c-.7,0-.964.266-.964.976q0,5.122,0,10.245c0,.687.266.955.946.955q5.158,0,10.316,0c.665,0,.926-.265.926-.934q0-2.909,0-5.818a.765.765,0,0,1,.791-.853.744.744,0,0,1,.724.808c.007,1.023,0,2.047,0,3.07s.012,2.023-.006,3.034A2.235,2.235,0,0,1,248.5,95.73a1.83,1.83,0,0,1-.458.048Q245.293,95.782,242.545,95.779Z"
-                                          transform="translate(0 -39.652)"
-                                          fill="#09ad95"
-                                        />
-                                        <path
-                                          id="Path_482"
-                                          data-name="Path 482"
-                                          d="M332.715,72.644l2.678,2.677c-.05.054-.119.133-.194.207q-2.814,2.815-5.634,5.625a1.113,1.113,0,0,1-.512.284c-.788.177-1.582.331-2.376.48-.5.093-.664-.092-.564-.589.157-.781.306-1.563.473-2.341a.911.911,0,0,1,.209-.437q2.918-2.938,5.853-5.86A.334.334,0,0,1,332.715,72.644Z"
-                                          transform="translate(-84.622 -32.286)"
-                                          fill="#09ad95"
-                                        />
-                                        <path
-                                          id="Path_483"
-                                          data-name="Path 483"
-                                          d="M433.709,42.165l-2.716-2.715a15.815,15.815,0,0,1,1.356-1.248,1.886,1.886,0,0,1,2.579,2.662A17.589,17.589,0,0,1,433.709,42.165Z"
-                                          transform="translate(-182.038)"
-                                          fill="#09ad95"
-                                        />
-                                      </g>
-                                    </svg>
-                                  </a>
-                                  <a
-                                    href="#"
                                     className="sherah-table__action sherah-color2 sherah-color2__bg--offset"
-                                    onClick={() =>
-                                      handleDeleteClick(order._id)
-                                    }
+                                    onClick={() => handleDeleteClick(order._id)}
                                   >
                                     {/* Delete icon */}
                                     <svg
@@ -340,7 +360,7 @@ function Orderslist() {
                                         color: "#333",
                                       }}
                                     >
-                                      Bạn có chắc chắn muốn xóa sản phẩm này?
+                                      Bạn có chắc chắn muốn xóa đơn hàng này?
                                     </p>
                                     <button
                                       onClick={handleConfirmDelete}
