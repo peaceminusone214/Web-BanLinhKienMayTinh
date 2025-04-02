@@ -10,40 +10,46 @@
 
 /* Breadcrumb */
 .breadcrumb {
-  font-size: 18px;
-  color: rgb(160, 111, 111);
+  font-size: 16px;
+  color: #333;
   margin: 20px 0;
-  padding: 15px 0;
-  background-color: #f1f1f1;
-  border-radius: 5px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+  border-left: 4px solid #007BFF;
+  border-radius: 8px;
   display: flex;
-  justify-content: center;
+  align-items: center;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .breadcrumb a {
-  color: black;
+  color: #007BFF;
   text-decoration: none;
-  font-size: 18px;
+  font-weight: 500;
   padding: 0 10px;
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .breadcrumb a:hover {
-  color: #007BFF;
+  color: #0056b3;
   transform: scale(1.05);
 }
 
 .breadcrumb .current {
-  font-weight: bold;
-  color: #333;
+  font-weight: 600;
+  color: #444;
   padding: 0 10px;
 }
 
 .breadcrumb a:not(:last-child)::after {
-  content: " / ";
-  padding-left: 10px;
-  color: rgb(160, 111, 111);
+  content: "›";
+  margin: 0 10px;
+  color: #aaa;
 }
+
+
+
 
 /* Danh mục */
 .news-categories {
@@ -83,6 +89,12 @@
   overflow: hidden;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
+}
+
+.featured-article-link {
+  display: contents; 
+  text-decoration: none;
+  color: inherit;
 }
 
 .featured-article:hover {
@@ -307,5 +319,11 @@
   
   .news-game .news-game-list {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .breadcrumb {
+    padding-left: 12px;  
   }
 }

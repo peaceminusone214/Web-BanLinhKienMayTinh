@@ -11,6 +11,8 @@ const buildRoutes = require("./routes/build");
 const discountRoutes = require("./routes/discount");
 const cartRoutes = require("./routes/cart");
 const newsRoutes = require("./routes/news");
+const paymentRoutes = require('./routes/payment');
+const commentRoutes = require('./routes/comment');
 
 const app = express();
 require("dotenv").config();
@@ -54,6 +56,7 @@ app.use(
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // API Routes
 app.use("/api/auth", authRoutes);
@@ -64,6 +67,9 @@ app.use("/api/build", buildRoutes);
 app.use("/api/discount", discountRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/news", newsRoutes);
+app.use('/api/payment', paymentRoutes);
+app.use('/api/comment', commentRoutes);
+app.use("/uploads", express.static("uploads"));
 
 // Khởi động server
 const PORT = process.env.PORT || 5000;

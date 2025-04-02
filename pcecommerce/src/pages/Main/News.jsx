@@ -179,20 +179,23 @@ const News = () => {
       try {
         if (!API_URL) throw new Error("API_URL không hợp lệ!");
 
-        // 1) Lấy tất cả tin isDisplayed = true
+        // Lấy tất cả tin có isDisplayed = true
         const { data: articles } = await axios.get(`${API_URL}/news?isDisplayed=true`);
-        if (articles.length > 0) {
-          setFeaturedArticle(articles[0]);
-          setLatestArticles(articles.slice(1, 4));
-        }
 
-        // 2) Lấy tin công nghệ (isDisplayed = true)
+        // Lọc bài viết dựa vào displaySection
+        const featured = articles.find(article => article.displaySection === "featured");
+        const latest = articles.filter(article => article.displaySection === "latest");
+
+        // Nếu không có bài nào được gán displaySection theo cách trên,
+        // có thể dùng fallback là bài đầu tiên và phần còn lại cho latest
+        setFeaturedArticle(featured || articles[0]);
+        setLatestArticles(latest.length > 0 ? latest : articles.slice(1, 4));
+
         const { data: techArticles } = await axios.get(
           `${API_URL}/news/category/tech?isDisplayed=true`
         );
         setTechNews(techArticles);
 
-        // 3) Lấy tin game (isDisplayed = true)
         const { data: gameArticles } = await axios.get(
           `${API_URL}/news/category/game?isDisplayed=true`
         );
@@ -230,8 +233,9 @@ const News = () => {
           <div className="news-content">
             {/* Tin nổi bật */}
             {featuredArticle && (
+              <Link to={`/NewsDetail/${featuredArticle._id}`} className="featured-article-link">
               <div className="featured-article">
-                <img src={`${featuredArticle.image}`} alt="Featured" />
+                <img src={featuredArticle.image} alt="Featured" />
                 <div className="overlay">
                   <h2>{featuredArticle.title}</h2>
                   <p>
@@ -239,6 +243,8 @@ const News = () => {
                   </p>
                 </div>
               </div>
+            </Link>
+            
             )}
 
             {/* Bài viết mới nhất */}
@@ -247,18 +253,24 @@ const News = () => {
                 BÀI VIẾT <span className="highlight">MỚI NHẤT</span>
               </h3>
               {latestArticles.map((article) => (
-                <div key={article._id} className="latest-news-item">
-                  <img src={`${article.image}`} alt={article.title} />
-                  <div>
-                    <h4>{article.title}</h4>
-                    <p className="datenews">
-                      {new Date(article.createdAt).toLocaleDateString()}
-                    </p>
-                    <p className="description">
-                      {article.content.substring(0, 100)}...
-                    </p>
+                <Link
+                  to={`/NewsDetail/${article._id}`}
+                  key={article._id}
+                  className="latest-news-link"
+                >
+                  <div className="latest-news-item">
+                    <img src={article.image} alt={article.title} />
+                    <div>
+                      <h4>{article.title}</h4>
+                      <p className="datenews">
+                        {new Date(article.createdAt).toLocaleDateString()}
+                      </p>
+                      <p className="description">
+                        {article.content.substring(0, 100)}...
+                      </p>
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </aside>
           </div>
@@ -268,13 +280,15 @@ const News = () => {
             <h3>TIN CÔNG NGHỆ</h3>
             <div className="news-experience-list">
               {techNews.slice(0, 6).map((news) => (
-                <div key={news._id} className="news-item">
-                  <img src={`${news.image}`} alt={news.title} />
-                  <div>
-                    <h4>{news.title}</h4>
-                    <p className="author">Tác giả: {news.author}</p>
+                <Link to={`/NewsDetail/${news._id}`} key={news._id} className="tech-news-link">
+                  <div className="news-item">
+                    <img src={news.image} alt={news.title} />
+                    <div>
+                      <h4>{news.title}</h4>
+                      <p className="author">Tác giả: {news.author}</p>
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </section>
@@ -284,13 +298,15 @@ const News = () => {
             <h3>CHỦ ĐỀ GAME</h3>
             <div className="news-game-list">
               {gameNews.slice(0, 9).map((news) => (
-                <div key={news._id} className="game-item">
-                  <img src={`${news.image}`} alt={news.title} />
-                  <h4>{news.title}</h4>
-                  <p className="datenews">
-                    {new Date(news.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
+                <Link to={`/NewsDetail/${news._id}`} key={news._id} className="game-news-link">
+                  <div className="game-item">
+                    <img src={news.image} alt={news.title} />
+                    <h4>{news.title}</h4>
+                    <p className="datenews">
+                      {new Date(news.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                </Link>
               ))}
             </div>
           </section>
@@ -303,6 +319,8 @@ const News = () => {
 };
 
 export default News;
+
+
 
 
 

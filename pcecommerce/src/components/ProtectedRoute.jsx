@@ -29,8 +29,9 @@ import AdminHeader from "./AdminHeader";
 import Customerslist from "../pages/Dashboard/customer-list copy";
 import Customer from "../pages/Dashboard/customers copy";
 import Uploaddiscount from "../pages/Dashboard/upload-discount";
-import NewsManagement from "../pages/Dashboard/news-management";
-import AddNews from "../pages/Dashboard/add-news";
+import NewsManagement from "./news-management";
+import AddNews from "./add-news";
+import NewsDetail from "./news-detail";
 
 const ProtectedRoute = () => {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -107,6 +108,7 @@ const ProtectedRoute = () => {
           <Route path="/admin/customer" element={<Customer />} />
           <Route path="/admin/news-management" element={<NewsManagement />} />
           <Route path="/admin/add-news" element={<AddNews />} />
+          <Route path="/admin/news-detail" element={<NewsDetail />} />
         </Routes>
       </div>
     );

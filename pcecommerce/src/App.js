@@ -19,6 +19,7 @@ import Software from './pages/Main/Software';
 import Checkout from './pages/Main/CheckOut';
 import ProfileInfo from './pages/Main/Profile-info';
 import Contact from './pages/Main/Contact';
+import NewsDetail from "./components/news-detail";
 
 function App() {
   const location = useLocation();
@@ -49,6 +50,7 @@ function App() {
         <Route path="News/software" element={<Software />} /> 
         <Route path="/checkout" element={<Checkout />} /> 
         <Route path="/contact" element={<Contact />} /> 
+        <Route path="/NewsDetail/:id" element={<NewsDetail />} />
 
         {/* Admin Routes (protected) */}
         <Route element={<ProtectedRoute />}>

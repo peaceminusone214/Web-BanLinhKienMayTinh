@@ -13,6 +13,8 @@ const NewsSchema = new mongoose.Schema(
 
     isDisplayed: { type: Boolean, default: true },
     featured: { type: Boolean, default: false },
+
+    displaySection: { type: String, default: "" },
   },
 
 );

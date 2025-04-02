@@ -93,8 +93,12 @@ const games = [
 const Game = () => {
   return (
     <div className="tech-container">
-      <div className="breadcrumb">
-        <Link to="/">Trang chủ</Link> <span className="current">Chủ đề Game</span>
+    <div className="breadcrumb">
+        <Link to="/">Trang chủ</Link>
+        <span className="separator"></span>
+        <Link to="/News">Tin tức</Link>
+        <span className="separator"></span>
+        <span className="current">Chủ đề Game</span>
       </div>
       <nav className="news-categories">
         <Link to="/News/tech">TIN CÔNG NGHỆ</Link>

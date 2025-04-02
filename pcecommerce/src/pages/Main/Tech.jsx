@@ -81,7 +81,11 @@ const Tech = () => {
   return (
     <div className="tech-container">
       <div className="breadcrumb">
-        <Link to="/">Trang chủ</Link> <span className="current">Tin Công Nghệ</span>
+        <Link to="/">Trang chủ</Link>
+        <span className="separator"></span>
+        <Link to="/News">Tin tức</Link>
+        <span className="separator"></span>
+        <span className="current">Tin Công Nghệ</span>
       </div>
       <nav className="news-categories">
         <Link to="/News/tech">TIN CÔNG NGHỆ</Link>
