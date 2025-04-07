@@ -45,6 +45,7 @@ const UserSchema = new mongoose.Schema({
   // Thông tin liên quan đến các Build đã lưu
   saved_builds: [{ type: mongoose.Schema.Types.ObjectId, ref: "Build" }],
   created_at: { type: Date, default: Date.now },
+  deleted: { type: Boolean, default: false },
 });
 
 // Middleware (hook) của Mongoose để mã hóa mật khẩu trước khi lưu

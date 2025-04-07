@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from 'react';
-
-import "./MainStyles/styleHome.css";
-
 import BannerShowcase from '../../components/Banner';
+import { fetchProducts, fetchProductsByCategory } from '../../Service/productApi';
+import { fetchCategories } from '../../Service/categoriesApi';
 import News from '../../components/NewsSections';
 import ProductList from '../../components/ProductList';
-
 import CompCategoryHeader from '../../components/CompCategoryHeader';
-import { fetchCategories } from '../../api/categoriesApi';
-
 import CompBannerSections from '../../components/CompBannerSections';
+import CompareSection from '../../components/CompareSection';
+import { useDispatch, useSelector } from 'react-redux';
+import { setProduct, setCategories, setProductsByCategory, setLoading } from '../../redux/actions/productActions';
+import CollectionSection from "../../components/CollectionSection"
+import "./MainStyles/styleHome.css";
 
 function Home() {
+
+  // product
+  // const [product, setProducts] = useState([]);
+  // const [categories, setCategories] = useState([]);
+  // const [productsByCategory, setProductsByCategory] = useState({});
+  // const [loading, setLoading] = useState(true);
 
   const banners = [
     { id: 32, img: "/assets/interface-main/imgComp/banner-slide1.png" },
@@ -55,9 +62,7 @@ function Home() {
     }
   ];
 
-
-
-  const products = [
+  const product = [
     {
       id: 5547,
       name: "Mainboard MSI B760 GAMING PLUS WIFI (DDR5)",
@@ -141,30 +146,84 @@ function Home() {
   ];
 
 
-  //categories
-  const [categories, setCategories] = useState([]);
+  const dispatch = useDispatch();
+  const { products, categories, productsByCategory, loading } = useSelector(state => state.product);
+
+
+
+  console.log("products: ", products);
+  console.log("categories: ", categories);
+  console.log("productsByCategory: ", productsByCategory);
+  console.log("loading: ", loading);
+
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+    const loadProducts = async () => {
+      try {
+        const data = await fetchProducts();
+        dispatch(setProduct(data));
+      } catch (error) {
+        console.error("Lỗi khi load sản phẩm:", error);
+      } finally {
+        dispatch(setLoading(false));
+      }
+    };
+
+    loadProducts();
+  }, [dispatch]);
+  // get pd by cat
+  useEffect(() => {
+    const loadProductsByCategory = async (categoryId) => {
+      try {
+        const data = await fetchProductsByCategory(categoryId);
+        dispatch(setProductsByCategory(categoryId, data));
+      } catch (error) {
+        console.error("Lỗi khi load sản phẩm theo danh mục:", error);
+      }
+    };
+
+    if (Array.isArray(categories) && categories.length > 0) {
+      categories.forEach((category) => {
+        loadProductsByCategory(category._id);
+      });
+    }
+  }, [categories, dispatch]);
+  ;
+
+
+
+  //categories
+  useEffect(() => {
     const loadCategories = async () => {
-      const data = await fetchCategories();
-      setCategories(data);
+      try {
+        const data = await fetchCategories();
+        dispatch(setCategories(data));
+      } catch (error) {
+        console.error("Lỗi khi load danh mục:", error);
+      }
     };
 
     loadCategories();
-  }, []);
+  }, [dispatch]);
 
+  useEffect(() => {
+    if (products) {
+      console.log("ProductList:", products);
+      console.log("Category:", categories);
+      console.log("🏠 Home mounted");
 
+    }
+  }, [products]);
+
+  if (loading) return <p>Đang tải sản phẩm...</p>;
 
 
 
   return (
     <div className="homepage">
-
       {/* Showcase Section */}
       <BannerShowcase banners={banners} />
-
-
-
       {/* Banner dưới Showcase */}
       <section className="homepage-banner">
         <div className="container">
@@ -213,121 +272,43 @@ function Home() {
 
 
 
+
+
       {/* Section ưu đãi */}
-
-
-      <div className="box box-collection" style={{ marginTop: "80px" }} id="js-collection-box">
-        {/* BOX HEADER */}
-        <div className="box-header">
-          <h2 className="heading heading-secondary text-center">ƯU ĐÃI DÀNH CHO BẠN</h2>
-          <ul className="list-style-none d-flex align-items-center justify-content-between">
-            <li className="js-collection-button cat-active" data-id="1" data-url="/collection/gia-shock">
-              <p className="font-weight-bold">GIÁ SHOCK TRONG NGÀY</p>
-              <span>Cập nhật liên tục</span>
-            </li>
-            <li className="js-collection-button" data-id="2" data-url="/collection/top-pc-cuc-khung">
-              <p className="font-weight-bold">SIÊU SALE TRONG THÁNG</p>
-              <span>Xem ngay kẻo lỡ</span>
-            </li>
-            <li className="js-collection-button" data-id="3" data-url="/collection/giai-nhiet-pc">
-              <p className="font-weight-bold">TOP PC BÁN CHẠY</p>
-              <span>Giá ưu đãi nhất</span>
-            </li>
-            <li className="js-collection-button" data-id="4" data-url="/collection/man-hinh-do-hoa">
-              <p className="font-weight-bold">MÀN HÌNH ĐỒ HỌA</p>
-              <span>Nhiều ưu đãi hấp dẫn</span>
-            </li>
-            <li className="js-collection-button" data-id="5" data-url="/collection/goc-thanh-ly">
-              <p className="font-weight-bold">GÓC THANH LÝ</p>
-              <span>Xả hàng tồn kho</span>
-            </li>
-          </ul>
-        </div>
-
-
-        {/* BOX CONTENT */}
-        <div className="box-content">
-          <div className="homepage-collection-swiper">
-            {/* SWIPER WRAPPER */}
-            <div className="grid grid--6-cols" id="js-collection-product">
-              {products.map((product) => (
-                <div key={product.id} className="swiper-slide min-width-0">
-                  <div className="product p-item" data-id={product.id} data-type="product">
-                    <a href={`/product/${product.id}`} className="p-img">
-                      <img src={product.img} alt={product.name} />
-                      <div class="p-sale-off ms-2">
-                        <p class="font-weight-500 text-uppercase">
-                          Tiết kiệm
-                          <span class="d-block text-12 font-weight-bold color-white">320,000 ₫</span>
-                        </p>
-                      </div>
-                    </a>
-                    <div className="p-content">
-                      <a href={`/product/${product.id}`}>
-                        <h3 className="p-name line-clamp-2">{product.name}</h3>
-                      </a>
-                      <p className="p-price color-secondary font-weight-bold text-20">
-                        {product.price}
-                      </p>
-                      <span className="p-market-price">{product.oldPrice}</span>
-                      <span className="p-market-sale color-secondary" style={{ marginLeft: "4px", fontSize: "13px", color: "blue" }}>
-                        {product.discount}
-                      </span>
-                      <div className="p-box d-flex align-items-center justify-content-between">
-                        <div className="wrapper">
-                          <p className="color-green">{product.status}</p>
-                          <a href="javascript:;" className="p-compare color-primary" data-id={product.id}>
-                            <span>+</span> So sánh
-                          </a>
-                        </div>
-                        <a href="javascript:;" className="btn-cart-sp d-flex align-items-center justify-content-center" >
-                          <i class="static-icon static-icon-cart"></i>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* BOX BOTTOM */}
-        <div className="box-bottom">
-          <a href="/collection/gia-shock" className="font-weight-500 color-white btn-view-more" id="js-collection-path">
-            XEM TẤT CẢ +
-          </a>
-        </div>
-      </div>
-
+      <CollectionSection/>
 
 
 
       {/* Product Section */}
       <section>
-        {categories.map(category => (
+        {categories && Array.isArray(categories) && categories.length > 0 ? (
+          categories.map((categoryItem) => {
 
-          <section key={category.id}>
-            <CompBannerSections category={category} />
-            <CompCategoryHeader category={category} />
+            const productsList = productsByCategory[categoryItem._id] || [];
+            const limit = productsList.length >= 10 ? 10 : 5;
 
-            <div class="box-content">
-              <div class="swiper-slide min-width-0">
-                <ProductList categoryId={category.id} />
-              </div>
-            </div>
+            return (
+              <section key={categoryItem._id}>
+                <CompBannerSections category={categoryItem} />
+                <CompCategoryHeader category={categoryItem} />
+                <div className="box-content">
+                  <div className="swiper-slide min-width-0">
+                    <ProductList
+                      products={productsList.slice(0, limit)}
+                    />
+                  </div>
+                </div>
+              </section>
 
-          </section>
-        ))}
+            );
+          })
+        ) : (
+          <p>Không có danh mục nào để hiển thị.</p>
+        )}
       </section>
-
-
-
-
       {/* News Section home */}
       <News articles={articles} />
-
-
+      <CompareSection />
 
 
 

@@ -1,13 +1,11 @@
 import axios from 'axios';
 
-//base json
-const BASE_URL = 'http://localhost:3000/assets/data';
+const BASE_URL = `${process.env.REACT_APP_API_URL}/product`;
 
 
 export const fetchCategories = async () => {
     try {
-        // lay url base
-        const response = await axios.get(`${BASE_URL}/categories.json`);
+        const response = await axios.get(`${BASE_URL}/get-all-categories`);
         return response.data;
     } catch (error) {
         console.error("Không lấy được sản phẩm:", error);
