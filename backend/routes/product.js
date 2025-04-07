@@ -3,6 +3,8 @@ const Product = require("../models/Product");
 const Category = require("../models/Category");
 const router = express.Router();
 
+
+
 // Route thêm danh mục sản phẩm
 router.post("/add-category", async (req, res) => {
   const { name, description } = req.body;
@@ -47,6 +49,19 @@ router.get("/categories", async (req, res) => {
     res.status(500).json({ message: "Lỗi máy chủ" });
   }
 });
+
+
+
+
+router.get("/category-by-name/:name", async (req, res) => {
+  try {
+    const category = await Category.findOne({ name: req.params.name });
+    res.json(category);
+  } catch (err) {
+    res.status(500).json({ message: "Lỗi" });
+  }
+});
+
 
 //Route thêm sản phẩm(có thể thêm nhiều hơn 1 sp)
 router.post("/add-product", async (req, res) => {
@@ -482,6 +497,307 @@ router.delete("/delete-products", async (req, res) => {
   }
 });
 
+
+
+
+// =============================================================================================
+// Get Product by ID category
+router.get("/products-by-category/:categoryId", async (req, res) => {
+  const { categoryId } = req.params;
+
+  try {
+    const products = await Product.find({ category_id: categoryId })
+      .populate("category_id", "name")
+      .exec();
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy sản phẩm nào trong danh mục này" });
+    }
+
+    res.status(200).json(products);
+  } catch (err) {
+    console.error("Lỗi khi lấy sản phẩm theo danh mục:", err);
+    res.status(500).json({ message: "Lỗi máy chủ" });
+  }
+});
+
+// get All category
+router.get("/get-all-categories", async (req, res) => {
+  try {
+    const categories = await Category.find();
+
+    if (!categories || categories.length === 0) {
+      return res.status(404).json({ message: "Không có danh mục nào!" });
+    }
+
+    res.status(200).json(categories);
+  } catch (err) {
+    console.error("Lỗi khi lấy danh mục:", err);
+    res.status(500).json({ message: "Lỗi máy chủ" });
+  }
+});
+
+
+
+
+// get category by ID
+router.get("/get-category/:categoryId", async (req, res) => {
+  const { categoryId } = req.params;
+
+  try {
+    const category = await Category.findById(categoryId);
+
+    if (!category) {
+      return res.status(404).json({ message: "Không tìm thấy danh mục" });
+    }
+
+    res.status(200).json(category);
+  } catch (err) {
+    console.error("Lỗi khi lấy danh mục:", err);
+    res.status(500).json({ message: "Lỗi máy chủ" });
+  }
+});
+
+
+
+
+// get all sub by category ID
+router.get("/sub-slugs/:categoryId", async (req, res) => {
+  const { categoryId } = req.params;
+
+  try {
+    const category = await Category.findById(categoryId).lean();
+
+    if (!category) {
+      return res.status(404).json({ message: "Không tìm thấy danh mục" });
+    }
+
+    if (!category.subCategories || category.subCategories.length === 0) {
+      return res.status(404).json({ message: "Danh mục không có subCategories" });
+    }
+
+    const result = category.subCategories.map((sub) => ({
+      name: sub.name,
+      slug: sub.slug,
+    }));
+
+    return res.status(200).json(result);
+  } catch (err) {
+    console.error("Lỗi khi lấy subCategories:", err);
+    res.status(500).json({ message: "Lỗi máy chủ" });
+  }
+});
+
+
+
+router.get("/get-slug/:categoryId", async (req, res) => {
+  const { categoryId } = req.params;
+  console.log("Nhận được ID:", categoryId);
+
+  try {
+    const category = await Category.findById(categoryId).select("slug");
+    console.log("Kết quả truy vấn:", category);
+
+    if (!category) {
+      return res.status(404).json({ message: "Không tìm thấy danh mục" });
+    }
+
+    res.status(200).json({ slug: category.slug });
+  } catch (err) {
+    console.error("Lỗi khi lấy slug:", err);
+    res.status(500).json({ message: "Lỗi máy chủ" });
+  }
+});
+
+
+// get category by slug
+router.get("/get-category-by-slug/:slug", async (req, res) => {
+  const { slug } = req.params;
+
+  try {
+    const category = await Category.findOne({ slug: slug });
+
+    if (!category) {
+      return res.status(404).json({ message: "Không tìm thấy danh mục" });
+    }
+
+    const products = await Product.find({ category_id: category._id });
+
+    res.status(200).json({
+      category: {
+        _id: category._id,
+        name: category.name,
+        slug: category.slug,
+      },
+      products: products,
+    });
+  } catch (err) {
+    console.error("Lỗi khi lấy sản phẩm theo slug:", err);
+    res.status(500).json({ message: "Lỗi máy chủ" });
+  }
+});
+
+
+
+
+
+
+
+//get all product
+router.get("/get-all-products", async (req, res) => {
+  try {
+    const products = await Product.find()
+      .populate("category_id", "name")
+      .exec();
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({ message: "Không có sản phẩm nào" });
+    }
+
+    res.status(200).json(products);
+  } catch (err) {
+    console.error("Lỗi khi lấy tất cả sản phẩm:", err);
+    res.status(500).json({ message: "Lỗi máy chủ" });
+  }
+});
+
+
+
+// product filter
+router.get("/products-filter", async (req, res) => {
+  try {
+    const { price, category, brand, sort, name } = req.query;
+    let filter = {};
+
+    // Lọc theo giá
+    if (price) {
+      const priceRange = price.split('-');
+      if (priceRange.length === 1) {
+        filter.price = { $lt: Number(priceRange[0]) };
+      } else if (priceRange.length === 2) {
+        filter.price = { $gte: Number(priceRange[0]), $lte: Number(priceRange[1]) };
+      }
+    }
+
+    // Lọc theo category
+    if (category) {
+      const categoryData = await Category.findOne({ slug: category });
+      if (categoryData) {
+        filter.category_id = categoryData._id; 
+      }
+    }
+
+    if (brand) {
+      filter.brand = brand;
+    }
+
+    if (name) {
+      filter.product_name = { $regex: name, $options: 'i' }; 
+    }
+
+    let sortOption = {};
+    if (sort) {
+      switch (sort) {
+        case 'new':
+          sortOption.created_at = -1;
+          break;
+        case 'price-asc':
+          sortOption.price = 1;
+          break;
+        case 'price-desc':
+          sortOption.price = -1;
+          break;
+        default:
+          break;
+      }
+    }
+
+    // Tìm các sản phẩm theo filter và sort
+    const products = await Product.find(filter)
+      .populate('category_id', 'name')
+      .sort(sortOption)
+      .exec();
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: 'Không tìm thấy sản phẩm nào' });
+    }
+
+    res.status(200).json(products);
+  } catch (err) {
+    console.error('Lỗi khi lấy sản phẩm:', err);
+    res.status(500).json({ message: 'Lỗi máy chủ khi lấy sản phẩm' });
+  }
+});
+
+
+router.get("/search", async (req, res) => {
+  try {
+    const { q } = req.query;
+
+    if (!q || q.trim() === "") {
+      return res.status(400).json({ message: "Vui lòng nhập từ khóa tìm kiếm" });
+    }
+
+    const searchRegex = new RegExp("^" + q, "i");
+
+    const matchedCategories = await Category.find({ name: searchRegex }).select("_id");
+
+    const categoryIds = matchedCategories.map((cat) => cat._id);
+
+    const products = await Product.find({
+      $or: [
+        { product_name: searchRegex },
+        { category_id: { $in: categoryIds } },
+      ],
+    }).populate("category_id", "name");
+
+    if (products.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy sản phẩm nào" });
+    }
+
+    res.status(200).json(products);
+  } catch (err) {
+    console.error("Lỗi khi tìm kiếm:", err);
+    res.status(500).json({ message: "Lỗi máy chủ" });
+  }
+});
+
+
+router.post("/compare", async (req, res) => {
+  try {
+    const { productIds } = req.body;
+
+    if (!Array.isArray(productIds) || productIds.length === 0) {
+      return res.status(400).json({ message: "Danh sách sản phẩm không hợp lệ" });
+    }
+
+    const products = await Product.find({ _id: { $in: productIds } })
+      .populate("category_id", "name")
+      .exec();
+
+    res.status(200).json(products);
+  } catch (err) {
+    console.error("Lỗi khi so sánh sản phẩm:", err);
+    res.status(500).json({ message: "Lỗi máy chủ" });
+  }
+});
+
+
+
+
+// ==============================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
 // Route lấy thông tin sản phẩm theo id
 router.get("/:id", async (req, res) => {
   try {
@@ -526,5 +842,8 @@ router.put("/update-product", async (req, res) => {
     res.status(500).json({ message: "Lỗi server khi cập nhật sản phẩm" });
   }
 });
+
+
+
 
 module.exports = router;

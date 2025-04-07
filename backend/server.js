@@ -11,6 +11,8 @@ const buildRoutes = require("./routes/build");
 const discountRoutes = require("./routes/discount");
 const cartRoutes = require("./routes/cart");
 const newsRoutes = require("./routes/news");
+const chatRoutes = require("./routes/ChatBot");
+
 
 const app = express();
 require("dotenv").config();
@@ -64,6 +66,7 @@ app.use("/api/build", buildRoutes);
 app.use("/api/discount", discountRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/news", newsRoutes);
+app.use("/api/chat", chatRoutes);
 
 // Khởi động server
 const PORT = process.env.PORT || 5000;

@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import AdminDashboard from "../pages/Dashboard/AdminDashboard";
 import Chatmessages from "../pages/Dashboard/chat-messages";
-import Customerlist from "../pages/Dashboard/customer-list";
-import Customers from "../pages/Dashboard/customers";
 import Faq from "../pages/Dashboard/faq";
 import History from "../pages/Dashboard/history";
 import Invoiceprint from "../pages/Dashboard/invoice-print";
@@ -26,8 +24,10 @@ import Wishlist from "../pages/Dashboard/wishlist";
 import Discount from "../pages/Dashboard/discount-management"
 import AdminMenu from "./AdminMenu";
 import AdminHeader from "./AdminHeader";
-import Customerslist from "../pages/Dashboard/customer-list copy";
-import Customer from "../pages/Dashboard/customers copy";
+
+import CustomerList from "../pages/Dashboard/CustomersListManagement";
+import CustomerDetail from "../pages/Dashboard/CustomersDetail";
+
 import Uploaddiscount from "../pages/Dashboard/upload-discount";
 import NewsManagement from "../pages/Dashboard/news-management";
 import AddNews from "../pages/Dashboard/add-news";
@@ -80,8 +80,7 @@ const ProtectedRoute = () => {
         <Routes>
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/chat" element={<Chatmessages />} />
-          <Route path="/admin/customerlist" element={<Customerlist />} />
-          <Route path="/admin/customers" element={<Customers />} />
+
           <Route path="/admin/faq" element={<Faq />} />
           <Route path="/admin/history" element={<History />} />
           <Route path="/admin/invoiceprint" element={<Invoiceprint />} />
@@ -103,8 +102,8 @@ const ProtectedRoute = () => {
           <Route path="/admin/vendor" element={<Vendor />} />
           <Route path="/admin/wishlist" element={<Wishlist />} />
           <Route path="/admin/discount" element={<Discount />} />
-          <Route path="/admin/customerslist" element={<Customerslist />} />
-          <Route path="/admin/customer" element={<Customer />} />
+          <Route path="/admin/customers-list" element={<CustomerList />} />
+          <Route path="/admin/customer/:userId" element={<CustomerDetail />} />
           <Route path="/admin/news-management" element={<NewsManagement />} />
           <Route path="/admin/add-news" element={<AddNews />} />
         </Routes>

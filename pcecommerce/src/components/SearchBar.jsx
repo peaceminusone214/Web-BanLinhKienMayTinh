@@ -1,11 +1,17 @@
-import React from 'react'
-import { useState } from 'react';
-import '../components/css/styleSearchBar.css'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { fetchSearchResults } from "../redux/actions/searchAction";
+import "../../src/components/css/styleSearchBar.css"
 
-function Header() {
 
+
+function SearchBar() {
     const [searchText, setSearchText] = useState("");
     const [cartCount, setCartCount] = useState(0);
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleSearchChange = (e) => {
         setSearchText(e.target.value);
@@ -14,6 +20,17 @@ function Header() {
     const clearSearch = () => {
         setSearchText("");
     };
+
+
+    const handleSearchSubmit = async (e) => {
+        e.preventDefault();
+        if (searchText.trim()) {
+            await dispatch(fetchSearchResults(searchText));
+            navigate("/search-results");
+        }
+    };
+    
+
 
     return (
         <div>
@@ -25,28 +42,25 @@ function Header() {
 
                     {/* Logo & Thanh tìm kiếm */}
                     <div className="header-left-group d-flex align-items-center">
-                        <a href="/" className="header-left-logo d-flex justify-content-center">
-                            <img src="/assets/interface-main/imgComp/logo_Logo dài Cam.png" alt="Logo" />
+                        <a href="/" className="header-left-logo d-flex justify-content-center" style={{ width: '250px' }}>
+                            <img src="/assets/interface-main/imgComp/2-removebg-preview.png" alt="Logo" />
                         </a>
 
                         {/* Thanh tìm kiếm */}
                         <div className="header-search">
-                            <form method="get" action="/tim" className="search-bar">
+                            <form onSubmit={handleSearchSubmit} className="search-bar">
                                 <input
                                     type="text"
                                     name="q"
-                                    className="search-bar-input"
-                                    placeholder="Nhập từ khóa cần tìm"
-                                    style={{fontSize:12}}
+                                    placeholder="Tìm kiếm sản phẩm..."
+                                    className="search-bar-input-2"
                                     autoComplete="off"
                                     value={searchText}
                                     onChange={handleSearchChange}
                                 />
-
                                 {searchText && (
                                     <i className="fa fa-times-circle search-bar-remove" onClick={clearSearch}></i>
                                 )}
-
                                 <button type="submit" className="search-bar-btn">
                                     <i className="fa fa-search"></i>
                                 </button>
@@ -113,7 +127,7 @@ function Header() {
                                     <p>0₫</p>
                                 </div>
                                 <div className="cart-ttip-price-button">
-                                    <a href="/checkout" className="color-white">
+                                    <a href="/cart" className="color-white">
                                         THANH TOÁN NGAY
                                     </a>
                                 </div>
@@ -126,4 +140,4 @@ function Header() {
     )
 }
 
-export default Header
+export default SearchBar

@@ -10,7 +10,7 @@ function Footer() {
         {/* Section 1: Dịch vụ hỗ trợ */}
         <div className="footer-services">
           <div className="service-item">
-            <img src="/assets/interface-main/imgFooter/delivery.png" alt="Giao hàng" />
+            <img src="/assets/interface-main/imgFooter/ship.png" alt="Giao hàng" />
             <h3>GIAO HÀNG TOÀN QUỐC</h3>
             <p>Giao hàng trước, trả tiền sau COD</p>
           </div>
@@ -20,7 +20,7 @@ function Footer() {
             <p>Đổi mới trong 15 ngày đầu</p>
           </div>
           <div className="service-item">
-            <img src="/assets/interface-main/imgFooter/payment.png" alt="Thanh toán" />
+            <img src="/assets/interface-main/imgFooter/pay.png" alt="Thanh toán" />
             <h3>THANH TOÁN TIỆN LỢI</h3>
             <p>Tiền mặt, chuyển khoản, trả góp 0%</p>
           </div>
@@ -74,7 +74,7 @@ function Footer() {
             <h3>THÔNG TIN KHÁC</h3>
             <p>Fan Page PC Parts Store</p>
             <p>📞 0987654321 (8:00 - 21:00)</p>
-            <p>📧 example@email.com.vn</p>
+            <p>📧 oitroioilatroi@luadao.vip</p>
           </div>
         </div>
 
@@ -91,6 +91,12 @@ function Footer() {
             <img src="/assets/interface-main/imgFooter/atm.png" alt="ATM" />
           </div>
         </div>
+
+        <div className="footer-copy-right text-center mt-4">
+          <p>© 2025 CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ VÀ CÔNG NGHỆ NHÓM 7.</p>
+        </div>
+
+
       </footer>
     </div>
   );
