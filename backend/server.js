@@ -13,7 +13,6 @@ const cartRoutes = require("./routes/cart");
 const newsRoutes = require("./routes/news");
 const chatRoutes = require("./routes/ChatBot");
 
-
 const app = express();
 require("dotenv").config();
 
@@ -25,6 +24,8 @@ mongoose
     console.log("MongoDB connection error:", err);
     process.exit(1);
   });
+
+app.set("trust proxy", 1); // cần thiết cho production
 
 // Cấu hình session middleware
 app.use(
@@ -40,7 +41,7 @@ app.use(
       maxAge: 60 * 60 * 1000, // 1 giờ
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      sameSite: "Lax",
+      sameSite: "Lax", //Để Lax nếu muốn chạy ở local, ngược lại None
     },
   })
 );
