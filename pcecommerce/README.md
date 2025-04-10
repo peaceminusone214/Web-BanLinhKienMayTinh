@@ -69,15 +69,15 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
-frontend    .env.development
-            REACT_APP_API_URL=http://localhost:5000/api
-            .env.production
-            REACT_APP_API_URL=https://webbanlinhkienmaytinh-backend.onrender.com/api           
+frontend env
+REACT_APP_API_URL=http://localhost:5000/api
 
 backend env
 MONGO_URI= ...
 PORT=5000
 SESSION_SECRET= ...
-CORS_ORIGIN=https://webbanlinhkienmaytinh-frontend.onrender.com,http://localhost:3000
+CORS_ORIGIN=http://localhost:3000
 EMAIL_USER= ...
 EMAIL_PASS= ...
+OPENROUTER_API_KEY= ...
+

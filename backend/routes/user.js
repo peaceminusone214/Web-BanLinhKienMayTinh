@@ -180,4 +180,43 @@ router.post("/reset-password", async (req, res) => {
   }
 });
 
+
+// =================================================================
+// Get all users
+router.get("/", async (req, res) => {
+  const users = await User.find();
+  res.json(users);
+});
+
+// Create user
+router.post("/", async (req, res) => {
+  const newUser = new User(req.body);
+  await newUser.save();
+  res.json(newUser);
+});
+
+// soft del
+router.put("/delete/:id", async (req, res) => {
+  const userId = req.params.id;
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { deleted: true }, 
+    { new: true }
+  );
+  if (!updatedUser) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  res.json(updatedUser);
+});
+
+
+// Update user
+router.put("/:id", async (req, res) => {
+  const updated = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  res.json(updated);
+});
+//=======================================================================
+
+
+
 module.exports = router;

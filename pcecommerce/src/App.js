@@ -20,6 +20,12 @@ import Checkout from './pages/Main/CheckOut';
 import ProfileInfo from './pages/Main/Profile-info';
 import Contact from './pages/Main/Contact';
 
+import SearchResultsPage from "./pages/Main/SearchResultsPage";
+import CategoryPage from "./pages/Main/CategoryPage";
+import CompareResult from "./pages/Main/ComparetionResulf";
+import FloatingChat from "../src/pages/Main/ChatBox/FloatingChat";
+
+
 function App() {
   const location = useLocation();
   const isAdminPath = location.pathname.startsWith("/admin");
@@ -49,6 +55,11 @@ function App() {
         <Route path="News/software" element={<Software />} /> 
         <Route path="/checkout" element={<Checkout />} /> 
         <Route path="/contact" element={<Contact />} /> 
+        <Route path="/category/:slug" element={<CategoryPage />} />
+        <Route path="/search-results" element={<SearchResultsPage/>} />
+        <Route path="/compare-results" element={<CompareResult/>} />
+
+
 
         {/* Admin Routes (protected) */}
         <Route element={<ProtectedRoute />}>
@@ -66,6 +77,7 @@ function AppWrapper() {
   return (
     <BrowserRouter>
       <App />
+      <FloatingChat/>
     </BrowserRouter>
   );
 }

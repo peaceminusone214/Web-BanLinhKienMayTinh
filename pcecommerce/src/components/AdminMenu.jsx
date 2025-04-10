@@ -239,7 +239,7 @@ function AdminMenu() {
                             </g>
                           </svg>
                         </span>
-                        <span className="menu-bar__name">Customers</span>
+                        <span className="menu-bar__name">Khách hàng</span>
                       </span>
                       <span className="sherah__toggle" />
                     </a>
@@ -252,18 +252,18 @@ function AdminMenu() {
                     >
                       <ul className="menu-bar__one-dropdown">
                         <li>
-                          <Link to="/admin/customerlist">
+                          <Link to="/admin/customers-list">
                             <span className="menu-bar__text">
                               <span className="menu-bar__name">
-                                Customer List
+                                Danh sách
                               </span>
                             </span>
                           </Link>
                         </li>
                         <li>
-                          <Link to="/admin/customers">
+                          <Link to="/admin/customer-detail">
                             <span className="menu-bar__text">
-                              <span className="menu-bar__name">Customers</span>
+                              <span className="menu-bar__name">Detail</span>
                             </span>
                           </Link>
                         </li>
