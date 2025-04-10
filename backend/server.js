@@ -24,6 +24,8 @@ mongoose
     process.exit(1);
   });
 
+app.set("trust proxy", 1); // cần thiết cho production
+
 // Cấu hình session middleware
 app.use(
   session({
@@ -38,7 +40,7 @@ app.use(
       maxAge: 60 * 60 * 1000, // 1 giờ
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      sameSite: "Lax",
+      sameSite: "None", //Để Lax nếu muốn chạy ở local
     },
   })
 );
