@@ -1,0 +1,287 @@
+/* --- Bộ lọc chính cho bình luận --- */
+.sherah-filter__container {
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #e1e1e1;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.sherah-filter__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.sherah-filter__select,
+.sherah-filter__input {
+  padding: 8px 12px;
+  min-width: 150px;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.sherah-filter__input {
+  min-width: 200px;
+  flex: 1;
+}
+
+.sherah-filter__btn-search {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.sherah-filter__btn-search:hover {
+  background-color: #0056b3;
+}
+
+/* --- Replies section --- */
+.admin-replies-heading {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #333;
+  margin: 32px 0 16px 0;
+}
+
+.admin-replies-filter__container {
+  background-color: #f4f6f8;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  border: 1px solid #dcdcdc;
+}
+
+.admin-replies-filter__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.admin-replies-filter__select,
+.admin-replies-filter__input {
+  padding: 8px 12px;
+  min-width: 160px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.admin-replies-filter__input {
+  flex: 1;
+  min-width: 200px;
+}
+
+.admin-replies-filter__btn-search {
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.admin-replies-filter__btn-search:hover {
+  background-color: #218838;
+}
+
+/* --- Replies table --- */
+.admin-replies-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 40px;
+}
+
+.admin-replies-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+}
+
+.admin-replies-table th,
+.admin-replies-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e1e1e1;
+  text-align: left;
+  font-size: 14px;
+}
+
+.admin-replies-table th {
+  background-color: #f0f2f5;
+  font-weight: 600;
+  color: #333;
+}
+
+.admin-replies-table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.admin-replies-table td:first-child {
+  font-weight: bold;
+  color: #007bff;
+  cursor: pointer;
+}
+  
+  /*******************************************     admin-comments-deatail      */
+/* Card container */
+.sherah-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+/* Header, Body, Footer của card */
+.sherah-card__header,
+.sherah-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.sherah-card__header {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.sherah-card__footer {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 10px;
+}
+
+/* Heading */
+.sherah-heading__title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Nút chung */
+.sherah-btn {
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.sherah-btn:hover {
+  background-color: #218838;
+}
+
+.sherah-btn--back {
+  background-color: #6c757d;
+}
+
+.sherah-btn--back:hover {
+  background-color: #5a6268;
+}
+
+.sherah-btn--delete {
+  background-color: #dc3545;
+}
+
+.sherah-btn--delete:hover {
+  background-color: #c82333;
+}
+
+/* Margin tiện ích */
+.mg-top-5 { margin-top: 5px; }
+.mg-top-10 { margin-top: 10px; }
+.mg-top-20 { margin-top: 20px; }
+.mg-top-30 { margin-top: 30px; }
+
+/* Input, Textarea */
+.sherah-wc__form-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+  resize: vertical;  /* Cho phép kéo dãn lên xuống */
+}
+
+.sherah-wc__form-input--big {
+  height: 80px;
+  resize: vertical;
+}
+
+/* Divider */
+.sherah-divider {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 20px 0;
+}
+
+/* Ảnh chi tiết */
+.sherah-img__container {
+  text-align: center;
+}
+
+.sherah-img--detail {
+  max-width: 150px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+/* Reply Section */
+.sherah-review-section,
+.sherah-notify-section {
+  margin-top: 20px;
+}
+
+.sherah-user-reviews__single {
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #fafafa;
+}
+
+.sherah-no-reply {
+  font-style: italic;
+  color: #888;
+}
+
+/* Phần hiển thị thông tin báo cáo cho reply */
+.sherah-report-info {
+  background-color: #ffe6e6;
+  border-left: 4px solid #dc3545;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 4px;
+}
+
+.sherah-report-info h5 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+  color: #dc3545;
+}
+
+.sherah-report-info ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.sherah-report-info li {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 3px;
+}
+
+
