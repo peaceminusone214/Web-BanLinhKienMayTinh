@@ -20,6 +20,7 @@ import Checkout from './pages/Main/CheckOut';
 import ProfileInfo from './pages/Main/Profile-info';
 import Contact from './pages/Main/Contact';
 import NewsDetail from "./components/news-detail";
+import OrderSuccess from "./pages/Main/OrderSuccess";
 
 function App() {
   const location = useLocation();
@@ -51,6 +52,7 @@ function App() {
         <Route path="/checkout" element={<Checkout />} /> 
         <Route path="/contact" element={<Contact />} /> 
         <Route path="/NewsDetail/:id" element={<NewsDetail />} />
+        <Route path="/order-success" element={<OrderSuccess />} />
 
         {/* Admin Routes (protected) */}
         <Route element={<ProtectedRoute />}>

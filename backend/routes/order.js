@@ -2,8 +2,16 @@ const express = require("express");
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 const Discount = require("../models/Discount");
+const User = require("../models/User");
 const sendOrderEmail = require("../utils/email");
+const { sendMessage } = require('../utils/telegramBot');
+const crypto = require("crypto");
 const router = express.Router();
+
+// Hàm tạo token ngẫu nhiên
+const generateToken = () => {
+  return crypto.randomBytes(16).toString("hex");
+};
 
 // Route thêm đơn hàng
 router.post("/add-order", async (req, res) => {
@@ -13,6 +21,7 @@ router.post("/add-order", async (req, res) => {
       return res.status(400).json({ message: "Danh sách đơn hàng trống hoặc không hợp lệ" });
     }
 
+    const telegramConnectionInfo = [];
     const newOrders = [];
 
     for (const order of orders) {
@@ -21,10 +30,15 @@ router.post("/add-order", async (req, res) => {
 
       for (const item of order.products) {
         const product = await Product.findById(item.product_id);
-        if (!product) return res.status(404).json({ message: `Sản phẩm ${item.product_id} không tồn tại` });
+        if (!product)
+          return res
+            .status(404)
+            .json({ message: `Sản phẩm ${item.product_id} không tồn tại` });
 
         if (product.stock_quantity < item.quantity) {
-          return res.status(400).json({ message: `Sản phẩm ${product.product_name} chỉ còn ${product.stock_quantity} trong kho` });
+          return res.status(400).json({
+            message: `Sản phẩm ${product.product_name} chỉ còn ${product.stock_quantity} trong kho`,
+          });
         }
 
         const productTotal = product.price * item.quantity;
@@ -46,10 +60,15 @@ router.post("/add-order", async (req, res) => {
       let discountAmount = 0;
       if (order.discount_code) {
         const discount = await Discount.findOne({ code: order.discount_code });
-        if (discount && discount.status === "active" && subtotal >= discount.min_order_value) {
-          discountAmount = discount.discount_type === "percentage"
-            ? (subtotal * discount.discount_value) / 100
-            : discount.discount_value;
+        if (
+          discount &&
+          discount.status === "active" &&
+          subtotal >= discount.min_order_value
+        ) {
+          discountAmount =
+            discount.discount_type === "percentage"
+              ? (subtotal * discount.discount_value) / 100
+              : discount.discount_value;
         }
       }
 
@@ -90,9 +109,128 @@ router.post("/add-order", async (req, res) => {
         shippingAddress: `${order.shipping_address.street}, ${order.shipping_address.ward}, ${order.shipping_address.city}, ${order.shipping_address.province}`,
         products: productDetails,
       });
+
+      // Lấy thông tin user để kiểm tra kết nối Telegram
+      const user = await User.findById(order.user_id);
+
+      if (!user) {
+        console.warn(`⚠️ Không tìm thấy user với ID: ${order.user_id}`);
+        continue;
+      }
+
+      // Gộp kiểm tra và tạo token nếu cần
+      if (!user.telegramChatId || !user.telegramConnectToken) {
+        if (!user.telegramConnectToken) {
+          user.telegramConnectToken = generateToken();
+          await user.save();
+          console.log(
+            `✅ Gán token Telegram cho user ${user._id}: ${user.telegramConnectToken}`
+          );
+        }
+      }
+
+      // Nếu user chưa kết nối Telegram (chatId null) → đẩy vào frontend
+      if (!user.telegramChatId && user.telegramConnectToken) {
+        telegramConnectionInfo.push({
+          userId: user._id,
+          connectionLink: `https://t.me/Auchobot_bot?start=${user.telegramConnectToken}`,
+        });
+
+        console.log(
+          `🧑 User ${user._id} chưa kết nối Telegram → Link: https://t.me/Auchobot_bot?start=${user.telegramConnectToken}`
+        );
+      } else {
+        console.log(
+          `✅ User ${user._id} đã kết nối Telegram (chatId: ${user.telegramChatId})`
+        );
+      }
     }
 
-    res.status(201).json({ message: `Thêm thành công ${newOrders.length} đơn hàng`, orders: newOrders });
+    console.log("📦 Tổng số đơn:", newOrders.length);
+    console.log("🔗 Đang xử lý kết nối Telegram...");
+    for (const order of newOrders) {
+      if (!order.user_id) {
+        console.warn("⚠️ Đơn không có user_id, bỏ qua Telegram.");
+        // Tìm token trong order.note với định dạng: guestToken=abc123
+        const guestTokenMatch = order.note?.match(/guestToken=([a-zA-Z0-9]+)/);
+        const guestToken = guestTokenMatch ? guestTokenMatch[1] : null;
+
+        if (guestToken) {
+          const guestUser = await User.findOne({
+            telegramConnectToken: guestToken,
+          });
+
+          if (guestUser?.telegramChatId) {
+            // Gửi thông báo đơn hàng
+            const message =
+              `📦 *Đơn hàng mới đã được đặt thành công!*\n\n` +
+              `🧾 Mã đơn: ${order._id}\n` +
+              `👤 Tên: ${order.fullName}\n` +
+              `💵 Tổng tiền: ${order.total_amount.toLocaleString()} đ\n` +
+              `📅 Ngày giao: ${order.deliveryDate || "Chưa xác định"}\n\n` +
+              `🛍️ Sản phẩm:\n` +
+              order.products
+                .map((p) => `- ${p.product_name} x${p.quantity}`)
+                .join("\n") +
+              `\n\n🚚 Địa chỉ: ${order.shipping_address?.street || ""}, ${
+                order.shipping_address?.ward || ""
+              }, ${order.shipping_address?.city || ""}, ${
+                order.shipping_address?.province || ""
+              }`;
+
+            await sendMessage(guestUser.telegramChatId, message);
+            console.log(
+              `✅ Đã gửi đơn hàng cho khách guestToken=${guestToken} (chatId: ${guestUser.telegramChatId})`
+            );
+          } else {
+            console.warn(
+              `❌ Không tìm thấy chatId cho guestToken=${guestToken}`
+            );
+          }
+        } else {
+          console.warn("⚠️ Không có guestToken trong order.note");
+        }
+        continue;
+      }
+
+      const user = await User.findById(order.user_id);
+
+      if (!user) {
+        console.warn(`⚠️ Không tìm thấy user với ID: ${order.user_id}`);
+        continue;
+      }
+
+      // Nếu chưa kết nối Telegram, và chưa có token thì tạo
+      if (!user.telegramChatId) {
+        if (!user.telegramConnectToken) {
+          user.telegramConnectToken = generateToken();
+          await user.save();
+          console.log(
+            `✅ Tạo token Telegram cho user ${user._id}: ${user.telegramConnectToken}`
+          );
+        }
+
+        telegramConnectionInfo.push({
+          userId: user._id,
+          connectionLink: `https://t.me/Auchobot_bot?start=${user.telegramConnectToken}`,
+        });
+
+        console.log(
+          `🧑 User ${user._id} chưa kết nối Telegram → Link: https://t.me/Auchobot_bot?start=${user.telegramConnectToken}`
+        );
+      } else {
+        console.log(
+          `✅ User ${user._id} đã kết nối Telegram (chatId: ${user.telegramChatId})`
+        );
+      }
+    }
+    console.log("✅ Gửi response về frontend");
+    console.log("📤 telegramConnectionInfo gửi về:", telegramConnectionInfo);
+    res.status(201).json({
+      message: `Thêm thành công ${newOrders.length} đơn hàng`,
+      orders: newOrders,
+      telegramConnectionInfo,
+    });
   } catch (err) {
     console.error("Lỗi:", err);
     res.status(500).json({ message: "Lỗi máy chủ khi thêm đơn hàng" });

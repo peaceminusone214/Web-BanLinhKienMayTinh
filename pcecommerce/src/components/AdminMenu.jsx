@@ -7,6 +7,7 @@ function AdminMenu() {
   const [isOrdersOpen, setIsOrdersOpen] = useState(false);
   const [isPagesOpen, setIsPagesOpen] = useState(false);
   const [isNewsOpen, setIsNewsOpen] = useState(false);
+  const [isCommentsOpen, setIsCommentOpen ] = useState(false);
 
   const toggleVendorsDropdown = () => {
     setIsVendorsOpen(!isVendorsOpen);
@@ -26,6 +27,9 @@ function AdminMenu() {
   const toggleNewsDropdown = () => {
     setIsNewsOpen(!isNewsOpen);
   };
+  const toggleCommentsDropdown = () => {
+    setIsCommentOpen(!isCommentsOpen);
+  };  
 
 
   return (
@@ -111,6 +115,27 @@ function AdminMenu() {
                       </span>
                     </Link>
                   </li>
+                  
+                  {/* Statistics menu item */}
+                  <li>
+                    <Link to="/admin/statistics">
+                      <span className="menu-bar__text">
+                        <span className="sherah-menu-icon sherah-svg-icon__v1">
+                          <svg
+                            className="sherah-svg-icon"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M9 17H7V10H9V17ZM13 17H11V7H13V17ZM17 17H15V13H17V17ZM19 19H5V5H19V19ZM19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3Z" />
+                          </svg>
+                        </span>
+                        <span className="menu-bar__name">Thống kê</span>
+                      </span>
+                    </Link>
+                  </li>
+                  
                   {/* Vendors Dropdown menu item */}
                   <li>
                     <a
@@ -663,7 +688,49 @@ function AdminMenu() {
                       </ul>
                     </div>
                   </li>
+                  {/*Quản lý bình luận */}
+                  <li>
+                    <a
+                      className={`collapsed ${isCommentsOpen ? "show" : ""}`}
+                      onClick={toggleCommentsDropdown}
+                    >
+                      <span className="menu-bar__text">
+                        <span className="sherah-menu-icon sherah-svg-icon__v1">
+                          <svg
+                            className="sherah-svg-icon"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="19.527"
+                            height="19.527"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              fill="currentColor"
+                              d="M20,2H4C2.897,2,2,2.897,2,4v14c0,1.103,0.897,2,2,2h4v4l4-4h10c1.103,0,2-0.897,2-2V4 C22,2.897,21.103,2,20,2z"
+                            />
+                          </svg>
+                        </span>
+                        <span className="menu-bar__name">Quản lý bình luận</span>
+                      </span>
+                      <span className="sherah__toggle" />
+                    </a>
+                    <div
+                      className={`collapse sherah__dropdown ${isCommentsOpen ? "show" : ""}`}
+                      id="menu-item__comments"
+                      data-bs-parent="#sherahMenu"
+                    >
+                      <ul className="menu-bar__one-dropdown">
+                        <li>
+                          <Link to="/admin/admin-comments">
+                            <span className="menu-bar__text">
+                              <span className="menu-bar__name">Danh sách bình luận</span>
+                            </span>
+                          </Link>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
 
+ 
                   {/* Invoice menu item */}
                   <li>
                     <Link to="/admin/invoiceprint" className="collapsed">

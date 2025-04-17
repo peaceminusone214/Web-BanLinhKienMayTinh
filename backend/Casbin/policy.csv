@@ -1,5 +1,6 @@
 p, admin, /api/auth/admin, get
 p, employee, /api/auth/employee, get
 g, admin, admin
+g, admin1, admin
 g, admin, employee
 g, newuser, employee

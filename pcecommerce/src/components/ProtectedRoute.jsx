@@ -32,6 +32,9 @@ import Uploaddiscount from "../pages/Dashboard/upload-discount";
 import NewsManagement from "./news-management";
 import AddNews from "./add-news";
 import NewsDetail from "./news-detail";
+import AdminComments from "./admin-comments";
+import AdminCommentDetail from "./admin-comments-detail";
+import Statistics from "../pages/Dashboard/Statistics";
 
 const ProtectedRoute = () => {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -109,6 +112,9 @@ const ProtectedRoute = () => {
           <Route path="/admin/news-management" element={<NewsManagement />} />
           <Route path="/admin/add-news" element={<AddNews />} />
           <Route path="/admin/news-detail" element={<NewsDetail />} />
+          <Route path="/admin/admin-comments" element={<AdminComments />} />
+          <Route path="/admin/admin-comments-detail/:id" element={<AdminCommentDetail />} />
+          <Route path="/admin/statistics" element={<Statistics />} />
         </Routes>
       </div>
     );
@@ -124,6 +130,7 @@ const ProtectedRoute = () => {
           <Route path="/admin/productlist" element={<Productlist />} />
           <Route path="/admin/products" element={<Products />} />
           <Route path="/admin/profileinfo" element={<ProfileinfoAdmin />} />
+          <Route path="/admin/statistics" element={<Statistics />} />
         </Routes>
       </div>
     );

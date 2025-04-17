@@ -210,7 +210,7 @@ const AdminComments = () => {
                               <th className="sherah-table__column-2 sherah-table__h2">Username</th>
                               <th className="sherah-table__column-3 sherah-table__h3">Nội dung</th>
                               <th className="sherah-table__column-4 sherah-table__h4">Rating</th>
-                              <th className="sherah-table__column-5 sherah-table__h5">Ảnh</th>
+                              {/* <th className="sherah-table__column-5 sherah-table__h5">Ảnh</th> */}
                               <th className="sherah-table__column-6 sherah-table__h6">Trạng thái</th>
                               {/* Cột mới hiển thị báo cáo */}
                               <th className="sherah-table__column-8 sherah-table__h8">Báo cáo</th>
@@ -260,7 +260,7 @@ const AdminComments = () => {
                                       </p>
                                     </div>
                                   </td>
-                                  <td className="sherah-table__column-5 sherah-table__data-5">
+                                  {/* <td className="sherah-table__column-5 sherah-table__data-5">
                                     {comment.image ? (
                                       <img
                                         src={`${API_URL}/${comment.image}`}
@@ -270,7 +270,7 @@ const AdminComments = () => {
                                     ) : (
                                       "No Image"
                                     )}
-                                  </td>
+                                  </td> */}
                                   <td className="sherah-table__column-6 sherah-table__data-6">
                                     <div
                                       className={`sherah-table__status ${

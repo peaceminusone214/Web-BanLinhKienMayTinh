@@ -16,7 +16,12 @@ function Productslist() {
 
   const handleEditClick = (product) => {
     setEditingProductId(product._id);
-    setEditedProduct({ ...product }); // Sao chép dữ liệu sản phẩm vào state
+    // Ensure category_id is properly initialized even if it's null
+    const productWithSafeCategory = {
+      ...product,
+      category_id: product.category_id || { name: "" }
+    };
+    setEditedProduct(productWithSafeCategory);
   };
   
   const handleInputChange = (e, field) => {
@@ -81,10 +86,13 @@ function Productslist() {
   const handleSortByCategory = () => {
     const sortedProducts = [...products];
     sortedProducts.sort((a, b) => {
+      const nameA = a.category_id?.name || "";
+      const nameB = b.category_id?.name || "";
+      
       if (isSortedByCategoryAsc) {
-        return a.category_id.name.localeCompare(b.category_id.name);
+        return nameA.localeCompare(nameB);
       } else {
-        return b.category_id.name.localeCompare(a.category_id.name);
+        return nameB.localeCompare(nameA);
       }
     });
     setProducts(sortedProducts);
@@ -346,12 +354,12 @@ function Productslist() {
                                   <select
                                     className="form-group__input"
                                     aria-label="Chọn danh mục"
-                                    value={editedProduct.category_id.name || ""}
+                                    value={editedProduct.category_id?.name || ""}
                                     onChange={(e) =>
                                       setEditedProduct({
                                         ...editedProduct,
                                         category_id: {
-                                          ...editedProduct.category_id,
+                                          ...(editedProduct.category_id || {}),
                                           name: e.target.value,
                                         },
                                       })
@@ -372,7 +380,7 @@ function Productslist() {
                                   </select>
                                 ) : (
                                   <p className="sherah-table__product-desc">
-                                    {product.category_id.name}
+                                    {product.category_id?.name || "Không có danh mục"}
                                   </p>
                                 )}
                               </td>

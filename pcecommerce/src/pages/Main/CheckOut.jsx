@@ -3,6 +3,10 @@ import { useNavigate } from "react-router-dom";
 import "./MainStyles/styleCheckOut.css";
 
 function Checkout() {
+  const [telegramConnected, setTelegramConnected] = useState(false);
+  const [telegramConnectLink, setTelegramConnectLink] = useState("");
+  const [orderSuccessId, setOrderSuccessId] = useState(null);
+
   const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
 
@@ -149,6 +153,7 @@ function Checkout() {
         setPhone(user.phoneNumber);
         setEmail(user.email);
         setAddress(user.address.street);
+
         setUser(user);
       } catch (error) {
         console.error("Lỗi lấy dữ liệu user:", error);
@@ -206,50 +211,75 @@ function Checkout() {
   const isAddressSelected =
     selectedProvince && selectedDistrict && selectedWard;
 
-    const handleApplyDiscount = async () => {
-      if (!couponCode) {
-        alert("Vui lòng nhập mã giảm giá!");
-        return;
-      }
-    
-      try {
-        const response = await fetch(`${API_URL}/discount/apply-discount`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            discount_code: couponCode,
-            products: cartItems.map((item) => ({
-              product_id: item.id,
-              quantity: item.quantity,
-            })),
-          }),
-        });
-    
-        const result = await response.json();
-    
-        if (response.ok) {
-          setDiscountAmount(result.discount_amount);
-    
-          // Lấy dữ liệu orderInfo cũ từ localStorage
-          const existingOrderInfo = JSON.parse(localStorage.getItem("orderInfo")) || {};
-    
-          // Cập nhật chỉ mã giảm giá, giữ nguyên các key cũ
-          const updatedOrderInfo = {
-            ...existingOrderInfo,
-            discount_code: couponCode, // Lưu mã giảm giá
-          };
-    
-          // Lưu lại vào localStorage
-          localStorage.setItem("orderInfo", JSON.stringify(updatedOrderInfo));
-        } else {
-          setDiscountAmount(0);
-        }
-      } catch (error) {
-        console.error("Lỗi khi áp dụng mã giảm giá:", error);
+  const handleApplyDiscount = async () => {
+    if (!couponCode) {
+      alert("Vui lòng nhập mã giảm giá!");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/discount/apply-discount`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          discount_code: couponCode,
+          products: cartItems.map((item) => ({
+            product_id: item.id,
+            quantity: item.quantity,
+          })),
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setDiscountAmount(result.discount_amount);
+
+        // Lấy dữ liệu orderInfo cũ từ localStorage
+        const existingOrderInfo =
+          JSON.parse(localStorage.getItem("orderInfo")) || {};
+
+        // Cập nhật chỉ mã giảm giá, giữ nguyên các key cũ
+        const updatedOrderInfo = {
+          ...existingOrderInfo,
+          discount_code: couponCode, // Lưu mã giảm giá
+        };
+
+        // Lưu lại vào localStorage
+        localStorage.setItem("orderInfo", JSON.stringify(updatedOrderInfo));
+      } else {
         setDiscountAmount(0);
       }
-    };      
+    } catch (error) {
+      console.error("Lỗi khi áp dụng mã giảm giá:", error);
+      setDiscountAmount(0);
+    }
+  };
 
+  const handleTelegramConnection = async () => {
+    try {
+      if (telegramConnectLink) {
+        window.open(telegramConnectLink, "_blank");
+        return;
+      }
+  
+      let token = localStorage.getItem("telegramGuestToken");
+  
+      if (!token) {
+        token = Math.random().toString(36).substring(2) + Date.now().toString(36);
+        localStorage.setItem("telegramGuestToken", token);
+      }
+  
+      const link = `https://t.me/Auchobot_bot?start=${token}`;
+      setTelegramConnectLink(link);
+      setTelegramConnected(true);
+      window.open(link, "_blank");
+    } catch (error) {
+      console.error("❌ Lỗi kết nối Telegram:", error);
+      alert("Không thể kết nối Telegram lúc này. Thử lại sau.");
+    }
+  }; 
+  
   const handlePlaceOrder = async () => {
     try {
       const orderInfo = JSON.parse(localStorage.getItem("orderInfo")) || {};
@@ -261,7 +291,7 @@ function Checkout() {
       }
 
       const orderData = {
-        user_id: user ? user._id : null,
+        user_id: user?._id || null,
         products: cartItems.map((item) => ({
           product_id: item.id,
           quantity: item.quantity,
@@ -284,9 +314,13 @@ function Checkout() {
           city: orderInfo.selectedDistrictName || "",
           ward: orderInfo.selectedWardName || "",
         },
+        note: telegramConnected
+          ? `guestToken=${localStorage.getItem("telegramGuestToken")}`
+          : "",
+        sendTelegram: telegramConnected,
       };
 
-      console.log("Dữ liệu đơn hàng gửi đi:", orderData);
+      console.log("📦 Dữ liệu đơn hàng gửi đi:", orderData);
 
       const response = await fetch(`${API_URL}/order/add-order`, {
         method: "POST",
@@ -295,9 +329,17 @@ function Checkout() {
       });
 
       const result = await response.json();
+      console.log("📥 API result:", result);
+
+      // 👉 Xử lý Telegram
+      if (result.telegramConnectionInfo?.length > 0) {
+        const link = result.telegramConnectionInfo[0].connectionLink;
+        console.log("📨 Gợi ý kết nối Telegram:", link);
+        setTelegramConnectLink(link);
+      }
 
       if (response.ok) {
-        alert(`Đặt hàng thành công! Mã đơn hàng: ${result.orders[0]._id}`);
+        alert(`🎉 Đặt hàng thành công! Mã đơn hàng: ${result.orders[0]._id}`);
 
         localStorage.removeItem("cart");
         localStorage.removeItem("orderInfo");
@@ -305,11 +347,70 @@ function Checkout() {
 
         navigate("/");
       } else {
-        alert(`Lỗi khi đặt hàng: ${result.message}`);
+        alert(`❌ Lỗi khi đặt hàng: ${result.message}`);
       }
     } catch (error) {
-      console.error("Lỗi khi gửi đơn hàng:", error);
+      console.error("❌ Lỗi khi gửi đơn hàng:", error);
       alert("Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!");
+    }
+  };
+
+  const handleCheckout = async () => {
+    if (cartItems.length === 0) {
+      alert("Giỏ hàng trống. Vui lòng thêm sản phẩm!");
+      return;
+    }
+
+    if (paymentMethod === "vnpay") {
+      try {
+        const paymentData = {
+          user: user?._id || null,
+          fullName,
+          email,
+          products: cartItems.map((item) => ({
+            product_id: item.id,
+            quantity: item.quantity,
+          })),
+          amount: totalAmount,
+          language: "vn",
+          bankCode: "VNPAY",
+          sendTelegram: telegramConnected,
+          shippingAddress: {
+            street: address,
+            province: selectedProvince,
+            city: selectedDistrict,
+            ward: selectedWard,
+          }
+        };
+       
+        const response = await fetch(
+          `${API_URL}/payment/create_order_payment`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(paymentData),
+          }
+        );
+
+        const result = await response.json();
+        
+        if (result.telegramConnectLink) {
+          console.log("Telegram link từ BE:", result.telegramConnectLink);
+          setTelegramConnectLink(result.telegramConnectLink);
+        }
+        if (result.paymentUrl) {
+          window.location.href = result.paymentUrl;
+        } else {
+          alert("Không nhận được đường dẫn thanh toán từ server!");
+        }
+      } catch (error) {
+        console.error("Lỗi khi tạo đơn hàng VNPay:", error);
+        alert(
+          "Có lỗi xảy ra khi thực hiện thanh toán bằng VNPay. Vui lòng thử lại sau!"
+        );
+      }
+    } else {
+      handlePlaceOrder();
     }
   };
 
@@ -498,7 +599,43 @@ function Checkout() {
             </label>
           </div>
 
-          <button className="checkout-button" onClick={handlePlaceOrder}>
+          {/**VNPAY method */}
+          <div className="form-group-radio">
+            <label>
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="vnpay"
+                checked={paymentMethod === "vnpay"}
+                onChange={() => setPaymentMethod("vnpay")}
+              />
+              <img
+                src="./assets/icons/vnpay-icon.svg"
+                alt="VNPAY Icon"
+                className="payment-icon"
+              />
+              Thanh toán qua VNPAY
+            </label>
+          </div>
+
+          <button
+            className={`telegram-connect-btn ${telegramConnected ? 'connected' : ''}`}
+            onClick={handleTelegramConnection}
+          >
+            {telegramConnected ? (
+              <>
+                <i className="fas fa-check-circle"></i>
+                Đã kết nối Telegram
+              </>
+            ) : (
+              <>
+                <i className="fab fa-telegram-plane"></i>
+                Kết nối Telegram để nhận thông báo
+              </>
+            )}
+          </button>
+
+          <button className="checkout-button" onClick={handleCheckout}>
             Hoàn tất đơn hàng
           </button>
         </div>

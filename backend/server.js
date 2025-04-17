@@ -13,6 +13,7 @@ const cartRoutes = require("./routes/cart");
 const newsRoutes = require("./routes/news");
 const paymentRoutes = require('./routes/payment');
 const commentRoutes = require('./routes/comment');
+const statsRoutes = require('./routes/stats');
 
 const app = express();
 require("dotenv").config();
@@ -69,6 +70,7 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/news", newsRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/comment', commentRoutes);
+app.use('/api/stats', statsRoutes);
 app.use("/uploads", express.static("uploads"));
 
 // Khởi động server

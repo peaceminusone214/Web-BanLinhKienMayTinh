@@ -539,7 +539,7 @@ function ProfileinfoAdmin() {
                                                         Địa chỉ :
                                                       </h4>
                                                       <p className="sherah-profile-info__text">
-                                                        {user.address.city}
+                                                        {user.address ? user.address.city : 'Chưa cập nhật'}
                                                       </p>
                                                     </li>
                                                   </ul>
@@ -1647,7 +1647,7 @@ function ProfileinfoAdmin() {
                                         while playing video games. In the
                                         future, the Company plans to develop its
                                         own games and Metaverse around the
-                                        Betonyou universe (“Project”).
+                                        Betonyou universe ("Project").
                                       </p>
                                       <p>
                                         To release the NFTs and fund the
@@ -1660,7 +1660,7 @@ function ProfileinfoAdmin() {
                                         development.
                                       </p>
                                       <h3 className="sherah-ptabs__page-title">
-                                        4. Purchaser’s obligations
+                                        4. Purchaser's obligations
                                       </h3>
                                       <p>
                                         To the fullest extent permitted by
@@ -1668,7 +1668,7 @@ function ProfileinfoAdmin() {
                                         indemnify, defend and hold harmless the
                                         Company from and against all claims,
                                         demands, actions, damages, losses, costs
-                                        and expenses (including attorneys’ fees)
+                                        and expenses (including attorneys' fees)
                                         that arise from or relate to (i) your
                                         Subscription or use of the NFTs; (ii)
                                         your responsibilities or obligations

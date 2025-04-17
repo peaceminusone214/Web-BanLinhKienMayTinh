@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
+import moment from "moment";
+import axios from "axios";
 
 const Product = () => {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -7,6 +9,19 @@ const Product = () => {
   const [product, setProduct] = useState(null);
   const [category, setCategory] = useState("");
   const [activeTab, setActiveTab] = useState("p_tab_1");
+
+  const [replyName, setReplyName] = useState("");
+
+  // State cho danh sách bình luận của sản phẩm hiện tại
+  const [reviews, setReviews] = useState([]);
+
+  // Các biến state cho form bình luận
+  const [firstName, setFirstName] = useState("");
+  const [email, setEmail] = useState("");
+  const [review, setReview] = useState("");
+  const [rating, setRating] = useState(5);
+  const [image, setImage] = useState(null);
+
   const fieldLabels = {
     core_count: "Số nhân",
     thread_count: "Số luồng",
@@ -19,27 +34,76 @@ const Product = () => {
     warranty: "Bảo hành",
     condition: "Tình trạng",
   };
-  
+
   const valueMappings = {
     New: "Mới",
     Used: "Đã sử dụng",
   };
-  
+
   const formatValue = (value) => {
     if (typeof value === "string") {
-      // Chuyển "New" -> "Mới", "Used" -> "Đã sử dụng"
       if (valueMappings[value]) return valueMappings[value];
-  
-      // Chuyển đổi "year" hoặc "years" thành "năm"
       return value.replace(/\b(years?|Years?)\b/g, "năm");
-    } 
+    }
     return value;
-  };  
+  };
 
+  // Các state reply và report
+  const [expandedReplies, setExpandedReplies] = useState({}); 
+  const [activeReplyForm, setActiveReplyForm] = useState(null); 
+  const [replyContent, setReplyContent] = useState("");
+
+  // Function to calculate average rating
+  const calculateAverageRating = () => {
+    if (!reviews || reviews.length === 0) return 0;
+    
+    const totalRating = reviews.reduce((sum, review) => sum + parseInt(review.rating || 0), 0);
+    return (totalRating / reviews.length).toFixed(1);
+  };
+
+  // Tạo component hiển thị sao đánh giá
+  const RatingStars = ({ rating }) => {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    
+    return (
+      <>
+        {[...Array(fullStars)].map((_, i) => (
+          <span key={i} className="sherah-color4">
+            <i className="fa fa-star" />
+          </span>
+        ))}
+        {hasHalfStar && (
+          <span className="sherah-color4">
+            <i className="fa fa-star-half-o" />
+          </span>
+        )}
+        {[...Array(5 - fullStars - (hasHalfStar ? 1 : 0))].map((_, i) => (
+          <span key={i + fullStars + (hasHalfStar ? 1 : 0)} className="sherah-color4">
+            <i className="fa fa-star-o" />
+          </span>
+        ))}
+      </>
+    );
+  };
+
+  // Hàm lấy danh sách bình luận của sản phẩm theo productId
+  const fetchReviews = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/comment`, {
+        params: { productId: id },
+      });
+      // Chỉ hiển thị các bình luận có trạng thái "active"
+      const activeReviews = res.data.filter((rev) => rev.status === "active");
+      setReviews(activeReviews);
+    } catch (err) {
+      console.error("Lỗi khi lấy danh sách bình luận:", err);
+    }
+  };
+
+  // Lấy thông tin sản phẩm và bình luận
   useEffect(() => {
     if (!id) return;
-
-    // Lấy thông tin sản phẩm
     fetch(`${API_URL}/product/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error(`Lỗi API sản phẩm: ${res.status}`);
@@ -47,20 +111,18 @@ const Product = () => {
       })
       .then((data) => {
         setProduct(data);
-        // Chỉ gọi fetchCategory nếu category_id hợp lệ
         if (data.category_id && typeof data.category_id === "string") {
           fetchCategory(data.category_id);
         }
+        fetchReviews(); // Lấy bình luận sau khi sản phẩm được load
       })
       .catch((err) => console.error("Lỗi khi lấy sản phẩm:", err));
-  }, [id]);
+  }, [id, API_URL]);
 
   const fetchCategory = (categoryId) => {
     fetch(`${API_URL}/product/get-category`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: categoryId }),
     })
       .then((res) => {
@@ -73,6 +135,122 @@ const Product = () => {
       })
       .catch((err) => console.error("Lỗi khi lấy danh mục:", err));
   };
+
+  // Xử lý chọn file ảnh từ máy tính
+  // const handleImageChange = (e) => {
+  //   if (e.target.files && e.target.files[0]) {
+  //     setImage(e.target.files[0]);
+  //   }
+  // };
+
+  // // Xử lý dán ảnh từ clipboard
+  // const handlePaste = (e) => {
+  //   const items = e.clipboardData.items;
+  //   for (let i = 0; i < items.length; i++) {
+  //     if (items[i].type.indexOf("image") !== -1) {
+  //       const file = items[i].getAsFile();
+  //       setImage(file);
+  //     }
+  //   }
+  // };
+
+  // Xử lý gửi bình luận mới
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("productId", id);
+    formData.append("username", firstName);
+    formData.append("email", email);
+    formData.append("content", review);
+    formData.append("rating", rating);
+    if (image) {
+      formData.append("image", image);
+    }
+    try {
+      const res = await axios.post(`${API_URL}/comment`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log("Comment submitted:", res.data);
+      // Thêm bình luận mới vào đầu danh sách reviews
+      setReviews([res.data, ...reviews]);
+      // Reset form sau khi gửi
+      setFirstName("");
+      setEmail("");
+      setReview("");
+      setRating(5);
+      setImage(null);
+    } catch (err) {
+      console.error("Error submitting comment:", err);
+    }
+  };
+
+  // Hàm xử lý mở/thu gọn reply cho 1 bình luận
+  const toggleReplies = (commentId) => {
+    setExpandedReplies((prev) => ({
+      ...prev,
+      [commentId]: !prev[commentId],
+    }));
+  };
+
+  // Hàm gửi reply cho bình luận
+  const handleReplySubmit = async (commentId) => {
+    if (!replyName.trim() || !replyContent.trim()) {
+      alert("Vui lòng nhập tên và nội dung reply.");
+      return;
+    }
+    try {
+      const res = await axios.post(`${API_URL}/comment/reply/${commentId}`, {
+        username: replyName,
+        content: replyContent,
+        role: "user",
+      });
+      // Sau khi gửi thành công, cập nhật lại danh sách bình luận (ví dụ qua fetchReviews)
+      fetchReviews();
+      setReplyName("");
+      setReplyContent("");
+      setActiveReplyForm(null);
+    } catch (error) {
+      console.error("Error submitting reply:", error);
+    }
+  };
+  
+ 
+// Hàm báo cáo bình luận
+const handleReport = async (commentId) => {
+  try {
+    const reporter = prompt("Nhập tên người dùng để báo cáo:");
+    if (!reporter) return;
+
+    const reason = prompt("Nhập lý do báo cáo:");
+    if (!reason) return;
+
+    await axios.post(`${API_URL}/comment/report/${commentId}`, {
+      reporter,
+      reason,
+    });
+    alert("Bình luận đã được báo cáo");
+  } catch (error) {
+    console.error("Error reporting comment:", error);
+  }
+};
+
+const handleReportReply = async (replyId) => {
+  try {
+    const reporter = prompt("Nhập tên người dùng để báo cáo reply:");
+    if (!reporter) return;
+
+    const reason = prompt("Nhập lý do báo cáo reply:");
+    if (!reason) return;
+
+    await axios.post(`${API_URL}/comment/report/reply/${replyId}`, {
+      reporter,
+      reason,
+    });
+    alert("Reply đã được báo cáo");
+  } catch (error) {
+    console.error("Error reporting reply:", error);
+  }
+};
 
   if (!product) return <p>Loading sản phẩm...</p>;
 
@@ -272,26 +450,12 @@ const Product = () => {
                               <div className="product-detail-body__deal--rating">
                                 <h5 className="sherah-product-card__price">
                                   <del>*Giá sale*</del>
-                                  {product.price} VNĐ
+                                  {product.price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })}
                                 </h5>
                                 <div className="sherah-product-card__meta sherah-dflex sherah-flex-gap-30">
                                   <div className="sherah-product-card__rating sherah-dflex sherah-flex-gap-5">
-                                    <span className="sherah-color4">
-                                      <i className="fa fa-star" />
-                                    </span>
-                                    <span className="sherah-color4">
-                                      <i className="fa fa-star" />
-                                    </span>
-                                    <span className="sherah-color4">
-                                      <i className="fa fa-star" />
-                                    </span>
-                                    <span className="sherah-color4">
-                                      <i className="fa fa-star" />
-                                    </span>
-                                    <span className="sherah-color4">
-                                      <i className="fa fa-star" />
-                                    </span>
-                                    (33)
+                                    <RatingStars rating={calculateAverageRating()} />
+                                    ({reviews.length})
                                   </div>
                                 </div>
                               </div>
@@ -485,7 +649,7 @@ const Product = () => {
                                   data-bs-toggle="list"
                                   role="tab"
                                 >
-                                  Đánh giá(chưa)
+                                  Đánh giá(đường tam tạng)
                                 </a>
                               </div>
                             </div>
@@ -866,388 +1030,427 @@ const Product = () => {
                                   </li>
                                 </ul>
                               </div>
-                              <div
-                                className={`tab-pane fade ${
-                                  activeTab === "p_tab_3" ? "show active" : ""
-                                }`}
-                                id="p_tab_3"
-                                role="tabpanel"
-                                aria-labelledby="nav-home-tab"
-                              >
-                                {/* Sherah Review */}
-                                <div className="sherah-user-reviews">
-                                  {/* Single Review */}
-                                  <div className="sherah-user-reviews__single">
-                                    <div className="shera-user-reviews_thumb">
-                                      <img src="/assets/interface-dashboard/img/review-1.png" />
-                                    </div>
-                                    <div className="sherah-user-reviews__content">
-                                      <h4 className="sherah-user-reviews_title">
-                                        Abubokkor Siddik
-                                      </h4>
-                                      <div className="sherah-product-card__rating sherah-dflex sherah-flex-gap-5">
-                                        <span className="sherah-color4">
-                                          <i className="fa fa-star" />
-                                        </span>
-                                        <span className="sherah-color4">
-                                          <i className="fa fa-star" />
-                                        </span>
-                                        <span className="sherah-color4">
-                                          <i className="fa fa-star" />
-                                        </span>
-                                        <span className="sherah-color4">
-                                          <i className="fa fa-star" />
-                                        </span>
-                                      </div>
-                                      <p className="sherah-user-reviews__text">
-                                        This is some unreal beauty!I really
-                                        liked it! What a beautiful light it
-                                        comes from! The radius of bright light
-                                        is about meters
-                                      </p>
-                                      <div className="sherah-user-reviews__buttons">
-                                        <a
-                                          href="#"
-                                          className="sherah-color3 sherah-color3__bg--opactity"
-                                        >
-                                          <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="17.136"
-                                            height="15.5"
-                                            viewBox="0 0 17.136 15.5"
-                                          >
-                                            <path
-                                              id="Icon"
-                                              d="M106.729,13.669v.694a.779.779,0,0,0-.022.1,5.407,5.407,0,0,1-.909,2.507,10.756,10.756,0,0,1-1.877,2.153c-1.417,1.265-2.855,2.505-4.29,3.75a.9.9,0,0,1-1.28-.03q-1.646-1.415-3.287-2.836a17.082,17.082,0,0,1-2.561-2.63,5.638,5.638,0,0,1-1.136-2.513,4.777,4.777,0,0,1,1.049-4.005,4.03,4.03,0,0,1,3.775-1.423,3.938,3.938,0,0,1,2.419,1.328c.138.149.264.31.4.477.069-.089.128-.169.192-.246s.135-.162.208-.239A3.931,3.931,0,0,1,103.71,9.6a4.192,4.192,0,0,1,2.863,3.17C106.65,13.062,106.679,13.368,106.729,13.669Z"
-                                              transform="translate(-90.443 -8.519)"
-                                              fill="none"
-                                              stroke="#09ad95"
-                                              strokeWidth="1.7"
-                                            />
-                                          </svg>{" "}
-                                          80
-                                        </a>
-                                        <a
-                                          href="#"
-                                          className="sherah-color2 sherah-color2__bg--opactity"
-                                        >
-                                          <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="17.684"
-                                            height="15.304"
-                                            viewBox="0 0 17.684 15.304"
-                                          >
-                                            <path
-                                              id="Icon"
-                                              d="M122.755,24.156c-.059.315-.1.635-.18.945a7.044,7.044,0,0,1-1.362,2.647l-.383.482-1.064-.84.358-.454a5.942,5.942,0,0,0,1.108-2.061,4.449,4.449,0,0,0-.089-2.687,4.951,4.951,0,0,0-2.707-3.014,4.9,4.9,0,0,0-2.089-.447q-4.115-.007-8.231,0c-.032,0-.065,0-.094,0l3.064,3.06-.963.962-4.69-4.694,4.71-4.711.925.925-3.1,3.1h.24q4.005,0,8.01,0a6.442,6.442,0,0,1,3.671,1.067,6.311,6.311,0,0,1,2.422,3,5.989,5.989,0,0,1,.417,1.86.716.716,0,0,0,.025.114Z"
-                                              transform="translate(-105.221 -13.137)"
-                                              fill="#ff6767"
-                                              stroke="#ff6767"
-                                              strokeWidth="0.3"
-                                            />
-                                          </svg>{" "}
-                                          Reply
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  {/* End Single Review */}
-                                  {/* Single Review */}
-                                  <div className="sherah-user-reviews__single sherah-user-reviews__single--reply">
-                                    <div className="shera-user-reviews_thumb">
-                                      <img src="/assets/interface-dashboard/img/review-2.png" />
-                                    </div>
-                                    <div className="sherah-user-reviews__content">
-                                      <h4 className="sherah-user-reviews_title">
-                                        Admin
-                                      </h4>
-                                      <div className="sherah-product-card__rating sherah-dflex sherah-flex-gap-5">
-                                        <span className="sherah-color4">
-                                          <i className="fa fa-star" />
-                                        </span>
-                                        <span className="sherah-color4">
-                                          <i className="fa fa-star" />
-                                        </span>
-                                        <span className="sherah-color4">
-                                          <i className="fa fa-star" />
-                                        </span>
-                                        <span className="sherah-color4">
-                                          <i className="fa fa-star" />
-                                        </span>
-                                      </div>
-                                      <p className="sherah-user-reviews__text">
-                                        Thank Your for opinion.
-                                      </p>
-                                      <div className="sherah-user-reviews__buttons">
-                                        <a
-                                          href="#"
-                                          className="sherah-color3 sherah-color3__bg--opactity"
-                                        >
-                                          <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="17.136"
-                                            height="15.5"
-                                            viewBox="0 0 17.136 15.5"
-                                          >
-                                            <path
-                                              id="Icon"
-                                              d="M106.729,13.669v.694a.779.779,0,0,0-.022.1,5.407,5.407,0,0,1-.909,2.507,10.756,10.756,0,0,1-1.877,2.153c-1.417,1.265-2.855,2.505-4.29,3.75a.9.9,0,0,1-1.28-.03q-1.646-1.415-3.287-2.836a17.082,17.082,0,0,1-2.561-2.63,5.638,5.638,0,0,1-1.136-2.513,4.777,4.777,0,0,1,1.049-4.005,4.03,4.03,0,0,1,3.775-1.423,3.938,3.938,0,0,1,2.419,1.328c.138.149.264.31.4.477.069-.089.128-.169.192-.246s.135-.162.208-.239A3.931,3.931,0,0,1,103.71,9.6a4.192,4.192,0,0,1,2.863,3.17C106.65,13.062,106.679,13.368,106.729,13.669Z"
-                                              transform="translate(-90.443 -8.519)"
-                                              fill="none"
-                                              stroke="#09ad95"
-                                              strokeWidth="1.7"
-                                            />
-                                          </svg>{" "}
-                                          80
-                                        </a>
-                                        <a
-                                          href="#"
-                                          className="sherah-color2 sherah-color2__bg--opactity"
-                                        >
-                                          <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="17.684"
-                                            height="15.304"
-                                            viewBox="0 0 17.684 15.304"
-                                          >
-                                            <path
-                                              id="Icon"
-                                              d="M122.755,24.156c-.059.315-.1.635-.18.945a7.044,7.044,0,0,1-1.362,2.647l-.383.482-1.064-.84.358-.454a5.942,5.942,0,0,0,1.108-2.061,4.449,4.449,0,0,0-.089-2.687,4.951,4.951,0,0,0-2.707-3.014,4.9,4.9,0,0,0-2.089-.447q-4.115-.007-8.231,0c-.032,0-.065,0-.094,0l3.064,3.06-.963.962-4.69-4.694,4.71-4.711.925.925-3.1,3.1h.24q4.005,0,8.01,0a6.442,6.442,0,0,1,3.671,1.067,6.311,6.311,0,0,1,2.422,3,5.989,5.989,0,0,1,.417,1.86.716.716,0,0,0,.025.114Z"
-                                              transform="translate(-105.221 -13.137)"
-                                              fill="#ff6767"
-                                              stroke="#ff6767"
-                                              strokeWidth="0.3"
-                                            />
-                                          </svg>{" "}
-                                          Reply
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  {/* End Single Review */}
-                                  {/* Single Review */}
-                                  <div className="sherah-user-reviews__single">
-                                    <div className="shera-user-reviews_thumb">
-                                      <img src="/assets/interface-dashboard/img/review-3.png" />
-                                    </div>
-                                    <div className="sherah-user-reviews__content">
-                                      <h4 className="sherah-user-reviews_title">
-                                        Deniella Rhodes
-                                      </h4>
-                                      <div className="sherah-product-card__rating sherah-dflex sherah-flex-gap-5">
-                                        <span className="sherah-color4">
-                                          <i className="fa fa-star" />
-                                        </span>
-                                        <span className="sherah-color4">
-                                          <i className="fa fa-star" />
-                                        </span>
-                                        <span className="sherah-color4">
-                                          <i className="fa fa-star" />
-                                        </span>
-                                        <span className="sherah-color4">
-                                          <i className="fa fa-star" />
-                                        </span>
-                                      </div>
-                                      <p className="sherah-user-reviews__text">
-                                        Rreally liked it! What a beautiful light
-                                        it comes from! The radius of bright.
-                                      </p>
-                                      <div className="sherah-user-reviews__buttons">
-                                        <a
-                                          href="#"
-                                          className="sherah-color3 sherah-color3__bg--opactity"
-                                        >
-                                          <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="17.136"
-                                            height="15.5"
-                                            viewBox="0 0 17.136 15.5"
-                                          >
-                                            <path
-                                              id="Icon"
-                                              d="M106.729,13.669v.694a.779.779,0,0,0-.022.1,5.407,5.407,0,0,1-.909,2.507,10.756,10.756,0,0,1-1.877,2.153c-1.417,1.265-2.855,2.505-4.29,3.75a.9.9,0,0,1-1.28-.03q-1.646-1.415-3.287-2.836a17.082,17.082,0,0,1-2.561-2.63,5.638,5.638,0,0,1-1.136-2.513,4.777,4.777,0,0,1,1.049-4.005,4.03,4.03,0,0,1,3.775-1.423,3.938,3.938,0,0,1,2.419,1.328c.138.149.264.31.4.477.069-.089.128-.169.192-.246s.135-.162.208-.239A3.931,3.931,0,0,1,103.71,9.6a4.192,4.192,0,0,1,2.863,3.17C106.65,13.062,106.679,13.368,106.729,13.669Z"
-                                              transform="translate(-90.443 -8.519)"
-                                              fill="none"
-                                              stroke="#09ad95"
-                                              strokeWidth="1.7"
-                                            />
-                                          </svg>{" "}
-                                          80
-                                        </a>
-                                        <a
-                                          href="#"
-                                          className="sherah-color2 sherah-color2__bg--opactity"
-                                        >
-                                          <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="17.684"
-                                            height="15.304"
-                                            viewBox="0 0 17.684 15.304"
-                                          >
-                                            <path
-                                              id="Icon"
-                                              d="M122.755,24.156c-.059.315-.1.635-.18.945a7.044,7.044,0,0,1-1.362,2.647l-.383.482-1.064-.84.358-.454a5.942,5.942,0,0,0,1.108-2.061,4.449,4.449,0,0,0-.089-2.687,4.951,4.951,0,0,0-2.707-3.014,4.9,4.9,0,0,0-2.089-.447q-4.115-.007-8.231,0c-.032,0-.065,0-.094,0l3.064,3.06-.963.962-4.69-4.694,4.71-4.711.925.925-3.1,3.1h.24q4.005,0,8.01,0a6.442,6.442,0,0,1,3.671,1.067,6.311,6.311,0,0,1,2.422,3,5.989,5.989,0,0,1,.417,1.86.716.716,0,0,0,.025.114Z"
-                                              transform="translate(-105.221 -13.137)"
-                                              fill="#ff6767"
-                                              stroke="#ff6767"
-                                              strokeWidth="0.3"
-                                            />
-                                          </svg>{" "}
-                                          Reply
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  {/* End Single Review */}
-                                  {/* Single Review */}
-                                  <div className="sherah-user-reviews__single">
-                                    <div className="shera-user-reviews_thumb">
-                                      <img src="/assets/interface-dashboard/img/review-4.png" />
-                                    </div>
-                                    <div className="sherah-user-reviews__content">
-                                      <h4 className="sherah-user-reviews_title">
-                                        Deniella Rhodes
-                                      </h4>
-                                      <div className="sherah-product-card__rating sherah-dflex sherah-flex-gap-5">
-                                        <span className="sherah-color4">
-                                          <i className="fa fa-star" />
-                                        </span>
-                                        <span className="sherah-color4">
-                                          <i className="fa fa-star" />
-                                        </span>
-                                        <span className="sherah-color4">
-                                          <i className="fa fa-star" />
-                                        </span>
-                                        <span className="sherah-color4">
-                                          <i className="fa fa-star" />
-                                        </span>
-                                      </div>
-                                      <p className="sherah-user-reviews__text">
-                                        Rreally liked it! What a beautiful light
-                                        it comes from! The radius of bright.
-                                      </p>
-                                      <div className="sherah-user-reviews__buttons">
-                                        <a
-                                          href="#"
-                                          className="sherah-color3 sherah-color3__bg--opactity"
-                                        >
-                                          <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="17.136"
-                                            height="15.5"
-                                            viewBox="0 0 17.136 15.5"
-                                          >
-                                            <path
-                                              id="Icon"
-                                              d="M106.729,13.669v.694a.779.779,0,0,0-.022.1,5.407,5.407,0,0,1-.909,2.507,10.756,10.756,0,0,1-1.877,2.153c-1.417,1.265-2.855,2.505-4.29,3.75a.9.9,0,0,1-1.28-.03q-1.646-1.415-3.287-2.836a17.082,17.082,0,0,1-2.561-2.63,5.638,5.638,0,0,1-1.136-2.513,4.777,4.777,0,0,1,1.049-4.005,4.03,4.03,0,0,1,3.775-1.423,3.938,3.938,0,0,1,2.419,1.328c.138.149.264.31.4.477.069-.089.128-.169.192-.246s.135-.162.208-.239A3.931,3.931,0,0,1,103.71,9.6a4.192,4.192,0,0,1,2.863,3.17C106.65,13.062,106.679,13.368,106.729,13.669Z"
-                                              transform="translate(-90.443 -8.519)"
-                                              fill="none"
-                                              stroke="#09ad95"
-                                              strokeWidth="1.7"
-                                            />
-                                          </svg>{" "}
-                                          80
-                                        </a>
-                                        <a
-                                          href="#"
-                                          className="sherah-color2 sherah-color2__bg--opactity"
-                                        >
-                                          <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="17.684"
-                                            height="15.304"
-                                            viewBox="0 0 17.684 15.304"
-                                          >
-                                            <path
-                                              id="Icon"
-                                              d="M122.755,24.156c-.059.315-.1.635-.18.945a7.044,7.044,0,0,1-1.362,2.647l-.383.482-1.064-.84.358-.454a5.942,5.942,0,0,0,1.108-2.061,4.449,4.449,0,0,0-.089-2.687,4.951,4.951,0,0,0-2.707-3.014,4.9,4.9,0,0,0-2.089-.447q-4.115-.007-8.231,0c-.032,0-.065,0-.094,0l3.064,3.06-.963.962-4.69-4.694,4.71-4.711.925.925-3.1,3.1h.24q4.005,0,8.01,0a6.442,6.442,0,0,1,3.671,1.067,6.311,6.311,0,0,1,2.422,3,5.989,5.989,0,0,1,.417,1.86.716.716,0,0,0,.025.114Z"
-                                              transform="translate(-105.221 -13.137)"
-                                              fill="#ff6767"
-                                              stroke="#ff6767"
-                                              strokeWidth="0.3"
-                                            />
-                                          </svg>{" "}
-                                          Reply
-                                        </a>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  {/* End Single Review */}
-                                </div>
-                                {/* End Sherah Review */}
-                                {/* Sherah Comment */}
-                                <div className="sherah-review-comment mg-top-30">
-                                  <h3 className="sherah-review-comment__title">
-                                    Add Your Review
-                                  </h3>
-                                  <form
-                                    className="sherah-wc__form-main sherah-form-main--v2 p-0"
-                                    action="#"
-                                    method="post"
-                                  >
-                                    <div className="row">
-                                      <div className="col-lg-6 col-md-6 col-12">
-                                        <div className="form-group">
-                                          <label className="sherah-wc__form-label">
-                                            First Name *
-                                          </label>
-                                          <div className="form-group__input">
-                                            <input
-                                              className="sherah-wc__form-input"
-                                              placeholder="Your name here"
-                                              type="text"
-                                              name="f_name"
-                                              required="required"
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="col-lg-6 col-md-6 col-12">
-                                        <div className="form-group">
-                                          <label className="sherah-wc__form-label">
-                                            Email Address*
-                                          </label>
-                                          <div className="form-group__input">
-                                            <input
-                                              className="sherah-wc__form-input"
-                                              placeholder="Your email address here"
-                                              type="text"
-                                              name="e_address"
-                                              required="required"
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="col-12">
-                                        <div className="form-group">
-                                          <label className="sherah-wc__form-label">
-                                            Review*
-                                          </label>
-                                          <div className="form-group__input">
-                                            <textarea
-                                              className="sherah-wc__form-input sherah-wc__form-input--big"
-                                              placeholder="Write your text"
-                                              type="text"
-                                              name="d_area"
-                                              required="required"
-                                              defaultValue={""}
-                                            />
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div className="form-group mg-top-30">
-                                      <button
-                                        type="submit"
-                                        className="sherah-btn sherah-btn__primary"
-                                      >
-                                        Submit Now
-                                      </button>
-                                    </div>
-                                  </form>
-                                </div>
-                                {/* End Sherah Comment */}
-                              </div>
+                {/* Tab: Reviews */}
+<div
+  className={`tab-pane fade ${activeTab === "p_tab_3" ? "show active" : ""}`}
+  id="p_tab_3"
+  role="tabpanel"
+  aria-labelledby="nav-home-tab"
+>
+  {/* Danh sách bình luận cho sản phẩm */}
+  <div className="sherah-user-reviews">
+    {reviews.length > 0 ? (
+      reviews.map((item) => (
+        <div key={item._id} className="sherah-user-reviews__single">
+          <div className="shera-user-reviews_thumb">
+            <img
+              src={
+                item.image
+                  ? `${API_URL}/${item.image}`
+                  : "/assets/interface-dashboard/img/def-1.png"
+              }
+              alt="Review"
+            />
+          </div>
+          <div className="sherah-user-reviews__content">
+            <div className="sherah-user-reviews__header">
+              <h4 className="sherah-user-reviews_title">{item.username}</h4>
+              <span className="sherah-review-date">
+                {moment(item.createdAt).format("DD/MM/YYYY HH:mm")}
+              </span>
+            </div>
+            <div className="sherah-product-card__rating sherah-dflex sherah-flex-gap-5">
+              {Array.from({ length: parseInt(item.rating) }).map((_, idx) => (
+                <span key={idx} className="sherah-color4">
+                  <i className="fa fa-star" />
+                </span>
+              ))}
+            </div>
+            <p className="sherah-user-reviews__text">{item.content}</p>
+
+
+                  {/* Các nút thao tác: Reply & Báo cáo */}
+                  <div className="sherah-user-reviews__buttons">
+  <button
+    onClick={() =>
+      setActiveReplyForm(activeReplyForm === item._id ? null : item._id)
+    }
+    className="sherah-color2 sherah-color2__bg--opactity"
+    style={{
+      backgroundColor: "#ffebeb", 
+      color: "white", 
+      border: "none", 
+      borderRadius: "5px", 
+      padding: "8px 20px",    
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      gap: "5px",
+    }}
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="17.684"
+      height="15.304"
+      viewBox="0 0 17.684 15.304"
+    >
+      <path
+        id="Icon"
+        d="M122.755,24.156c-.059.315-.1.635-.18.945a7.044,7.044,0,0,1-1.362,2.647l-.383.482-1.064-.84.358-.454a5.942,5.942,0,0,0,1.108-2.061,4.449,4.449,0,0,0-.089-2.687,4.951,4.951,0,0,0-2.707-3.014,4.9,4.9,0,0,0-2.089-.447q-4.115-.007-8.231,0c-.032,0-.065,0-.094,0l3.064,3.06-.963.962-4.69-4.694,4.71-4.711.925.925-3.1,3.1h.24q4.005,0,8.01,0a6.442,6.442,0,0,1,3.671,1.067,6.311,6.311,0,0,1,2.422,3,5.989,5.989,0,0,1,.417,1.86.716.716,0,0,0,.025.114Z"
+        transform="translate(-105.221 -13.137)"
+        fill="#ff6767"  
+        // stroke="#ff6767" 
+      />
+    </svg>
+    Reply
+  </button>
+
+  <button
+  onClick={() => handleReport(item._id)}
+  className="sherah-color3 sherah-color3__bg--opactity"
+  style={{
+    backgroundColor: "#6176fe",  
+    color: "white",
+    border: "none",
+    borderRadius: "5px",
+    padding: "8px 12px",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    gap: "5px",
+  }}
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="#e3db90"  
+  >
+    <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
+  </svg>
+  <span style={{ color: "#FFFFFF" }}>Báo cáo</span> 
+</button>
+
+</div>
+
+            {/* Hiển thị danh sách reply  */}
+            {item.replies && item.replies.length > 0 && (
+              <div className="sherah-replies">
+                {(expandedReplies[item._id]
+                  ? item.replies
+                  : item.replies.slice(0, 2)
+                ).map((reply, idx) => (
+                  <div
+                    key={idx}
+                    className="sherah-user-reviews__single sherah-user-reviews__single--reply"
+                  >
+                    <div className="shera-user-reviews_thumb">
+                      <img
+                        src={
+                          reply.role === 'admin'
+                            ? "/assets/interface-dashboard/img/icon-admin1.png"
+                            : reply.image
+                              ? `${API_URL}/${reply.image}`
+                              : "/assets/interface-dashboard/img/def-1.png"
+                        }
+                        alt="Reply"
+                      />
+                    </div>
+                    <div className="sherah-user-reviews__content">
+                      <h4 className="sherah-user-reviews_title">
+                        {reply.username}
+                      </h4>
+                      <div className="sherah-product-card__rating sherah-dflex sherah-flex-gap-5">
+                        {reply.rating &&
+                          Array.from({ length: parseInt(reply.rating) }).map(
+                            (_, i) => (
+                              <span key={i} className="sherah-color4">
+                                <i className="fa fa-star" />
+                              </span>
+                            )
+                          )}
+                      </div>
+                      <p className="sherah-user-reviews__text">
+                        {reply.content}
+                      </p>
+                      <div className="sherah-user-reviews__buttons">
+                        <button
+                          onClick={() =>
+                            setActiveReplyForm(activeReplyForm === item._id ? null : item._id)
+                          }
+                          className="sherah-color2 sherah-color2__bg--opactity"
+                          style={{
+                            backgroundColor: "#ffebeb",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "5px",
+                            padding: "8px 20px",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "5px",
+                          }}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="17.684"
+                            height="15.304"
+                            viewBox="0 0 17.684 15.304"
+                          >
+                            <path
+                              id="Icon"
+                              d="M122.755,24.156c-.059.315-.1.635-.18.945a7.044,7.044,0,0,1-1.362,2.647l-.383.482-1.064-.84.358-.454a5.942,5.942,0,0,0,1.108-2.061,4.449,4.449,0,0,0-.089-2.687,4.951,4.951,0,0,0-2.707-3.014,4.9,4.9,0,0,0-2.089-.447q-4.115-.007-8.231,0c-.032,0-.065,0-.094,0l3.064,3.06-.963.962-4.69-4.694,4.71-4.711.925.925-3.1,3.1h.24q4.005,0,8.01,0a6.442,6.442,0,0,1,3.671,1.067,6.311,6.311,0,0,1,2.422,3,5.989,5.989,0,0,1,.417,1.86.716.716,0,0,0,.025.114Z"
+                              transform="translate(-105.221 -13.137)"
+                              fill="#ff6767"
+                            // stroke="#ff6767" 
+                            />
+                          </svg>
+                          Reply
+                        </button>
+
+                        <button
+                          onClick={() => handleReportReply(reply._id)}
+                          className="sherah-color3 sherah-color3__bg--opactity"
+                          style={{
+                            backgroundColor: "#6176fe",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "5px",
+                            padding: "8px 12px",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "5px",
+                          }}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="#e3db90"
+                          >
+                            <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
+                          </svg>
+                          <span style={{ color: "#FFFFFF" }}>Báo cáo</span>
+                        </button>
+
+
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {item.replies.length > 2 && (
+                  <button
+                  onClick={() => toggleReplies(item._id)}
+                  style={{
+                    backgroundColor: expandedReplies[item._id] ? "#8a4af3" : "#f4a261",  
+                    color: "white",
+                    border: "none",
+                    borderRadius: "5px",
+                    padding: "8px 12px",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "5px",
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="white"
+                  >
+                    {expandedReplies[item._id] ? (
+                      <path d="M5 12h14" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                    ) : (
+                      <path d="M12 5v14M5 12h14" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                    )}
+                  </svg>
+                  <span>{expandedReplies[item._id] ? "Ẩn bớt" : "Xem thêm"}</span>
+                </button>
+                
+                )}
+              </div>
+            )}
+       
+            {/* Form gửi reply với giao diện giống "Add Your Review" */}
+            {activeReplyForm === item._id && (
+              <div className="sherah-review-comment mg-top-30">
+                <h3 className="sherah-review-comment__title">
+                  Add Your Reply
+                </h3>
+                <form
+                  className="sherah-wc__form-main sherah-form-main--v2 p-0"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleReplySubmit(item._id);
+                  }}
+                >
+                  <div className="row">
+                    <div className="col-lg-6 col-md-6 col-12">
+                      <div className="form-group">
+                        <label className="sherah-wc__form-label">
+                          First Name *
+                        </label>
+                        <div className="form-group__input">
+                          <input
+                            className="sherah-wc__form-input"
+                            placeholder="Your name here"
+                            type="text"
+                            value={replyName}
+                            onChange={(e) =>
+                              setReplyName(e.target.value)
+                            }
+                            required
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-12">
+                      <div className="form-group">
+                        <label className="sherah-wc__form-label">
+                          Reply *
+                        </label>
+                        <div className="form-group__input">
+                          <textarea
+                            className="sherah-wc__form-input sherah-wc__form-input--big"
+                            placeholder="Write your reply..."
+                            value={replyContent}
+                            onChange={(e) =>
+                              setReplyContent(e.target.value)
+                            }
+                            required
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="form-group mg-top-30">
+                    <button
+                      type="submit"
+                      className="sherah-btn sherah-btn__primary"
+                    >
+                      Submit Now
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+          </div>
+        </div>
+      ))
+    ) : (
+      <p>No reviews yet.</p>
+    )}
+  </div>
+
+  {/* Form gửi bình luận mới */}
+  <div className="sherah-review-comment mg-top-30">
+    <h3 className="sherah-review-comment__title">Add Your Review</h3>
+    <form
+      className="sherah-wc__form-main sherah-form-main--v2 p-0"
+      onSubmit={handleSubmit}
+      // onPaste={handlePaste}
+    >
+      <div className="row">
+        <div className="col-lg-6 col-md-6 col-12">
+          <div className="form-group">
+            <label className="sherah-wc__form-label">First Name *</label>
+            <div className="form-group__input">
+              <input
+                className="sherah-wc__form-input"
+                placeholder="Your name here"
+                type="text"
+                name="f_name"
+                required
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-6 col-md-6 col-12">
+          <div className="form-group">
+            <label className="sherah-wc__form-label">
+              Email Address*
+            </label>
+            <div className="form-group__input">
+              <input
+                className="sherah-wc__form-input"
+                placeholder="Your email address here"
+                type="email"
+                name="e_address"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="col-12">
+          <div className="form-group">
+            <label className="sherah-wc__form-label">Review*</label>
+            <div className="form-group__input">
+              <textarea
+                className="sherah-wc__form-input sherah-wc__form-input--big"
+                placeholder="Write your text"
+                name="d_area"
+                required
+                value={review}
+                onChange={(e) => setReview(e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="col-12">
+          <div className="form-group">
+            <label className="sherah-wc__form-label">Rating*</label>
+            <div className="form-group__input">
+              <select
+                className="sherah-wc__form-input"
+                value={rating}
+                onChange={(e) => setRating(e.target.value)}
+              >
+                <option value={1}>1 star</option>
+                <option value={2}>2 stars</option>
+                <option value={3}>3 stars</option>
+                <option value={4}>4 stars</option>
+                <option value={5}>5 stars</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* <div className="form-group">
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          style={{ display: "none" }}
+          id="uploadImage"
+        />
+        <label
+          htmlFor="uploadImage"
+          className="sherah-btn sherah-btn__secondary"
+        >
+          Upload Image
+        </label>
+        {image && <span className="ml-2">{image.name}</span>}
+      </div> */}
+      <div className="form-group mg-top-30">
+        <button type="submit" className="sherah-btn sherah-btn__primary">
+          Submit Now
+        </button>
+      </div>
+    </form>
+  </div>
+  {/* End Sherah Comment */}
+</div>
+
+
                             </div>
                           </div>
                         </div>
