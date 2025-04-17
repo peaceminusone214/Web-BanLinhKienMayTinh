@@ -1,0 +1,264 @@
+#newsForm {
+    margin-top: 30px;                
+    background-color: #fff;          
+    border: 1px solid #e9ecef;       
+    border-radius: 8px;              
+    padding: 20px;                   
+  }
+  
+  #newsForm .news-form {
+    display: flex;
+    flex-wrap: wrap;                 
+    gap: 20px;                      
+  }
+  
+  #newsForm .news-form label {
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+  
+  #newsForm .news-form input[type="text"],
+  #newsForm .news-form textarea {
+    width: 100%;                     
+    padding: 10px;
+    border: 1px solid #ccc;         
+    border-radius: 4px;            
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  
+  #newsForm .news-form textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+  
+  #newsForm .news-form button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+  
+  #newsForm .news-form button[type="submit"] {
+    background-color: #09ad95; 
+    color: #fff;
+  }
+  
+  #newsForm .news-form button[type="submit"]:hover {
+    background-color: #088a80;
+  }
+  
+  #newsForm .news-form button[type="button"] {
+    background-color: #6c757d; 
+    color: #fff;
+  }
+  
+  #newsForm .news-form button[type="button"]:hover {
+    background-color: #5a6268;
+  }
+
+  /* ----- STYLING CHO CHECKBOX (HIỂN THỊ / NỔI BẬT) ----- */
+
+/* Tạo style checkbox “custom” bằng cách ẩn checkbox mặc định */
+.sherah-table__column-3 input[type="checkbox"],
+.sherah-table__column-4 input[type="checkbox"] {
+  /* Ẩn checkbox mặc định */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none;
+
+  /* Kích thước & viền */
+  width: 20px;
+  height: 20px;
+  border: 2px solid #09ad95;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+.sherah-table__column-3 input[type="checkbox"],
+.sherah-table__column-4 input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none;
+  
+  width: 20px;
+  height: 20px;
+  border: 2px solid #09ad95;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+
+/* Hiệu ứng hover */
+.sherah-table__column-3 input[type="checkbox"]:hover,
+.sherah-table__column-4 input[type="checkbox"]:hover {
+  border-color: #07a287;
+  background-color: #f7f7f7;
+  box-shadow: 0 0 4px rgba(9, 173, 149, 0.4);
+}
+
+/* Khi checkbox được check */
+.sherah-table__column-3 input[type="checkbox"]:checked,
+.sherah-table__column-4 input[type="checkbox"]:checked {
+  background-color: #09ad95;
+  border-color: #09ad95;
+}
+
+/* Dấu check khi đã tick */
+.sherah-table__column-3 input[type="checkbox"]:checked::before,
+.sherah-table__column-4 input[type="checkbox"]:checked::before {
+  content: "\2713";  /* Sử dụng mã Unicode cho dấu tick */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  color: #fff;
+}
+
+    /********************************add-news  **************************************/
+/* Ví dụ style gợi ý, tùy ý chỉnh sửa cho hợp theme */
+.custom-badge {
+  display: inline-block;
+  padding: 0.35em 0.65em;
+  font-size: 0.75em;
+  font-weight: 700;
+  line-height: 1;
+  color: #000000; /* Chữ màu đen */
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: 0.25rem;
+}
+
+/* Các biến thể màu cho custom-badge */
+.custom-badge-light {
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+}
+
+.custom-badge-primary {
+  background-color: #09ad95;
+  border: 1px solid #09ad95;
+  color: #000;
+}
+
+.custom-badge-success {
+  background-color: #28a745;
+  border: 1px solid #28a745;
+  color: #000;
+}
+
+.custom-badge-warning {
+  background-color: #ffc107;
+  border: 1px solid #ffc107;
+  color: #000;
+}
+
+.custom-badge-info {
+  background-color: #17a2b8;
+  border: 1px solid #17a2b8;
+  color: #000000;
+}
+
+.custom-badge-secondary {
+  background-color: #6c757d;
+  border: 1px solid #6c757d;
+  color: #fffafa;
+}
+
+/* Các định nghĩa CSS khác dành cho bảng và summary */
+.news-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 20px 0;
+}
+
+.news-summary__card {
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 10px 15px;
+  min-width: 150px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.news-summary__card h4 {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+  color: #777;
+}
+
+.news-summary__card p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.sherah-table__main-v3 {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.sherah-table__head th {
+  background-color: #f3f4f6;
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.sherah-table__body td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.sherah-table__body tr:hover {
+  background-color: #fafafa;
+}
+
+.sherah-table__column-3 input[type="checkbox"],
+.sherah-table__column-4 input[type="checkbox"] {
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.sherah-table__column-5 select {
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.sherah-table__column-8 .sherah-btn {
+  background-color: #ff4d4f;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.sherah-table__column-8 .sherah-btn:hover {
+  background-color: #ff7875;
+}
+
+.sherah-table__column-9 {
+  display: table-cell;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  min-width: 100px;
+}

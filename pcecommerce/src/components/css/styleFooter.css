@@ -1,0 +1,121 @@
+/* Footer */
+.footer {
+  background-color: #f1f1f1;
+  color: black;
+  font-family: Arial, sans-serif;
+  margin-top: 100px;
+}
+
+/* Dịch vụ hỗ trợ */
+.footer-services {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+  text-align: center;
+
+}
+
+.service-item img {
+  height: 50px;
+}
+
+.service-item h3 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.service-item p {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Đăng ký nhận tin */
+.footer-newsletter {
+  background-color: #1A73E8;
+  color: white;
+  text-align: center;
+  padding: 30px;
+}
+
+.footer-newsletter h2 {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.footer-newsletter p {
+  color: #333;
+}
+
+.newsletter-input {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+}
+
+.newsletter-input input {
+  width: 300px;
+  padding: 10px;
+  border-radius: 5px 0 0 5px;
+  border: none;
+}
+
+.newsletter-input button {
+  background-color: #0033ff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
+
+.newsletter-input button:hover {
+  background-color: #89bafb;
+}
+
+/* Thông tin footer */
+.footer-info {
+  display: flex;
+  justify-content: space-around;
+  padding: 30px;
+}
+
+.footer-info h3 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.footer-info ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-info ul li {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+/* Phương thức thanh toán */
+.footer-payment {
+  text-align: center;
+  padding: 20px;
+}
+
+.payment-methods {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.payment-methods img {
+  height: 40px;
+}
+
+.footer-copy-right{
+  background-color: #fdfeff;
+  
+}
+
