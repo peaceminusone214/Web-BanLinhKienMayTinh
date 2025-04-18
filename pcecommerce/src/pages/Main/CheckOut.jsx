@@ -262,14 +262,15 @@ function Checkout() {
         window.open(telegramConnectLink, "_blank");
         return;
       }
-  
+
       let token = localStorage.getItem("telegramGuestToken");
-  
+
       if (!token) {
-        token = Math.random().toString(36).substring(2) + Date.now().toString(36);
+        token =
+          Math.random().toString(36).substring(2) + Date.now().toString(36);
         localStorage.setItem("telegramGuestToken", token);
       }
-  
+
       const link = `https://t.me/Auchobot_bot?start=${token}`;
       setTelegramConnectLink(link);
       setTelegramConnected(true);
@@ -278,8 +279,8 @@ function Checkout() {
       console.error("❌ Lỗi kết nối Telegram:", error);
       alert("Không thể kết nối Telegram lúc này. Thử lại sau.");
     }
-  }; 
-  
+  };
+
   const handlePlaceOrder = async () => {
     try {
       const orderInfo = JSON.parse(localStorage.getItem("orderInfo")) || {};
@@ -361,7 +362,7 @@ function Checkout() {
       return;
     }
 
-    if (paymentMethod === "vnpay") {
+    if (paymentMethod === "VNPAY") {
       try {
         const paymentData = {
           user: user?._id || null,
@@ -380,9 +381,9 @@ function Checkout() {
             province: selectedProvince,
             city: selectedDistrict,
             ward: selectedWard,
-          }
+          },
         };
-       
+
         const response = await fetch(
           `${API_URL}/payment/create_order_payment`,
           {
@@ -393,7 +394,7 @@ function Checkout() {
         );
 
         const result = await response.json();
-        
+
         if (result.telegramConnectLink) {
           console.log("Telegram link từ BE:", result.telegramConnectLink);
           setTelegramConnectLink(result.telegramConnectLink);
@@ -605,9 +606,9 @@ function Checkout() {
               <input
                 type="radio"
                 name="paymentMethod"
-                value="vnpay"
-                checked={paymentMethod === "vnpay"}
-                onChange={() => setPaymentMethod("vnpay")}
+                value="VNPAY"
+                checked={paymentMethod === "VNPAY"}
+                onChange={() => setPaymentMethod("VNPAY")}
               />
               <img
                 src="./assets/icons/vnpay-icon.svg"
@@ -619,7 +620,9 @@ function Checkout() {
           </div>
 
           <button
-            className={`telegram-connect-btn ${telegramConnected ? 'connected' : ''}`}
+            className={`telegram-connect-btn ${
+              telegramConnected ? "connected" : ""
+            }`}
             onClick={handleTelegramConnection}
           >
             {telegramConnected ? (

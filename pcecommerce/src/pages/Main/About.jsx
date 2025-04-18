@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import "./MainStyles/styleAbout.css";
 
 function About() {
@@ -19,10 +19,11 @@ function About() {
         <div className="about-intro-box">
           <div className="about-intro-text">
             <p>
-              Công ty TNHH Máy tính Nguyễn Công là đơn vị tiên phong trong việc cung cấp 
-              các giải pháp công nghệ thông tin, linh kiện máy tính và thiết bị gaming gear. 
-              Trải qua nhiều năm phát triển, chúng tôi luôn đặt khách hàng làm trung tâm và 
-              không ngừng nỗ lực để mang đến những sản phẩm, dịch vụ chất lượng.
+              Công ty TNHH Máy tính Nguyễn Công là đơn vị tiên phong trong việc
+              cung cấp các giải pháp công nghệ thông tin, linh kiện máy tính và
+              thiết bị gaming gear. Trải qua nhiều năm phát triển, chúng tôi
+              luôn đặt khách hàng làm trung tâm và không ngừng nỗ lực để mang
+              đến những sản phẩm, dịch vụ chất lượng.
             </p>
             <ul>
               <li>Đội ngũ nhân viên nhiệt tình, chuyên nghiệp</li>
@@ -30,14 +31,15 @@ function About() {
               <li>Chế độ hậu mãi, bảo hành uy tín</li>
             </ul>
             <p>
-              Với sứ mệnh “Khách hàng là số 1”, chúng tôi cam kết tiếp tục phát triển và 
-              đổi mới để đáp ứng nhu cầu ngày càng cao của thị trường công nghệ.
+              Với sứ mệnh “Khách hàng là số 1”, chúng tôi cam kết tiếp tục phát
+              triển và đổi mới để đáp ứng nhu cầu ngày càng cao của thị trường
+              công nghệ.
             </p>
           </div>
           <div className="about-intro-image">
-            <img 
-              src="/assets/icons/about-illustration.png" 
-              alt="HAHAHA illustration" 
+            <img
+              src="/assets/icons/about-illustration.png"
+              alt="HAHAHA illustration"
             />
           </div>
         </div>

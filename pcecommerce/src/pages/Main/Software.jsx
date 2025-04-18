@@ -59,7 +59,7 @@ const promotions = [
 const Software = () => {
   return (
     <div className="tech-container">
-    <div className="breadcrumb">
+      <div className="breadcrumb">
         <Link to="/">Trang chủ</Link>
         <span className="separator"></span>
         <Link to="/News">Tin tức</Link>
@@ -74,41 +74,41 @@ const Software = () => {
         <Link to="/News/software">PHẦN MỀM</Link>
       </nav>
       <div className="content">
-      <div className="software-list">
-        {softwarePosts.map((post, index) => (
-          <div key={index} className="software-card">
-            <img src={post.image} alt={post.title} />
-            <h2>{post.title}</h2>
-            <div className="post-meta">
-              <span>📅 {post.date}</span>
-              <span>👁️ {post.views}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-       {/* Sidebar */}
-       <div className="sidebar">
-        <div className="popular">
-          <h3>Xem nhiều</h3>
-          <ul>
-            {trendingPosts.map((post, index) => (
-              <li key={index}>{post}</li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="promotions">
-          <h3>Tin tức khuyến mãi</h3>
-          {promotions.map((promo, index) => (
-            <div key={index} className="promo-card">
-              <img src={promo.image} alt={promo.title} />
-              <p>{promo.title}</p>
-              <span>{promo.date}</span>
+        <div className="software-list">
+          {softwarePosts.map((post, index) => (
+            <div key={index} className="software-card">
+              <img src={post.image} alt={post.title} />
+              <h2>{post.title}</h2>
+              <div className="post-meta">
+                <span>📅 {post.date}</span>
+                <span>👁️ {post.views}</span>
+              </div>
             </div>
           ))}
         </div>
+        {/* Sidebar */}
+        <div className="sidebar">
+          <div className="popular">
+            <h3>Xem nhiều</h3>
+            <ul>
+              {trendingPosts.map((post, index) => (
+                <li key={index}>{post}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="promotions">
+            <h3>Tin tức khuyến mãi</h3>
+            {promotions.map((promo, index) => (
+              <div key={index} className="promo-card">
+                <img src={promo.image} alt={promo.title} />
+                <p>{promo.title}</p>
+                <span>{promo.date}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
     </div>
   );
 };

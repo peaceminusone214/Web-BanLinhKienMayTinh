@@ -12,7 +12,9 @@ router.post("/add-discount", async (req, res) => {
   }
 
   if (discounts.length === 0) {
-    return res.status(400).json({ message: "Dữ liệu mã giảm giá không hợp lệ" });
+    return res
+      .status(400)
+      .json({ message: "Dữ liệu mã giảm giá không hợp lệ" });
   }
 
   let errorMessages = [];
@@ -37,12 +39,21 @@ router.post("/add-discount", async (req, res) => {
       if (!start_date) missingFields.push("start_date");
       if (!end_date) missingFields.push("end_date");
 
-      if (discount_type && !["percentage", "fixed_amount"].includes(discount_type)) {
+      if (
+        discount_type &&
+        !["percentage", "fixed_amount"].includes(discount_type)
+      ) {
         missingFields.push("discount_type (Không hợp lệ)");
       }
 
-      if (start_date && end_date && new Date(start_date) >= new Date(end_date)) {
-        errorMessages.push(`Mã giảm giá "${code}" có ngày bắt đầu phải trước ngày kết thúc.`);
+      if (
+        start_date &&
+        end_date &&
+        new Date(start_date) >= new Date(end_date)
+      ) {
+        errorMessages.push(
+          `Mã giảm giá "${code}" có ngày bắt đầu phải trước ngày kết thúc.`
+        );
       }
 
       // Kiểm tra danh mục hợp lệ
@@ -71,12 +82,18 @@ router.post("/add-discount", async (req, res) => {
       }
 
       if (missingFields.length > 0) {
-        errorMessages.push(`Mã giảm giá thứ ${i + 1} thiếu các trường: ${missingFields.join(", ")}`);
+        errorMessages.push(
+          `Mã giảm giá thứ ${i + 1} thiếu các trường: ${missingFields.join(
+            ", "
+          )}`
+        );
       }
     }
 
     if (errorMessages.length > 0) {
-      return res.status(400).json({ message: "Lỗi khi thêm mã giảm giá", errors: errorMessages });
+      return res
+        .status(400)
+        .json({ message: "Lỗi khi thêm mã giảm giá", errors: errorMessages });
     }
 
     for (let i = 0; i < discounts.length; i++) {
@@ -87,7 +104,9 @@ router.post("/add-discount", async (req, res) => {
       await newDiscount.save();
     }
 
-    res.status(201).json({ message: "Tất cả mã giảm giá đã được thêm thành công!" });
+    res
+      .status(201)
+      .json({ message: "Tất cả mã giảm giá đã được thêm thành công!" });
   } catch (err) {
     console.error("Lỗi:", err);
     res.status(500).json({ message: "Lỗi máy chủ khi thêm mã giảm giá" });
@@ -136,11 +155,9 @@ router.delete("/delete-discounts", async (req, res) => {
     }
 
     // Trả về thông báo thành công
-    res
-      .status(200)
-      .json({
-        message: `${deletedDiscounts.deletedCount} giảm giá đã được xóa thành công`,
-      });
+    res.status(200).json({
+      message: `${deletedDiscounts.deletedCount} giảm giá đã được xóa thành công`,
+    });
   } catch (err) {
     console.error("Lỗi:", err);
     res.status(500).json({ message: "Lỗi máy chủ khi xóa giảm giá" });
@@ -150,7 +167,15 @@ router.delete("/delete-discounts", async (req, res) => {
 // Route cập nhật mã giảm giá
 router.put("/update-discount", async (req, res) => {
   try {
-    const { _id, code, description, discount_value, min_order_value, start_date, end_date } = req.body;
+    const {
+      _id,
+      code,
+      description,
+      discount_value,
+      min_order_value,
+      start_date,
+      end_date,
+    } = req.body;
 
     if (!_id) {
       return res.status(400).json({ message: "Thiếu ID mã giảm giá" });
@@ -165,8 +190,10 @@ router.put("/update-discount", async (req, res) => {
     // Cập nhật thông tin mã giảm giá
     existingDiscount.code = code || existingDiscount.code;
     existingDiscount.description = description || existingDiscount.description;
-    existingDiscount.discount_value = discount_value || existingDiscount.discount_value;
-    existingDiscount.min_order_value = min_order_value || existingDiscount.min_order_value;
+    existingDiscount.discount_value =
+      discount_value || existingDiscount.discount_value;
+    existingDiscount.min_order_value =
+      min_order_value || existingDiscount.min_order_value;
     existingDiscount.start_date = start_date || existingDiscount.start_date;
     existingDiscount.end_date = end_date || existingDiscount.end_date;
     existingDiscount.updated_at = Date.now(); // Cập nhật thời gian sửa đổi
@@ -216,7 +243,9 @@ router.post("/apply-discount", async (req, res) => {
     const discount = await Discount.findOne({ code: discount_code });
 
     if (!discount || discount.status !== "active") {
-      return res.status(400).json({ message: "Mã giảm giá không hợp lệ hoặc đã hết hạn!" });
+      return res
+        .status(400)
+        .json({ message: "Mã giảm giá không hợp lệ hoặc đã hết hạn!" });
     }
 
     // Tính tổng giá trị giỏ hàng (subtotal)
@@ -224,14 +253,22 @@ router.post("/apply-discount", async (req, res) => {
     for (const item of products) {
       const product = await Product.findById(item.product_id);
       if (!product) {
-        return res.status(400).json({ message: `Sản phẩm với ID ${item.product_id} không tồn tại!` });
+        return res
+          .status(400)
+          .json({
+            message: `Sản phẩm với ID ${item.product_id} không tồn tại!`,
+          });
       }
       subtotal += product.price * item.quantity;
     }
 
     // Kiểm tra giá trị tối thiểu của đơn hàng để áp dụng giảm giá
     if (subtotal < discount.min_order_value) {
-      return res.status(400).json({ message: `Mã giảm giá chỉ áp dụng cho đơn hàng từ ${discount.min_order_value.toLocaleString()} đ!` });
+      return res
+        .status(400)
+        .json({
+          message: `Mã giảm giá chỉ áp dụng cho đơn hàng từ ${discount.min_order_value.toLocaleString()} đ!`,
+        });
     }
 
     // Tính số tiền giảm giá
@@ -248,7 +285,6 @@ router.post("/apply-discount", async (req, res) => {
       discount_amount: discountAmount,
       message: `Mã giảm giá hợp lệ! Giảm ${discountAmount.toLocaleString()} đ`,
     });
-
   } catch (error) {
     console.error("Lỗi xử lý mã giảm giá:", error);
     res.status(500).json({ message: "Lỗi máy chủ khi áp dụng mã giảm giá!" });

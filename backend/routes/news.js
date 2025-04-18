@@ -24,7 +24,8 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const newsItem = await News.findById(req.params.id);
-    if (!newsItem) return res.status(404).json({ message: "Không tìm thấy tin tức" });
+    if (!newsItem)
+      return res.status(404).json({ message: "Không tìm thấy tin tức" });
     res.json(newsItem);
   } catch (error) {
     res.status(500).json({ message: "Lỗi server" });
@@ -78,11 +79,9 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     // req.body sẽ chứa isDisplayed, featured,...
-    const updatedNews = await News.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const updatedNews = await News.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
     if (!updatedNews) {
       return res.status(404).json({ message: "Không tìm thấy tin tức" });
     }
@@ -96,7 +95,8 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const deletedNews = await News.findByIdAndDelete(req.params.id);
-    if (!deletedNews) return res.status(404).json({ message: "Không tìm thấy tin tức" });
+    if (!deletedNews)
+      return res.status(404).json({ message: "Không tìm thấy tin tức" });
     res.json({ message: "Đã xóa tin tức" });
   } catch (error) {
     res.status(500).json({ message: "Lỗi server" });

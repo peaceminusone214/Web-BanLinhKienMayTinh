@@ -13,6 +13,7 @@ const cartRoutes = require("./routes/cart");
 const newsRoutes = require("./routes/news");
 const paymentRoutes = require('./routes/payment');
 const commentRoutes = require('./routes/comment');
+const chatRoutes = require("./routes/ChatBot");
 const statsRoutes = require('./routes/stats');
 
 const app = express();
@@ -26,6 +27,8 @@ mongoose
     console.log("MongoDB connection error:", err);
     process.exit(1);
   });
+
+app.set("trust proxy", 1); // cần thiết cho production
 
 // Cấu hình session middleware
 app.use(
@@ -41,7 +44,7 @@ app.use(
       maxAge: 60 * 60 * 1000, // 1 giờ
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      sameSite: "Lax",
+      sameSite: "Lax", //Để Lax nếu muốn chạy ở local, ngược lại None
     },
   })
 );
@@ -70,8 +73,9 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/news", newsRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/comment', commentRoutes);
-app.use('/api/stats', statsRoutes);
 app.use("/uploads", express.static("uploads"));
+app.use("/api/chat", chatRoutes);
+app.use('/api/stats', statsRoutes);
 
 // Khởi động server
 const PORT = process.env.PORT || 5000;

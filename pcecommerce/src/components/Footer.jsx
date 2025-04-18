@@ -1,7 +1,5 @@
-import React from 'react';
-import '../components/css/styleFooter.css'
-
-
+import React from "react";
+import "../components/css/styleFooter.css";
 
 function Footer() {
   return (
@@ -10,22 +8,34 @@ function Footer() {
         {/* Section 1: Dịch vụ hỗ trợ */}
         <div className="footer-services">
           <div className="service-item">
-            <img src="/assets/interface-main/imgFooter/delivery.png" alt="Giao hàng" />
+            <img
+              src="/assets/interface-main/imgFooter/ship.png"
+              alt="Giao hàng"
+            />
             <h3>GIAO HÀNG TOÀN QUỐC</h3>
             <p>Giao hàng trước, trả tiền sau COD</p>
           </div>
           <div className="service-item">
-            <img src="/assets/interface-main/imgFooter/return.png" alt="Đổi trả" />
+            <img
+              src="/assets/interface-main/imgFooter/return.png"
+              alt="Đổi trả"
+            />
             <h3>ĐỔI TRẢ DỄ DÀNG</h3>
             <p>Đổi mới trong 15 ngày đầu</p>
           </div>
           <div className="service-item">
-            <img src="/assets/interface-main/imgFooter/payment.png" alt="Thanh toán" />
+            <img
+              src="/assets/interface-main/imgFooter/pay.png"
+              alt="Thanh toán"
+            />
             <h3>THANH TOÁN TIỆN LỢI</h3>
             <p>Tiền mặt, chuyển khoản, trả góp 0%</p>
           </div>
           <div className="service-item">
-            <img src="/assets/interface-main/imgFooter/support.png" alt="Hỗ trợ" />
+            <img
+              src="/assets/interface-main/imgFooter/support.png"
+              alt="Hỗ trợ"
+            />
             <h3>HỖ TRỢ NHIỆT TÌNH</h3>
             <p>Tư vấn miễn phí 24/7</p>
           </div>
@@ -34,9 +44,14 @@ function Footer() {
         {/* Section 2: Đăng ký nhận tin khuyến mãi */}
         <div className="footer-newsletter">
           <h2>Nhận tin khuyến mãi</h2>
-          <p>Vui lòng để lại Email để nhận thông tin khuyến mãi từ PC Parts Store</p>
+          <p>
+            Vui lòng để lại Email để nhận thông tin khuyến mãi từ PC Parts Store
+          </p>
           <div className="newsletter-input">
-            <input type="email" placeholder="Nhập email đăng ký nhận tin khuyến mãi" />
+            <input
+              type="email"
+              placeholder="Nhập email đăng ký nhận tin khuyến mãi"
+            />
             <button>➤</button>
           </div>
         </div>
@@ -74,7 +89,7 @@ function Footer() {
             <h3>THÔNG TIN KHÁC</h3>
             <p>Fan Page PC Parts Store</p>
             <p>📞 0987654321 (8:00 - 21:00)</p>
-            <p>📧 example@email.com.vn</p>
+            <p>📧 example@email.com</p>
           </div>
         </div>
 
@@ -82,14 +97,27 @@ function Footer() {
         <div className="footer-payment">
           <h3>PHƯƠNG THỨC THANH TOÁN</h3>
           <div className="payment-methods">
-            <img src="/assets/interface-main/imgFooter/zalopay.png" alt="ZaloPay" />
-            <img src="/assets/interface-main/imgFooter/alepay.png" alt="AlePay" />
+            <img
+              src="/assets/interface-main/imgFooter/zalopay.png"
+              alt="ZaloPay"
+            />
+            <img
+              src="/assets/interface-main/imgFooter/alepay.png"
+              alt="AlePay"
+            />
             <img src="/assets/interface-main/imgFooter/momo.png" alt="MoMo" />
             <img src="/assets/interface-main/imgFooter/visa.png" alt="Visa" />
-            <img src="/assets/interface-main/imgFooter/mastercard.png" alt="Mastercard" />
+            <img
+              src="/assets/interface-main/imgFooter/mastercard.png"
+              alt="Mastercard"
+            />
             <img src="/assets/interface-main/imgFooter/vnpay.png" alt="VNPay" />
             <img src="/assets/interface-main/imgFooter/atm.png" alt="ATM" />
           </div>
+        </div>
+
+        <div className="footer-copy-right text-center mt-4">
+          <p>© 2025 CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ VÀ CÔNG NGHỆ NHÓM 7.</p>
         </div>
       </footer>
     </div>

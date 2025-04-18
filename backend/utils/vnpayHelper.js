@@ -18,7 +18,13 @@ function sortObject(obj) {
  * @param {Object} params - Thông tin thanh toán: amount, orderId, ipAddr, language, bankCode
  * @returns {string} URL
  */
-function generateVNPayUrl({ amount, orderId, ipAddr, language = "vn", bankCode = "" }) {
+function generateVNPayUrl({
+  amount,
+  orderId,
+  ipAddr,
+  language = "vn",
+  bankCode = "",
+}) {
   const vnp_TmnCode = process.env.VNP_TMN_CODE;
   const vnp_HashSecret = process.env.VNP_HASH_SECRET;
   const vnp_Url = process.env.VNP_URL;

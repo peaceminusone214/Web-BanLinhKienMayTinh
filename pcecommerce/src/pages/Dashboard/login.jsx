@@ -79,7 +79,7 @@ function Login() {
                 <div className="sherah-wc__logo">
                   <a>
                     <img
-                      src="/assets/interface-dashboard/img/logo.png"
+                      src="/assets/interface-main/imgComp/logo_WTC.png"
                       alt="#"
                     />
                   </a>
@@ -104,9 +104,7 @@ function Login() {
                 <div className="sherah-wc__form-inner">
                   <h3 className="sherah-wc__form-title sherah-wc__form-title__one">
                     Đăng nhập vào tài khoản của bạn{" "}
-                    <span>
-                      Vui lòng nhập tài khoản và mật khẩu
-                    </span>
+                    <span>Vui lòng nhập tài khoản và mật khẩu</span>
                   </h3>
                   {/* Sign in Form */}
                   <form
@@ -154,7 +152,7 @@ function Login() {
                       <div className="sherah-wc__bottom">
                         <p className="sherah-wc__text">
                           Bạn chưa có tài khoản?{" "}
-                          <Link to ="/register">Đăng ký ngay</Link>
+                          <Link to="/register">Đăng ký ngay</Link>
                         </p>
                       </div>
                     </div>

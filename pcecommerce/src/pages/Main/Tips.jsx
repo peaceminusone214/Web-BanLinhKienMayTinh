@@ -5,13 +5,15 @@ import "./MainStyles/styleTips.css";
 
 const ThuThuat = [
   {
-    title: "Biến ý tưởng thành hiện thực với ChatGPT-4 và DALL-E: Sáng tạo hình ảnh AI không giới hạn!",
+    title:
+      "Biến ý tưởng thành hiện thực với ChatGPT-4 và DALL-E: Sáng tạo hình ảnh AI không giới hạn!",
     date: "31-01-2024, 11:11 pm",
     views: 1146,
     image: "/assets/interface-main/imgTips/chatgpt-dalle.jpg",
   },
   {
-    title: "Hướng dẫn khởi động Stable Diffusion trên MEG Trident X2 và MPG Infinite X2",
+    title:
+      "Hướng dẫn khởi động Stable Diffusion trên MEG Trident X2 và MPG Infinite X2",
     date: "30-01-2024, 3:15 pm",
     views: 191,
     image: "/assets/interface-main/imgTips/stable-diffusion-pc.jpg",
@@ -29,7 +31,8 @@ const ThuThuat = [
     image: "/assets/interface-main/imgTips/build-pc-tips.jpg",
   },
   {
-    title: "Build PC cơ bản – Hướng dẫn chi tiết xây dựng PC tự lắp ráp cho người mới",
+    title:
+      "Build PC cơ bản – Hướng dẫn chi tiết xây dựng PC tự lắp ráp cho người mới",
     date: "05-05-2023, 9:33 am",
     views: 7706,
     image: "/assets/interface-main/imgTips/build-pc-beginner.jpg",
@@ -81,7 +84,7 @@ const ThuThuat = [
 const Tips = () => {
   return (
     <div className="tech-container">
-    <div className="breadcrumb">
+      <div className="breadcrumb">
         <Link to="/">Trang chủ</Link>
         <span className="separator"></span>
         <Link to="/News">Tin tức</Link>
@@ -96,17 +99,17 @@ const Tips = () => {
         <Link to="/News/software">PHẦN MỀM</Link>
       </nav>
       <div className="tips-container">
-      {ThuThuat.map((tip, index) => (
-        <div key={index} className="tip-card">
-          <img src={tip.image} alt={tip.title} />
-          <h2>{tip.title}</h2>
-          <div className="tip-meta">
-            <span>📅 {tip.date}</span>
-            <span>👁️ {tip.views}</span>
+        {ThuThuat.map((tip, index) => (
+          <div key={index} className="tip-card">
+            <img src={tip.image} alt={tip.title} />
+            <h2>{tip.title}</h2>
+            <div className="tip-meta">
+              <span>📅 {tip.date}</span>
+              <span>👁️ {tip.views}</span>
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
     </div>
   );
 };

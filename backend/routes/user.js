@@ -4,7 +4,6 @@ const LoginHistory = require("../models/LoginHistory");
 const bcrypt = require("bcryptjs");
 const router = express.Router();
 const Order = require("../models/Order");
-const crypto = require("crypto");
 
 // Route lấy thông tin người dùng theo _id
 router.post("/get-user", async (req, res) => {
@@ -80,12 +79,10 @@ router.put("/edit-user", async (req, res) => {
     await user.save();
 
     // Trả về thông tin người dùng sau khi chỉnh sửa
-    res
-      .status(200)
-      .json({
-        message: "Thông tin người dùng đã được cập nhật thành công",
-        user,
-      });
+    res.status(200).json({
+      message: "Thông tin người dùng đã được cập nhật thành công",
+      user,
+    });
   } catch (err) {
     console.error("Lỗi:", err);
     res
@@ -123,11 +120,9 @@ router.post("/get-login-history", async (req, res) => {
     res.status(200).json(loginHistory);
   } catch (err) {
     console.error("Lỗi:", err);
-    res
-      .status(500)
-      .json({
-        message: "Lỗi máy chủ khi lấy lịch sử đăng nhập của người dùng",
-      });
+    res.status(500).json({
+      message: "Lỗi máy chủ khi lấy lịch sử đăng nhập của người dùng",
+    });
   }
 });
 
@@ -182,6 +177,42 @@ router.post("/reset-password", async (req, res) => {
   }
 });
 
+// Get all users
+router.get("/", async (req, res) => {
+  const users = await User.find();
+  res.json(users);
+});
+
+// Create user
+router.post("/", async (req, res) => {
+  const newUser = new User(req.body);
+  await newUser.save();
+  res.json(newUser);
+});
+
+// soft del
+router.put("/delete/:id", async (req, res) => {
+  const userId = req.params.id;
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { deleted: true },
+    { new: true }
+  );
+  if (!updatedUser) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  res.json(updatedUser);
+});
+
+// Update user
+router.put("/:id", async (req, res) => {
+  const updated = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  res.json(updated);
+});
+
+//
 router.get("/:id/latest-order", async (req, res) => {
   try {
     const userId = req.params.id;
@@ -200,11 +231,14 @@ router.get("/:id/latest-order", async (req, res) => {
   }
 });
 
-router.post('/connect-telegram', async (req, res) => {
+//
+router.post("/connect-telegram", async (req, res) => {
   try {
     const { token, telegramChatId } = req.body;
     if (!token || !telegramChatId) {
-      return res.status(400).json({ message: 'Thiếu token hoặc telegramChatId' });
+      return res
+        .status(400)
+        .json({ message: "Thiếu token hoặc telegramChatId" });
     }
 
     let user = await User.findOne({ telegramConnectToken: token });
@@ -220,22 +254,30 @@ router.post('/connect-telegram', async (req, res) => {
       });
 
       await newUser.save();
-      return res.status(200).json({ message: 'Kết nối Telegram thành công', userId: newUser._id });
+      return res
+        .status(200)
+        .json({ message: "Kết nối Telegram thành công", userId: newUser._id });
     }
 
     // Nếu đã có chatId thì không cần làm gì nữa
     if (user.telegramChatId && user.telegramChatId === telegramChatId) {
-      return res.status(200).json({ message: 'Đã kết nối Telegram trước đó', userId: user._id });
+      return res
+        .status(200)
+        .json({ message: "Đã kết nối Telegram trước đó", userId: user._id });
     }
 
     // Nếu lần đầu kết nối
     user.telegramChatId = telegramChatId;
     await user.save();
 
-    return res.status(200).json({ message: 'Kết nối Telegram thành công', userId: user._id });
+    return res
+      .status(200)
+      .json({ message: "Kết nối Telegram thành công", userId: user._id });
   } catch (error) {
-    console.error('❌ Lỗi khi connect Telegram:', error.message);
-    return res.status(500).json({ message: 'Lỗi kết nối Telegram', error: error.message });
+    console.error("Lỗi khi connect Telegram:", error.message);
+    return res
+      .status(500)
+      .json({ message: "Lỗi kết nối Telegram", error: error.message });
   }
 });
 

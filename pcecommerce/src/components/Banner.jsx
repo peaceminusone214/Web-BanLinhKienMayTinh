@@ -1,10 +1,7 @@
-import React from 'react';
+import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
-import '../components/css/styleBanner.css';
-
-
-
+import "../components/css/styleBanner.css";
 
 const BannerShowcase = ({ banners }) => (
   <Swiper

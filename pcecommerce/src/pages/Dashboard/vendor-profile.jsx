@@ -38,7 +38,10 @@ function Vendorprofile() {
                       <div className="sharah-profile--main sherah-default-bg sharah-border mg-top-40">
                         {/* Sharah Profile header */}
                         <div className="sherah-userprofile__header">
-                          <img src="/assets/interface-dashboard/img/profile-cover.jpg" alt="#" />
+                          <img
+                            src="/assets/interface-dashboard/img/profile-cover.jpg"
+                            alt="#"
+                          />
                           <div className="sherah-userprofile__right">
                             <a
                               href="#"
@@ -112,7 +115,10 @@ function Vendorprofile() {
                           {/* Profile Info */}
                           <div className="sherah-profile-info">
                             <div className="sherah-profile-info__thumb">
-                              <img src="/assets/interface-dashboard/img/profile.png" alt="#" />
+                              <img
+                                src="/assets/interface-dashboard/img/profile.png"
+                                alt="#"
+                              />
                               <h3 className="sherah-profile-info__name">
                                 Mendorcart<span>@_mendorcart</span>
                               </h3>

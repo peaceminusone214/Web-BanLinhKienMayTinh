@@ -5,12 +5,12 @@ const ReplySchema = new mongoose.Schema({
   content: { type: String, required: true },
   role: { type: String, enum: ["user", "admin"], default: "user" },
   createdAt: { type: Date, default: Date.now },
-  reports: [ 
+  reports: [
     {
       reporter: { type: String, required: true },
       reason: { type: String },
-      createdAt: { type: Date, default: Date.now }
-    }
+      createdAt: { type: Date, default: Date.now },
+    },
   ],
 });
 
@@ -30,7 +30,7 @@ const CommentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  email: {        
+  email: {
     type: String,
     required: true,
   },
@@ -60,7 +60,6 @@ const CommentSchema = new mongoose.Schema({
   replies: [ReplySchema],
   // Danh sách báo cáo bình luận
   reports: [ReportSchema],
-
 });
 
 module.exports = mongoose.model("Comment", CommentSchema);

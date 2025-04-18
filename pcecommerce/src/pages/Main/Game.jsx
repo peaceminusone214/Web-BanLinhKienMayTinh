@@ -33,7 +33,8 @@ const games = [
     image: "/assets/interface-main/imgGame/assassins-creed-shadows.jpg",
   },
   {
-    title: "Cấu hình game Dynasty Warriors: Origins - Siêu phẩm hack & slash của năm",
+    title:
+      "Cấu hình game Dynasty Warriors: Origins - Siêu phẩm hack & slash của năm",
     date: "18-01-2025, 9:16 am",
     views: 1214,
     comments: 0,
@@ -47,14 +48,16 @@ const games = [
     image: "/assets/interface-main/imgGame/lost-soul-aside.jpg",
   },
   {
-    title: "Steam Winter Sale 2024: Sự kiện Sale lớn Nhất Cuối Năm Dành Cho Game thủ",
+    title:
+      "Steam Winter Sale 2024: Sự kiện Sale lớn Nhất Cuối Năm Dành Cho Game thủ",
     date: "20-12-2024, 6:43 pm",
     views: 172,
     comments: 0,
     image: "/assets/interface-main/imgGame/steamwinter.jpg",
   },
   {
-    title: "Cấu hình Indiana Jones and the Great Circle: Chuẩn mực game benchmark",
+    title:
+      "Cấu hình Indiana Jones and the Great Circle: Chuẩn mực game benchmark",
     date: "13-12-2024, 10:44 am",
     views: 504,
     comments: 0,
@@ -75,14 +78,15 @@ const games = [
     image: "/assets/interface-main/imgGame/marvelrivals4.jpg",
   },
   {
-    title: "Cấu hình Microsoft Flight Simulator 2024: Rất thật và cũng rất nặng",
+    title:
+      "Cấu hình Microsoft Flight Simulator 2024: Rất thật và cũng rất nặng",
     date: "20-11-2024, 1:45 pm",
     views: 900,
     comments: 0,
     image: "/assets/interface-main/imgGame/flightsimulator2024.jpg",
   },
   {
-    title: "7 Game giảm sâu đáng mua nhất Halloween Sale trên Steam 2024", 
+    title: "7 Game giảm sâu đáng mua nhất Halloween Sale trên Steam 2024",
     date: "29-10-2024, 2:16 pm",
     views: 297,
     comments: 0,
@@ -93,7 +97,7 @@ const games = [
 const Game = () => {
   return (
     <div className="tech-container">
-    <div className="breadcrumb">
+      <div className="breadcrumb">
         <Link to="/">Trang chủ</Link>
         <span className="separator"></span>
         <Link to="/News">Tin tức</Link>
@@ -108,19 +112,19 @@ const Game = () => {
         <Link to="/News/software">PHẦN MỀM</Link>
       </nav>
       <div className="game-container">
-      {games.map((game, index) => (
-        <div key={index} className="game-card">
-          <img src={game.image} alt={game.title} />
-          <h2>{game.title}</h2>
-          <div className="game-meta">
-            <span>📅 {game.date}</span>
-            <span>💬 {game.comments}</span>
-            <span>👁️ {game.views}</span>
+        {games.map((game, index) => (
+          <div key={index} className="game-card">
+            <img src={game.image} alt={game.title} />
+            <h2>{game.title}</h2>
+            <div className="game-meta">
+              <span>📅 {game.date}</span>
+              <span>💬 {game.comments}</span>
+              <span>👁️ {game.views}</span>
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))}
       </div>
+    </div>
   );
 };
 

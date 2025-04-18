@@ -98,6 +98,10 @@ const ProductSchema = new mongoose.Schema({
     enum: ["In Stock", "Out of Stock", "Discontinued"],
     default: "In Stock",
   },
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // Cập nhật tự động `updated_at` khi sửa sản phẩm

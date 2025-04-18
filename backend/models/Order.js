@@ -47,7 +47,7 @@ const OrderSchema = new mongoose.Schema({
   },
   payment_method: {
     type: String,
-    enum: ["COD", "Bank Transfer", "vnpay"],
+    enum: ["COD", "Bank Transfer", "VNPAY"],
   },
   shipping_address: {
     street: { type: String },
@@ -72,6 +72,12 @@ const OrderSchema = new mongoose.Schema({
   VAT: { type: Number, required: true, default: 0 },
   subtotal: { type: Number },
   total_amount: { type: Number },
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
+  telegramChatId: { type: String, default: "" },
+  telegramConnectToken: { type: String },
   created_at: {
     type: Date,
     default: Date.now,

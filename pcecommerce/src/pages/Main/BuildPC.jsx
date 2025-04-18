@@ -63,12 +63,14 @@ const BuildPC = () => {
   // Lấy danh sách hãng sản xuất từ API
   useEffect(() => {
     if (selectedCategory) {
-      fetch(`${API_URL}/product/get-brands-category?category_id=${selectedCategory._id}`)
+      fetch(
+        `${API_URL}/product/get-brands-category?category_id=${selectedCategory._id}`
+      )
         .then((response) => response.json())
         .then((data) => setBrands(data))
         .catch((error) => console.error("Lỗi khi lấy hãng sản xuất:", error));
     }
-  }, [selectedCategory]);  
+  }, [selectedCategory]);
 
   // Lấy danh sách danh mục từ API bằng fetch
   useEffect(() => {
@@ -81,6 +83,19 @@ const BuildPC = () => {
   // Lấy sản phẩm theo danh mục từ API bằng fetch
   useEffect(() => {
     if (selectedCategory) {
+      // Reset filters
+      setSelectedBrands([]);
+      setSelectedPriceRanges([]);
+
+      // Lấy hãng sản xuất
+      fetch(
+        `${API_URL}/product/get-brands-category?category_id=${selectedCategory._id}`
+      )
+        .then((response) => response.json())
+        .then((data) => setBrands(data))
+        .catch((error) => console.error("Lỗi khi lấy hãng sản xuất:", error));
+
+      // Lấy sản phẩm
       fetch(
         `${API_URL}/product/get-products?category_id=${selectedCategory._id}`
       )

@@ -7,7 +7,7 @@ const Comment = require("../models/Comment");
 // Cấu hình Multer để upload ảnh
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/"); 
+    cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
     // Đặt tên file bằng thời gian hiện tại cộng với extension của file
@@ -36,9 +36,16 @@ router.post("/", upload.single("image"), async (req, res) => {
     const { productId, username, email, content, rating } = req.body;
     let image = "";
     if (req.file) {
-      image = req.file.path; 
+      image = req.file.path;
     }
-    const comment = new Comment({ productId, username, email, content, rating, image });
+    const comment = new Comment({
+      productId,
+      username,
+      email,
+      content,
+      rating,
+      image,
+    });
     await comment.save();
     res.status(201).json(comment);
   } catch (error) {
@@ -164,9 +171,13 @@ router.put("/reply/:replyId", async (req, res) => {
   try {
     const { content } = req.body;
     // Tìm comment chứa reply có _id bằng replyId
-    const comment = await Comment.findOne({ "replies._id": req.params.replyId });
+    const comment = await Comment.findOne({
+      "replies._id": req.params.replyId,
+    });
     if (!comment) {
-      return res.status(404).json({ error: "Comment chứa reply không được tìm thấy" });
+      return res
+        .status(404)
+        .json({ error: "Comment chứa reply không được tìm thấy" });
     }
     // Lấy reply từ mảng replies
     const reply = comment.replies.id(req.params.replyId);
@@ -194,7 +205,7 @@ router.get("/replies", async (req, res) => {
     }
 
     const comments = await Comment.find(filter, { replies: 1, _id: 0 });
-    let allReplies = comments.flatMap(comment => comment.replies);
+    let allReplies = comments.flatMap((comment) => comment.replies);
 
     if (sortBy === "newest") {
       allReplies.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -226,9 +237,13 @@ router.get("/:id", async (req, res) => {
 router.delete("/reply/:replyId", async (req, res) => {
   try {
     // Tìm comment chứa reply có _id bằng replyId
-    const comment = await Comment.findOne({ "replies._id": req.params.replyId });
+    const comment = await Comment.findOne({
+      "replies._id": req.params.replyId,
+    });
     if (!comment) {
-      return res.status(404).json({ error: "Comment chứa reply không được tìm thấy" });
+      return res
+        .status(404)
+        .json({ error: "Comment chứa reply không được tìm thấy" });
     }
     // Sử dụng pull để loại bỏ reply theo id
     comment.replies.pull(req.params.replyId);
@@ -245,7 +260,9 @@ router.post("/report/reply/:replyId", async (req, res) => {
   try {
     const { reporter, reason } = req.body;
     // Tìm comment chứa reply có _id bằng replyId
-    const comment = await Comment.findOne({ "replies._id": req.params.replyId });
+    const comment = await Comment.findOne({
+      "replies._id": req.params.replyId,
+    });
     if (!comment) {
       return res.status(404).json({ error: "Reply không được tìm thấy" });
     }
@@ -266,6 +283,5 @@ router.post("/report/reply/:replyId", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 
 module.exports = router;

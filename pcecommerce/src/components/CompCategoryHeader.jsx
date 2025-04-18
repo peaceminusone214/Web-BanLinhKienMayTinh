@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 const CompCategoryHeader = ({ category }) => (
   <div className="pc-header d-flex align-center space-between">
@@ -8,11 +8,15 @@ const CompCategoryHeader = ({ category }) => (
       <ul className="pc-list d-flex align-center">
         {category.subCategories.map((sub, idx) => (
           <li key={idx}>
-            <Link to={`/category/${sub.slug}`}><p>{sub.name}</p></Link>
+            <Link to={`/category/${sub.slug}`}>
+              <p>{sub.name}</p>
+            </Link>
           </li>
         ))}
       </ul>
-      <Link to={`/category/${category.slug}`} className="btn-view-all">XEM TẤT CẢ +</Link>
+      <Link to={`/category/${category.slug}`} className="btn-view-all">
+        XEM TẤT CẢ +
+      </Link>
     </div>
   </div>
 );

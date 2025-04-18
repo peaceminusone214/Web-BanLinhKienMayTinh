@@ -10,7 +10,8 @@ const techArticles = [
     image: "/assets/interface-main/imgTech/gpu-arc.png",
   },
   {
-    title: "Ryzen AI 7 Pro 360 lộ diện trong điểm chuẩn mới – chip Zen 5 tám lõi",
+    title:
+      "Ryzen AI 7 Pro 360 lộ diện trong điểm chuẩn mới – chip Zen 5 tám lõi",
     date: "15-07-2024, 8:38 am",
     views: 1797,
     image: "/assets/interface-main/imgTech/ryzen-ai.png",
@@ -40,13 +41,15 @@ const techArticles = [
     image: "/assets/interface-main/imgTech/gddr7.png",
   },
   {
-    title: "Chiếc 'RTX 4090 Super' đầu tiên trên thế giới đạt điểm số cao hơn tới 16% so với phiên bản tiêu chuẩn 4090",
+    title:
+      "Chiếc 'RTX 4090 Super' đầu tiên trên thế giới đạt điểm số cao hơn tới 16% so với phiên bản tiêu chuẩn 4090",
     date: "10-07-2024, 8:45 am",
     views: 313,
     image: "/assets/interface-main/imgTech/11zon.png",
   },
   {
-    title: "Chip RISC-V sẽ hỗ trợ thay thế RAM mà không cần tắt hệ thống - tính năng hot plugging sẽ có mặt trong các phiên bản Linux mới hơn",
+    title:
+      "Chip RISC-V sẽ hỗ trợ thay thế RAM mà không cần tắt hệ thống - tính năng hot plugging sẽ có mặt trong các phiên bản Linux mới hơn",
     date: "08-07-2024, 1:20 pm",
     views: 42,
     image: "/assets/interface-main/imgTech/risc.png",
@@ -58,7 +61,8 @@ const techArticles = [
     image: "/assets/interface-main/imgTech/socketcpu.png",
   },
   {
-    title: "Bổ sung mới AMD cho tiện ích ép xung cho phép điều chỉnh hiệu suất thêm - Curve Shaper cho phép 15 điểm bù điện áp",
+    title:
+      "Bổ sung mới AMD cho tiện ích ép xung cho phép điều chỉnh hiệu suất thêm - Curve Shaper cho phép 15 điểm bù điện áp",
     date: "07-07-2024, 4:33 am",
     views: 85,
     image: "/assets/interface-main/imgTech/amadanew1.png",
@@ -70,7 +74,8 @@ const techArticles = [
     image: "/assets/interface-main/imgTech/amdavsintel.png",
   },
   {
-    title: "AMD công bố tài liệu phân tích chi tiết về bộ vi xử lý MI300A - APU exascale đột phá của họ được nghiên cứu kỹ lưỡng... ",
+    title:
+      "AMD công bố tài liệu phân tích chi tiết về bộ vi xử lý MI300A - APU exascale đột phá của họ được nghiên cứu kỹ lưỡng... ",
     date: "06-07-2024, 2:04 pm",
     views: 56,
     image: "/assets/interface-main/imgTech/mi300a.png",
@@ -102,7 +107,9 @@ const Tech = () => {
             <div key={index} className="tech-item">
               <img src={article.image} alt={article.title} />
               <h3>{article.title}</h3>
-              <p className="datetech">📅 {article.date} &bull; 👁 {article.views}</p>
+              <p className="datetech">
+                📅 {article.date} &bull; 👁 {article.views}
+              </p>
             </div>
           ))}
         </div>
@@ -110,6 +117,5 @@ const Tech = () => {
     </div>
   );
 };
-
 
 export default Tech;

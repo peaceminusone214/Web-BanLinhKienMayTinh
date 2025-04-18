@@ -7,7 +7,7 @@ function AdminMenu() {
   const [isOrdersOpen, setIsOrdersOpen] = useState(false);
   const [isPagesOpen, setIsPagesOpen] = useState(false);
   const [isNewsOpen, setIsNewsOpen] = useState(false);
-  const [isCommentsOpen, setIsCommentOpen ] = useState(false);
+  const [isCommentsOpen, setIsCommentOpen] = useState(false);
 
   const toggleVendorsDropdown = () => {
     setIsVendorsOpen(!isVendorsOpen);
@@ -29,13 +29,12 @@ function AdminMenu() {
   };
   const toggleCommentsDropdown = () => {
     setIsCommentOpen(!isCommentsOpen);
-  };  
-
+  };
 
   return (
     <div>
       <div className="sherah-body-area">
-        {/* sherah Admin Menu */}
+        {/* Admin Menu */}
         <div className="sherah-smenu">
           {/* Admin Menu */}
           <div className="admin-menu">
@@ -44,7 +43,7 @@ function AdminMenu() {
               <Link to="/admin" className="collapsed">
                 <img
                   className="sherah-logo__main"
-                  src="/assets/interface-dashboard/img/logo.png"
+                  src="/assets/interface-main/imgComp/logo_WTC.png"
                   alt="#"
                 />
               </Link>
@@ -68,57 +67,10 @@ function AdminMenu() {
                   className="menu-bar__one sherah-dashboard-menu"
                   id="sherahMenu"
                 >
-                  {/* Dashoard menu item */}
-                  <li>
-                    <Link
-                      to="/admin"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#menu-item_home"
-                    >
-                      <span className="menu-bar__text">
-                        <span className="sherah-menu-icon sherah-svg-icon__v1">
-                          <svg
-                            className="sherah-svg-icon"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="18.075"
-                            height="18.075"
-                            viewBox="0 0 18.075 18.075"
-                          >
-                            <g id="Icon" transform="translate(0 0)">
-                              <path
-                                id="Path_29"
-                                data-name="Path 29"
-                                d="M6.966,6.025H1.318A1.319,1.319,0,0,1,0,4.707V1.318A1.319,1.319,0,0,1,1.318,0H6.966A1.319,1.319,0,0,1,8.284,1.318V4.707A1.319,1.319,0,0,1,6.966,6.025ZM1.318,1.13a.188.188,0,0,0-.188.188V4.707a.188.188,0,0,0,.188.188H6.966a.188.188,0,0,0,.188-.188V1.318a.188.188,0,0,0-.188-.188Zm0,0"
-                              />
-                              <path
-                                id="Path_30"
-                                data-name="Path 30"
-                                d="M6.966,223.876H1.318A1.319,1.319,0,0,1,0,222.558V214.65a1.319,1.319,0,0,1,1.318-1.318H6.966a1.319,1.319,0,0,1,1.318,1.318v7.908A1.319,1.319,0,0,1,6.966,223.876Zm-5.648-9.414a.188.188,0,0,0-.188.188v7.908a.188.188,0,0,0,.188.188H6.966a.188.188,0,0,0,.188-.188V214.65a.188.188,0,0,0-.188-.188Zm0,0"
-                                transform="translate(0 -205.801)"
-                              />
-                              <path
-                                id="Path_31"
-                                data-name="Path 31"
-                                d="M284.3,347.357H278.65a1.319,1.319,0,0,1-1.318-1.318V342.65a1.319,1.319,0,0,1,1.318-1.318H284.3a1.319,1.319,0,0,1,1.318,1.318v3.389A1.319,1.319,0,0,1,284.3,347.357Zm-5.648-4.9a.188.188,0,0,0-.188.188v3.389a.188.188,0,0,0,.188.188H284.3a.188.188,0,0,0,.188-.188V342.65a.188.188,0,0,0-.188-.188Zm0,0"
-                                transform="translate(-267.542 -329.282)"
-                              />
-                              <path
-                                id="Path_32"
-                                data-name="Path 32"
-                                d="M284.3,10.544H278.65a1.319,1.319,0,0,1-1.318-1.318V1.318A1.319,1.319,0,0,1,278.65,0H284.3a1.319,1.319,0,0,1,1.318,1.318V9.226A1.319,1.319,0,0,1,284.3,10.544ZM278.65,1.13a.188.188,0,0,0-.188.188V9.226a.188.188,0,0,0,.188.188H284.3a.188.188,0,0,0,.188-.188V1.318a.188.188,0,0,0-.188-.188Zm0,0"
-                                transform="translate(-267.542)"
-                              />
-                            </g>
-                          </svg>
-                        </span>
-                        <span className="menu-bar__name">Dashboard</span>
-                      </span>
-                    </Link>
-                  </li>
-                  
+
                   {/* Statistics menu item */}
                   <li>
-                    <Link to="/admin/statistics">
+                    <Link to="/admin">
                       <span className="menu-bar__text">
                         <span className="sherah-menu-icon sherah-svg-icon__v1">
                           <svg
@@ -135,7 +87,7 @@ function AdminMenu() {
                       </span>
                     </Link>
                   </li>
-                  
+
                   {/* Vendors Dropdown menu item */}
                   <li>
                     <a
@@ -180,6 +132,7 @@ function AdminMenu() {
                       </span>
                       <span className="sherah__toggle" />
                     </a>
+
                     {/* Dropdown Menu */}
                     <div
                       className={`collapse sherah__dropdown ${
@@ -218,85 +171,9 @@ function AdminMenu() {
                       </ul>
                     </div>
                   </li>
+
                   {/* Customers menu item */}
                   <li>
-                    <a
-                      className={`collapsed ${isCustomersOpen ? "show" : ""}`}
-                      onClick={toggleCustomersDropdown} // Attach toggle function
-                    >
-                      <span className="menu-bar__text">
-                        <span className="sherah-menu-icon sherah-svg-icon__v1">
-                          <svg
-                            className="sherah-svg-icon"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="21.732"
-                            height={18}
-                            viewBox="0 0 21.732 18"
-                          >
-                            <g
-                              id="Icon"
-                              transform="translate(-525.662 -352.927)"
-                            >
-                              <path
-                                id="Path_208"
-                                data-name="Path 208"
-                                d="M536.507,455.982q-4.327,0-8.654,0a1.953,1.953,0,0,1-2.188-2.2c0-.99-.005-1.979,0-2.969a3.176,3.176,0,0,1,3.309-3.315c.875,0,1.749.052,2.624.062a.451.451,0,0,0,.33-.168,3.237,3.237,0,0,1,2.94-1.527q1.654.024,3.309,0a3.262,3.262,0,0,1,2.947,1.52.621.621,0,0,0,.449.153,30.091,30.091,0,0,1,3.212.044,3.044,3.044,0,0,1,2.594,3.014c.021,1.117.014,2.234.005,3.351a1.909,1.909,0,0,1-2.054,2.032Q540.919,455.989,536.507,455.982Zm3.812-1.288c0-.187,0-.326,0-.465-.008-1.781.026-3.564-.042-5.342a1.8,1.8,0,0,0-1.929-1.74c-1.131-.012-2.263,0-3.394,0a1.961,1.961,0,0,0-2.22,2.212q0,2.439,0,4.878v.46Zm-8.89.011c.013-.11.026-.165.026-.22,0-1.781-.006-3.562.009-5.343,0-.337-.178-.37-.422-.37-.749,0-1.5-.024-2.248.006a1.849,1.849,0,0,0-1.837,1.763c-.044,1.172-.022,2.346-.013,3.519a.581.581,0,0,0,.6.639C528.826,454.716,530.111,454.705,531.429,454.705Zm10.165-.005c1.354,0,2.664.018,3.974-.011.377-.008.544-.315.544-.688,0-1.117.017-2.234-.007-3.35a1.867,1.867,0,0,0-1.823-1.87c-.762-.035-1.526,0-2.29-.01-.3,0-.41.114-.406.431.017,1.4.007,2.8.007,4.2Z"
-                                transform="translate(0 -85.056)"
-                              />
-                              <path
-                                id="Path_209"
-                                data-name="Path 209"
-                                d="M609.243,356.712a3.775,3.775,0,1,1,3.788,3.764A3.775,3.775,0,0,1,609.243,356.712Zm1.279-.076a2.5,2.5,0,1,0,2.611-2.434A2.5,2.5,0,0,0,610.523,356.636Z"
-                                transform="translate(-76.492)"
-                              />
-                              <path
-                                id="Path_210"
-                                data-name="Path 210"
-                                d="M548.151,397.022a2.819,2.819,0,1,1-2.842-2.82A2.827,2.827,0,0,1,548.151,397.022Zm-1.278.023a1.542,1.542,0,1,0-1.531,1.542A1.548,1.548,0,0,0,546.873,397.045Z"
-                                transform="translate(-15.421 -37.775)"
-                              />
-                              <path
-                                id="Path_211"
-                                data-name="Path 211"
-                                d="M698.51,397.045a2.819,2.819,0,1,1,2.839,2.819A2.831,2.831,0,0,1,698.51,397.045Zm4.361.032a1.542,1.542,0,1,0-1.56,1.512A1.55,1.55,0,0,0,702.871,397.076Z"
-                                transform="translate(-158.187 -37.776)"
-                              />
-                            </g>
-                          </svg>
-                        </span>
-                        <span className="menu-bar__name">Customers</span>
-                      </span>
-                      <span className="sherah__toggle" />
-                    </a>
-                    <div
-                      className={`collapse sherah__dropdown ${
-                        isCustomersOpen ? "show" : ""
-                      }`}
-                      id="menu-item__customers"
-                      data-bs-parent="#sherahMenu"
-                    >
-                      <ul className="menu-bar__one-dropdown">
-                        <li>
-                          <Link to="/admin/customerlist">
-                            <span className="menu-bar__text">
-                              <span className="menu-bar__name">
-                                Customer List
-                              </span>
-                            </span>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/admin/customers">
-                            <span className="menu-bar__text">
-                              <span className="menu-bar__name">Customers</span>
-                            </span>
-                          </Link>
-                        </li>
-                      </ul>
-                    </div>
-                  </li>
-                                    {/* Customers menu item */}
-                                    <li>
                     <a
                       className={`collapsed ${isCustomersOpen ? "show" : ""}`}
                       onClick={toggleCustomersDropdown} // Attach toggle function
@@ -354,24 +231,23 @@ function AdminMenu() {
                     >
                       <ul className="menu-bar__one-dropdown">
                         <li>
-                          <Link to="/admin/customerslist">
+                          <Link to="/admin/customers-list">
                             <span className="menu-bar__text">
-                              <span className="menu-bar__name">
-                                Danh sách khách hàng
-                              </span>
+                              <span className="menu-bar__name">Danh sách khách hàng</span>
                             </span>
                           </Link>
                         </li>
                         <li>
-                          <Link to="/admin/customer">
+                          <Link to="/admin/customer-detail">
                             <span className="menu-bar__text">
-                              <span className="menu-bar__name">Thông tin khách hàng</span>
+                              <span className="menu-bar__name">Chi tiết</span>
                             </span>
                           </Link>
                         </li>
                       </ul>
                     </div>
                   </li>
+
                   {/* Products menu item */}
                   <li>
                     <a
@@ -407,7 +283,7 @@ function AdminMenu() {
                       data-bs-parent="#sherahMenu"
                     >
                       <ul className="menu-bar__one-dropdown">
-                      <li>
+                        <li>
                           <Link to="/admin/productslist">
                             <span className="menu-bar__text">
                               <span className="menu-bar__name">
@@ -425,65 +301,11 @@ function AdminMenu() {
                             </span>
                           </Link>
                         </li>
-                      </ul>
-                    </div>
-                  </li>
-                  {/* Products menu item */}
-                  <li>
-                    <a
-                      className={`collapsed ${isProductsOpen ? "show" : ""}`}
-                      onClick={toggleProductsDropdown} // Attach toggle function
-                    >
-                      <span className="menu-bar__text">
-                        <span className="sherah-menu-icon sherah-svg-icon__v1">
-                          <svg
-                            className="sherah-svg-icon"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="21.136"
-                            height="17.873"
-                            viewBox="0 0 21.136 17.873"
-                          >
-                            <path
-                              id="Path_218"
-                              data-name="Path 218"
-                              d="M558.766,384.526c.177-.092.32-.164.46-.24l6.468-3.491a1.9,1.9,0,0,1,.368-.179.506.506,0,0,1,.632.248.487.487,0,0,1-.127.656,1.743,1.743,0,0,1-.315.191c-2.517,1.359-5.038,2.712-7.549,4.083a.98.98,0,0,1-1.036.012q-3.781-1.986-7.582-3.934a.811.811,0,0,1-.505-.831c.02-1.3,0-2.6.014-3.9a.486.486,0,0,0-.3-.508c-.45-.232-.889-.486-1.326-.742a.539.539,0,0,1-.221-.877c.62-.926,1.244-1.849,1.883-2.762a1.17,1.17,0,0,1,.442-.344c2.561-1.246,5.127-2.482,7.688-3.728a.879.879,0,0,1,.822-.01c2.568,1.2,5.143,2.387,7.709,3.591a1.24,1.24,0,0,1,.478.42c.61.916,1.2,1.844,1.794,2.771.3.463.23.71-.265.989q-3.631,2.046-7.265,4.086c-.454.255-.643.212-.981-.2-.412-.5-.823-1.011-1.292-1.587Zm-7.409-12.033c.133.076.214.126.3.17,2.065,1.073,4.133,2.141,6.191,3.225a.625.625,0,0,0,.674-.018c2.031-1.106,4.069-2.2,6.1-3.3.118-.064.232-.133.367-.21a1.6,1.6,0,0,0-.164-.106c-2.124-.986-4.246-1.977-6.378-2.945a.814.814,0,0,0-.6.038c-2.04.971-4.071,1.96-6.1,2.945C551.626,372.349,551.511,372.412,551.357,372.492Zm-.688,4.945c0,1.092.01,2.129-.007,3.165a.5.5,0,0,0,.321.528c2.093,1.074,4.179,2.162,6.267,3.245.1.054.216.1.344.152v-6.293l-1.263,1.551c-.386.473-.552.507-1.076.212q-2.074-1.166-4.147-2.334C550.982,377.593,550.85,377.53,550.668,377.438Zm10.08,1.529,6.694-3.769-1.4-2.171-7.033,3.792Zm-3.4-2.142-7.037-3.652-1.38,2.033,6.683,3.76Z"
-                              transform="translate(-547.61 -368.076)"
-                            />
-                          </svg>
-                        </span>
-                        <span className="menu-bar__name">Products</span>
-                      </span>
-                      <span className="sherah__toggle" />
-                    </a>
-                    <div
-                      className={`collapse sherah__dropdown ${
-                        isProductsOpen ? "show" : ""
-                      }`}
-                      id="menu-item_products"
-                      data-bs-parent="#sherahMenu"
-                    >
-                      <ul className="menu-bar__one-dropdown">
                         <li>
-                          <Link to="/admin/products">
-                            <span className="menu-bar__text">
-                              <span className="menu-bar__name">Products</span>
-                            </span>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/admin/productlist">
+                          <Link to="/admin/warehouse">
                             <span className="menu-bar__text">
                               <span className="menu-bar__name">
-                                Product Details
-                              </span>
-                            </span>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/admin/uploadproduct">
-                            <span className="menu-bar__text">
-                              <span className="menu-bar__name">
-                                Upload Product
+                                Quản lý kho
                               </span>
                             </span>
                           </Link>
@@ -491,32 +313,9 @@ function AdminMenu() {
                       </ul>
                     </div>
                   </li>
-                  {/* Wishlist menu item */}
+
+                  {/* Discount menu item */}
                   <li>
-                    <Link to="/admin/wishlist" className="collapsed">
-                      <span className="menu-bar__text">
-                        <span className="sherah-menu-icon sherah-svg-icon__v1">
-                          <svg
-                            className="sherah-svg-icon"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="22.259"
-                            height="19.146"
-                            viewBox="0 0 22.259 19.146"
-                          >
-                            <path
-                              id="Path_229"
-                              data-name="Path 229"
-                              d="M601.866,379.059c.384-.409.661-.738.973-1.031a6.035,6.035,0,0,1,8.378.092,5.886,5.886,0,0,1,.126,8.307c-2.912,2.961-5.887,5.861-8.839,8.783a.788.788,0,0,1-1.258.011c-2.964-2.933-5.954-5.841-8.872-8.819a5.875,5.875,0,0,1,.169-8.3,6.037,6.037,0,0,1,8.343-.082C601.208,378.318,601.493,378.66,601.866,379.059Zm.008,14.528c.112-.1.187-.168.257-.237q3.966-3.931,7.928-7.866a4.341,4.341,0,0,0,.055-6.23,4.455,4.455,0,0,0-6.287.011c-.38.365-.749.741-1.124,1.112-.676.669-.985.672-1.648.017-.41-.405-.806-.826-1.233-1.213a4.4,4.4,0,0,0-6.158,6.284c2.629,2.636,5.283,5.246,7.927,7.867C601.67,393.412,601.758,393.484,601.874,393.588Z"
-                              transform="translate(-590.738 -376.383)"
-                            />
-                          </svg>
-                        </span>
-                        <span className="menu-bar__name">X-Wishlist</span>
-                      </span>
-                    </Link>
-                  </li>
-                                    {/* Discount menu item */}
-                                    <li>
                     <Link to="/admin/discount" className="collapsed">
                       <span className="menu-bar__text">
                         <span className="sherah-menu-icon sherah-svg-icon__v1">
@@ -613,29 +412,26 @@ function AdminMenu() {
                         <li>
                           <Link to="/admin/orderslist">
                             <span className="menu-bar__text">
-                              <span className="menu-bar__name">Danh sách đơn hàng</span>
+                              <span className="menu-bar__name">
+                                Danh sách đơn hàng
+                              </span>
                             </span>
                           </Link>
                         </li>
                         <li>
                           <Link to="/admin/ordersdetails">
                             <span className="menu-bar__text">
-                              <span className="menu-bar__name">Chi tiết đơn hàng</span>
+                              <span className="menu-bar__name">
+                                Chi tiết đơn hàng
+                              </span>
                             </span>
                           </Link>
                         </li>
                         <li>
-                          <Link to="/admin/orderlist">
-                            <span className="menu-bar__text">
-                              <span className="menu-bar__name">Order List</span>
-                            </span>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link to="/admin/orderdetails">
+                          <Link to="/admin/deletedorders">
                             <span className="menu-bar__text">
                               <span className="menu-bar__name">
-                                Order Details
+                                Đơn hàng lưu trữ
                               </span>
                             </span>
                           </Link>
@@ -643,6 +439,7 @@ function AdminMenu() {
                       </ul>
                     </div>
                   </li>
+
                   {/*Quản lý tin tức item */}
                   <li>
                     <a
@@ -666,7 +463,9 @@ function AdminMenu() {
                       <span className="sherah__toggle" />
                     </a>
                     <div
-                      className={`collapse sherah__dropdown ${isNewsOpen ? "show" : ""}`}
+                      className={`collapse sherah__dropdown ${
+                        isNewsOpen ? "show" : ""
+                      }`}
                       id="menu-item__news"
                       data-bs-parent="#sherahMenu"
                     >
@@ -674,20 +473,25 @@ function AdminMenu() {
                         <li>
                           <Link to="/admin/news-management">
                             <span className="menu-bar__text">
-                              <span className="menu-bar__name">Danh sách tin tức</span>
+                              <span className="menu-bar__name">
+                                Danh sách tin tức
+                              </span>
                             </span>
                           </Link>
                         </li>
                         <li>
                           <Link to="/admin/add-news">
                             <span className="menu-bar__text">
-                              <span className="menu-bar__name">Cài đặt giao diện</span>
+                              <span className="menu-bar__name">
+                                Cài đặt giao diện
+                              </span>
                             </span>
                           </Link>
                         </li>
                       </ul>
                     </div>
                   </li>
+
                   {/*Quản lý bình luận */}
                   <li>
                     <a
@@ -709,12 +513,16 @@ function AdminMenu() {
                             />
                           </svg>
                         </span>
-                        <span className="menu-bar__name">Quản lý bình luận</span>
+                        <span className="menu-bar__name">
+                          Quản lý bình luận
+                        </span>
                       </span>
                       <span className="sherah__toggle" />
                     </a>
                     <div
-                      className={`collapse sherah__dropdown ${isCommentsOpen ? "show" : ""}`}
+                      className={`collapse sherah__dropdown ${
+                        isCommentsOpen ? "show" : ""
+                      }`}
                       id="menu-item__comments"
                       data-bs-parent="#sherahMenu"
                     >
@@ -722,7 +530,9 @@ function AdminMenu() {
                         <li>
                           <Link to="/admin/admin-comments">
                             <span className="menu-bar__text">
-                              <span className="menu-bar__name">Danh sách bình luận</span>
+                              <span className="menu-bar__name">
+                                Danh sách bình luận
+                              </span>
                             </span>
                           </Link>
                         </li>
@@ -730,7 +540,44 @@ function AdminMenu() {
                     </div>
                   </li>
 
- 
+                  {/* Settings menu item */}
+                  <li>
+                    <Link to="/admin/profileinfo" className="collapsed">
+                      <span className="menu-bar__text">
+                        <span className="sherah-menu-icon sherah-svg-icon__v1">
+                          <svg
+                            className="sherah-svg-icon"
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="22.103"
+                            height="22.368"
+                            viewBox="0 0 22.103 22.368"
+                          >
+                            <g id="Icon" transform="translate(0.787 -1.038)">
+                              <g
+                                id="setting"
+                                transform="translate(-0.787 1.038)"
+                              >
+                                <path
+                                  id="Path_39"
+                                  data-name="Path 39"
+                                  d="M20.942,9.2h-.094A.71.71,0,0,1,20.359,8l.067-.068a2.209,2.209,0,0,0,0-3.092L19.313,3.715a2.144,2.144,0,0,0-3.055,0l-.067.068a.7.7,0,0,1-.759.145A.713.713,0,0,1,15,3.282v-.1A2.175,2.175,0,0,0,12.838,1H11.264A2.175,2.175,0,0,0,9.1,3.186v.1a.713.713,0,0,1-.435.64.7.7,0,0,1-.754-.142l-.063-.068a2.144,2.144,0,0,0-3.055,0L3.68,4.838a2.209,2.209,0,0,0,0,3.092L3.747,8a.7.7,0,0,1,.136.772.681.681,0,0,1-.629.432H3.16A2.175,2.175,0,0,0,1,11.388V12.98a2.175,2.175,0,0,0,2.16,2.186h.094a.71.71,0,0,1,.489,1.2l-.067.068a2.209,2.209,0,0,0,0,3.092l1.112,1.125a2.144,2.144,0,0,0,3.055,0l.067-.068a.7.7,0,0,1,1.189.5v.1a2.2,2.2,0,0,0,.633,1.549,2.149,2.149,0,0,0,1.53.641h1.574A2.175,2.175,0,0,0,15,21.182v-.1a.713.713,0,0,1,.435-.64.7.7,0,0,1,.754.142l.067.068a2.144,2.144,0,0,0,3.055,0l1.113-1.125a2.209,2.209,0,0,0,0-3.092l-.067-.068a.7.7,0,0,1-.136-.772.681.681,0,0,1,.629-.432h.094A2.175,2.175,0,0,0,23.1,12.98V11.388A2.175,2.175,0,0,0,20.942,9.2Zm.687,3.779a.692.692,0,0,1-.687.695h-.094a2.178,2.178,0,0,0-1.993,1.36,2.223,2.223,0,0,0,.459,2.388l.066.068a.7.7,0,0,1,0,.983L18.267,19.6a.681.681,0,0,1-.971,0l-.066-.068a2.16,2.16,0,0,0-2.36-.463,2.2,2.2,0,0,0-1.345,2.016v.1a.692.692,0,0,1-.687.695H11.264a.692.692,0,0,1-.687-.695v-.1a2.2,2.2,0,0,0-1.342-2.022,2.155,2.155,0,0,0-2.362.47l-.067.068a.682.682,0,0,1-.971,0L4.723,18.476a.7.7,0,0,1,0-.983l.067-.068a2.223,2.223,0,0,0,.459-2.389,2.178,2.178,0,0,0-1.995-1.36H3.16a.692.692,0,0,1-.687-.695V11.388a.692.692,0,0,1,.687-.695h.094a2.178,2.178,0,0,0,1.993-1.36,2.223,2.223,0,0,0-.459-2.388l-.066-.068a.7.7,0,0,1,0-.983L5.835,4.767a.681.681,0,0,1,.971,0l.066.068a2.16,2.16,0,0,0,2.36.464,2.2,2.2,0,0,0,1.345-2.017v-.1a.692.692,0,0,1,.687-.695h1.574a.692.692,0,0,1,.687.695v.1A2.2,2.2,0,0,0,14.869,5.3a2.159,2.159,0,0,0,2.36-.464l.067-.068a.681.681,0,0,1,.971,0L19.38,5.893a.7.7,0,0,1,0,.983l-.067.068a2.223,2.223,0,0,0-.459,2.389,2.178,2.178,0,0,0,1.994,1.36h.094a.692.692,0,0,1,.687.695Z"
+                                  transform="translate(-1 -1)"
+                                />
+                                <path
+                                  id="Path_40"
+                                  data-name="Path 40"
+                                  d="M13.965,9a4.965,4.965,0,1,0,4.965,4.965A4.965,4.965,0,0,0,13.965,9Zm0,8.511a3.546,3.546,0,1,1,3.546-3.546,3.546,3.546,0,0,1-3.546,3.546Z"
+                                  transform="translate(-2.913 -2.781)"
+                                />
+                              </g>
+                            </g>
+                          </svg>
+                        </span>
+                        <span className="menu-bar__name">Cài đặt</span>
+                      </span>
+                    </Link>
+                  </li>
+
                   {/* Invoice menu item */}
                   <li>
                     <Link to="/admin/invoiceprint" className="collapsed">
@@ -818,43 +665,32 @@ function AdminMenu() {
                       </span>
                     </Link>
                   </li>
-                  {/* Settings menu item */}
+
+                  {/* Wishlist menu item */}
                   <li>
-                    <Link to="/admin/profileinfo" className="collapsed">
+                    <Link to="/admin/wishlist" className="collapsed">
                       <span className="menu-bar__text">
                         <span className="sherah-menu-icon sherah-svg-icon__v1">
                           <svg
                             className="sherah-svg-icon"
                             xmlns="http://www.w3.org/2000/svg"
-                            width="22.103"
-                            height="22.368"
-                            viewBox="0 0 22.103 22.368"
+                            width="22.259"
+                            height="19.146"
+                            viewBox="0 0 22.259 19.146"
                           >
-                            <g id="Icon" transform="translate(0.787 -1.038)">
-                              <g
-                                id="setting"
-                                transform="translate(-0.787 1.038)"
-                              >
-                                <path
-                                  id="Path_39"
-                                  data-name="Path 39"
-                                  d="M20.942,9.2h-.094A.71.71,0,0,1,20.359,8l.067-.068a2.209,2.209,0,0,0,0-3.092L19.313,3.715a2.144,2.144,0,0,0-3.055,0l-.067.068a.7.7,0,0,1-.759.145A.713.713,0,0,1,15,3.282v-.1A2.175,2.175,0,0,0,12.838,1H11.264A2.175,2.175,0,0,0,9.1,3.186v.1a.713.713,0,0,1-.435.64.7.7,0,0,1-.754-.142l-.063-.068a2.144,2.144,0,0,0-3.055,0L3.68,4.838a2.209,2.209,0,0,0,0,3.092L3.747,8a.7.7,0,0,1,.136.772.681.681,0,0,1-.629.432H3.16A2.175,2.175,0,0,0,1,11.388V12.98a2.175,2.175,0,0,0,2.16,2.186h.094a.71.71,0,0,1,.489,1.2l-.067.068a2.209,2.209,0,0,0,0,3.092l1.112,1.125a2.144,2.144,0,0,0,3.055,0l.067-.068a.7.7,0,0,1,1.189.5v.1a2.2,2.2,0,0,0,.633,1.549,2.149,2.149,0,0,0,1.53.641h1.574A2.175,2.175,0,0,0,15,21.182v-.1a.713.713,0,0,1,.435-.64.7.7,0,0,1,.754.142l.067.068a2.144,2.144,0,0,0,3.055,0l1.113-1.125a2.209,2.209,0,0,0,0-3.092l-.067-.068a.7.7,0,0,1-.136-.772.681.681,0,0,1,.629-.432h.094A2.175,2.175,0,0,0,23.1,12.98V11.388A2.175,2.175,0,0,0,20.942,9.2Zm.687,3.779a.692.692,0,0,1-.687.695h-.094a2.178,2.178,0,0,0-1.993,1.36,2.223,2.223,0,0,0,.459,2.388l.066.068a.7.7,0,0,1,0,.983L18.267,19.6a.681.681,0,0,1-.971,0l-.066-.068a2.16,2.16,0,0,0-2.36-.463,2.2,2.2,0,0,0-1.345,2.016v.1a.692.692,0,0,1-.687.695H11.264a.692.692,0,0,1-.687-.695v-.1a2.2,2.2,0,0,0-1.342-2.022,2.155,2.155,0,0,0-2.362.47l-.067.068a.682.682,0,0,1-.971,0L4.723,18.476a.7.7,0,0,1,0-.983l.067-.068a2.223,2.223,0,0,0,.459-2.389,2.178,2.178,0,0,0-1.995-1.36H3.16a.692.692,0,0,1-.687-.695V11.388a.692.692,0,0,1,.687-.695h.094a2.178,2.178,0,0,0,1.993-1.36,2.223,2.223,0,0,0-.459-2.388l-.066-.068a.7.7,0,0,1,0-.983L5.835,4.767a.681.681,0,0,1,.971,0l.066.068a2.16,2.16,0,0,0,2.36.464,2.2,2.2,0,0,0,1.345-2.017v-.1a.692.692,0,0,1,.687-.695h1.574a.692.692,0,0,1,.687.695v.1A2.2,2.2,0,0,0,14.869,5.3a2.159,2.159,0,0,0,2.36-.464l.067-.068a.681.681,0,0,1,.971,0L19.38,5.893a.7.7,0,0,1,0,.983l-.067.068a2.223,2.223,0,0,0-.459,2.389,2.178,2.178,0,0,0,1.994,1.36h.094a.692.692,0,0,1,.687.695Z"
-                                  transform="translate(-1 -1)"
-                                />
-                                <path
-                                  id="Path_40"
-                                  data-name="Path 40"
-                                  d="M13.965,9a4.965,4.965,0,1,0,4.965,4.965A4.965,4.965,0,0,0,13.965,9Zm0,8.511a3.546,3.546,0,1,1,3.546-3.546,3.546,3.546,0,0,1-3.546,3.546Z"
-                                  transform="translate(-2.913 -2.781)"
-                                />
-                              </g>
-                            </g>
+                            <path
+                              id="Path_229"
+                              data-name="Path 229"
+                              d="M601.866,379.059c.384-.409.661-.738.973-1.031a6.035,6.035,0,0,1,8.378.092,5.886,5.886,0,0,1,.126,8.307c-2.912,2.961-5.887,5.861-8.839,8.783a.788.788,0,0,1-1.258.011c-2.964-2.933-5.954-5.841-8.872-8.819a5.875,5.875,0,0,1,.169-8.3,6.037,6.037,0,0,1,8.343-.082C601.208,378.318,601.493,378.66,601.866,379.059Zm.008,14.528c.112-.1.187-.168.257-.237q3.966-3.931,7.928-7.866a4.341,4.341,0,0,0,.055-6.23,4.455,4.455,0,0,0-6.287.011c-.38.365-.749.741-1.124,1.112-.676.669-.985.672-1.648.017-.41-.405-.806-.826-1.233-1.213a4.4,4.4,0,0,0-6.158,6.284c2.629,2.636,5.283,5.246,7.927,7.867C601.67,393.412,601.758,393.484,601.874,393.588Z"
+                              transform="translate(-590.738 -376.383)"
+                            />
                           </svg>
                         </span>
-                        <span className="menu-bar__name">Cài đặt</span>
+                        <span className="menu-bar__name">X-Wishlist</span>
                       </span>
                     </Link>
                   </li>
+
                   {/* Messages menu item */}
                   <li>
                     <Link to="/admin/chat" className="collapsed">
@@ -1070,7 +906,7 @@ function AdminMenu() {
           </div>
           {/* End Admin Menu */}
         </div>
-        {/* End sherah Admin Menu */}
+        {/* End Admin Menu */}
       </div>
     </div>
   );

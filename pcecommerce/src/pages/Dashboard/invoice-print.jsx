@@ -19,7 +19,7 @@ function Invoiceprint() {
                             {" "}
                             <img
                               className="sherah-logo__main"
-                              src="/assets/interface-dashboard/img/logo.png"
+                              src="/assets/interface-main/imgComp/logo_WTC.png"
                               alt="#"
                             />
                           </a>

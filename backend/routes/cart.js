@@ -30,7 +30,9 @@ router.post("/sync", async (req, res) => {
     res.status(200).json({ message: "Đồng bộ giỏ hàng thành công", cart });
   } catch (error) {
     console.error("Lỗi backend:", error); // Log lỗi vào console
-    res.status(500).json({ message: "Lỗi đồng bộ giỏ hàng", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Lỗi đồng bộ giỏ hàng", error: error.message });
   }
 });
 

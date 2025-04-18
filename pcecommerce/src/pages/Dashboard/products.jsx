@@ -26,7 +26,7 @@ function Products() {
                                 <a href="#">admin</a>
                               </li>
                               <li className="active">
-                                <Link to = "/admin/products">products</Link>
+                                <Link to="/admin/products">products</Link>
                               </li>
                             </ul>
                           </div>
@@ -89,8 +89,8 @@ function Products() {
                               <li>
                                 <a href="#">
                                   <span>
-                                    <i className="fa-solid fa-chevron-right" />
-                                    Ổ cứng
+                                    <i className="fa-solid fa-chevron-right" />Ổ
+                                    cứng
                                   </span>
                                   <span className="count">50</span>
                                 </a>
@@ -135,7 +135,8 @@ function Products() {
                                 <a href="#">
                                   <span>
                                     <i className="fa-solid fa-chevron-right" />
-                                    Tản nhiệt                                  </span>
+                                    Tản nhiệt{" "}
+                                  </span>
                                   <span className="count">25</span>
                                 </a>
                               </li>

@@ -40,7 +40,10 @@ function AdminHeader() {
 
   const handleLogout = async () => {
     try {
-      await fetch(`${API_URL}/auth/logout`, { method: "POST", credentials: "include" });
+      await fetch(`${API_URL}/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
       navigate("/login");
     } catch (error) {
       console.error("Logout error:", error);
@@ -51,12 +54,14 @@ function AdminHeader() {
     const fetchUserData = async () => {
       try {
         // Gọi API session để lấy thông tin user ban đầu
-        const sessionResponse = await fetch(`${API_URL}/auth/session`, { credentials: "include" });
+        const sessionResponse = await fetch(`${API_URL}/auth/session`, {
+          credentials: "include",
+        });
         if (!sessionResponse.ok) throw new Error("Lỗi khi lấy dữ liệu session");
-  
+
         const sessionData = await sessionResponse.json();
         let user = sessionData.user;
-  
+
         if (user?.userId) {
           // Gọi API bổ sung thông tin user
           const userResponse = await fetch(`${API_URL}/user/get-user/`, {
@@ -64,15 +69,17 @@ function AdminHeader() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId: user.userId }),
           });
-  
+
           if (userResponse.ok) {
             const additionalUserData = await userResponse.json();
             user = { ...user, ...additionalUserData }; // Gộp dữ liệu từ cả hai API
           } else {
-            console.warn("Không thể lấy dữ liệu user bổ sung, giữ lại dữ liệu session");
+            console.warn(
+              "Không thể lấy dữ liệu user bổ sung, giữ lại dữ liệu session"
+            );
           }
         }
-  
+
         setUser(user);
         setRoleToDisplay(user.roles?.join(", ") || "No roles available");
       } catch (error) {
@@ -80,9 +87,9 @@ function AdminHeader() {
         setUser(null);
       }
     };
-  
+
     fetchUserData();
-  }, []);  
+  }, []);
 
   if (!user) return <div>Loading...</div>;
 
@@ -126,7 +133,7 @@ function AdminHeader() {
                           name="s"
                           defaultValue=""
                           type="text"
-                          placeholder="Search"
+                          placeholder="Tìm kiếm"
                         />
                       </form>
                     </div>
@@ -696,10 +703,7 @@ function AdminHeader() {
                           {/* Header Author */}
                           <div className="sherah-header__author sherah-flex__center--top">
                             <div className="sherah-header__author-img">
-                              <img
-                                src={user.image_url}
-                                alt="#"
-                              />
+                              <img src={user.image_url} alt="#" />
                             </div>
                             <div className="sherah-header__author--info sherah-dflex sherah-dflex__base">
                               <h4 className="sherah-header__author--title  sherah-dflex sherah-dflex__column">

@@ -5,12 +5,12 @@ require("dotenv").config();
 
 // Cấu hình email server
 const transporter = nodemailer.createTransport({
-    service: "Gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+  service: "Gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 // Cấu hình Handlebars cho Nodemailer
 transporter.use(
@@ -43,7 +43,7 @@ const sendOrderEmail = async (orderData) => {
   };
 
   await transporter.sendMail(mailOptions);
-  console.log("✅ Email đã gửi thành công!");
+  console.log("Email đã gửi thành công!");
 };
 
 module.exports = sendOrderEmail;

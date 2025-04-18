@@ -76,7 +76,10 @@ function Vendorlist() {
                                       />
                                     </div>
                                     <div className="sherah-table__vendor-img">
-                                      <img src="/assets/interface-dashboard/img/vendor-1.png" alt="#" />
+                                      <img
+                                        src="/assets/interface-dashboard/img/vendor-1.png"
+                                        alt="#"
+                                      />
                                     </div>
                                   </div>
                                 </td>
@@ -223,7 +226,10 @@ function Vendorlist() {
                                       />
                                     </div>
                                     <div className="sherah-table__vendor-img">
-                                      <img src="/assets/interface-dashboard/img/vendor-2.png" alt="#" />
+                                      <img
+                                        src="/assets/interface-dashboard/img/vendor-2.png"
+                                        alt="#"
+                                      />
                                     </div>
                                   </div>
                                 </td>
@@ -370,7 +376,10 @@ function Vendorlist() {
                                       />
                                     </div>
                                     <div className="sherah-table__vendor-img">
-                                      <img src="/assets/interface-dashboard/img/vendor-3.png" alt="#" />
+                                      <img
+                                        src="/assets/interface-dashboard/img/vendor-3.png"
+                                        alt="#"
+                                      />
                                     </div>
                                   </div>
                                 </td>
@@ -515,7 +524,10 @@ function Vendorlist() {
                                       />
                                     </div>
                                     <div className="sherah-table__vendor-img">
-                                      <img src="/assets/interface-dashboard/img/vendor-4.png" alt="#" />
+                                      <img
+                                        src="/assets/interface-dashboard/img/vendor-4.png"
+                                        alt="#"
+                                      />
                                     </div>
                                   </div>
                                 </td>
@@ -662,7 +674,10 @@ function Vendorlist() {
                                       />
                                     </div>
                                     <div className="sherah-table__vendor-img">
-                                      <img src="/assets/interface-dashboard/img/vendor-5.png" alt="#" />
+                                      <img
+                                        src="/assets/interface-dashboard/img/vendor-5.png"
+                                        alt="#"
+                                      />
                                     </div>
                                   </div>
                                 </td>
@@ -809,7 +824,10 @@ function Vendorlist() {
                                       />
                                     </div>
                                     <div className="sherah-table__vendor-img">
-                                      <img src="/assets/interface-dashboard/img/vendor-6.png" alt="#" />
+                                      <img
+                                        src="/assets/interface-dashboard/img/vendor-6.png"
+                                        alt="#"
+                                      />
                                     </div>
                                   </div>
                                 </td>
@@ -956,7 +974,10 @@ function Vendorlist() {
                                       />
                                     </div>
                                     <div className="sherah-table__vendor-img">
-                                      <img src="/assets/interface-dashboard/img/vendor-7.png" alt="#" />
+                                      <img
+                                        src="/assets/interface-dashboard/img/vendor-7.png"
+                                        alt="#"
+                                      />
                                     </div>
                                   </div>
                                 </td>
@@ -1103,7 +1124,10 @@ function Vendorlist() {
                                       />
                                     </div>
                                     <div className="sherah-table__vendor-img">
-                                      <img src="/assets/interface-dashboard/img/vendor-8.png" alt="#" />
+                                      <img
+                                        src="/assets/interface-dashboard/img/vendor-8.png"
+                                        alt="#"
+                                      />
                                     </div>
                                   </div>
                                 </td>
@@ -1250,7 +1274,10 @@ function Vendorlist() {
                                       />
                                     </div>
                                     <div className="sherah-table__vendor-img">
-                                      <img src="/assets/interface-dashboard/img/vendor-9.png" alt="#" />
+                                      <img
+                                        src="/assets/interface-dashboard/img/vendor-9.png"
+                                        alt="#"
+                                      />
                                     </div>
                                   </div>
                                 </td>
@@ -1395,7 +1422,10 @@ function Vendorlist() {
                                       />
                                     </div>
                                     <div className="sherah-table__vendor-img">
-                                      <img src="/assets/interface-dashboard/img/vendor-10.png" alt="#" />
+                                      <img
+                                        src="/assets/interface-dashboard/img/vendor-10.png"
+                                        alt="#"
+                                      />
                                     </div>
                                   </div>
                                 </td>
@@ -1542,7 +1572,10 @@ function Vendorlist() {
                                       />
                                     </div>
                                     <div className="sherah-table__vendor-img">
-                                      <img src="/assets/interface-dashboard/img/vendor-11.png" alt="#" />
+                                      <img
+                                        src="/assets/interface-dashboard/img/vendor-11.png"
+                                        alt="#"
+                                      />
                                     </div>
                                   </div>
                                 </td>
@@ -1689,7 +1722,10 @@ function Vendorlist() {
                                       />
                                     </div>
                                     <div className="sherah-table__vendor-img">
-                                      <img src="/assets/interface-dashboard/img/vendor-12.png" alt="#" />
+                                      <img
+                                        src="/assets/interface-dashboard/img/vendor-12.png"
+                                        alt="#"
+                                      />
                                     </div>
                                   </div>
                                 </td>
@@ -1836,7 +1872,10 @@ function Vendorlist() {
                                       />
                                     </div>
                                     <div className="sherah-table__vendor-img">
-                                      <img src="/assets/interface-dashboard/img/vendor-13.png" alt="#" />
+                                      <img
+                                        src="/assets/interface-dashboard/img/vendor-13.png"
+                                        alt="#"
+                                      />
                                     </div>
                                   </div>
                                 </td>
@@ -1983,7 +2022,10 @@ function Vendorlist() {
                                       />
                                     </div>
                                     <div className="sherah-table__vendor-img">
-                                      <img src="/assets/interface-dashboard/img/vendor-14.png" alt="#" />
+                                      <img
+                                        src="/assets/interface-dashboard/img/vendor-14.png"
+                                        alt="#"
+                                      />
                                     </div>
                                   </div>
                                 </td>
@@ -2130,7 +2172,10 @@ function Vendorlist() {
                                       />
                                     </div>
                                     <div className="sherah-table__vendor-img">
-                                      <img src="/assets/interface-dashboard/img/vendor-15.png" alt="#" />
+                                      <img
+                                        src="/assets/interface-dashboard/img/vendor-15.png"
+                                        alt="#"
+                                      />
                                     </div>
                                   </div>
                                 </td>

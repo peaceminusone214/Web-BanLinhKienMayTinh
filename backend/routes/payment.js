@@ -1,26 +1,29 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const moment = require('moment');
-const crypto = require('crypto');
-const qs = require('qs');
-const Order = require('../models/Order');
-const Product = require('../models/Product');
-const User = require('../models/User');
+const moment = require("moment");
+const crypto = require("crypto");
+const qs = require("qs");
+const Order = require("../models/Order");
+const Product = require("../models/Product");
+const User = require("../models/User");
 const sendOrderEmail = require("../utils/email");
-const { sendMessage } = require('../utils/telegramBot');
-const { generateVNPayUrl } = require('../utils/vnpayHelper');
+const { sendMessage } = require("../utils/telegramBot");
+const { generateVNPayUrl } = require("../utils/vnpayHelper");
 
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
 
 function sortObject(obj) {
   const sorted = {};
-  Object.keys(obj).sort().forEach(key => {
-    sorted[key] = encodeURIComponent(obj[key]).replace(/%20/g, "+");
-  });
+  Object.keys(obj)
+    .sort()
+    .forEach((key) => {
+      sorted[key] = encodeURIComponent(obj[key]).replace(/%20/g, "+");
+    });
   return sorted;
 }
 
-router.post('/create_order_payment', async (req, res) => {
+//
+router.post("/create_order_payment", async (req, res) => {
   try {
     const {
       user,
@@ -76,7 +79,7 @@ router.post('/create_order_payment', async (req, res) => {
       VAT,
       shipping_fee,
       total_amount,
-      payment_method: "vnpay",
+      payment_method: "VNPAY",
       payment_status: "Unpaid",
       order_status: "Pending",
       created_at: new Date(),
@@ -143,7 +146,9 @@ router.post('/create_order_payment', async (req, res) => {
       const foundUser = await User.findById(user);
       if (foundUser && !foundUser.telegramChatId) {
         if (!foundUser.telegramConnectToken) {
-          foundUser.telegramConnectToken = crypto.randomBytes(16).toString("hex");
+          foundUser.telegramConnectToken = crypto
+            .randomBytes(16)
+            .toString("hex");
           await foundUser.save();
         }
         telegramConnectLink = `https://t.me/Auchobot_bot?start=${foundUser.telegramConnectToken}`;
@@ -152,26 +157,27 @@ router.post('/create_order_payment', async (req, res) => {
     res.status(200).json({
       order: savedOrder,
       paymentUrl,
-      telegramConnectLink, 
+      telegramConnectLink,
     });
   } catch (error) {
     console.error("Lỗi khi tạo đơn hàng VNPay:", error);
     res.status(500).json({
       message: "Lỗi khi tạo đơn hàng VNPay",
-      error: error.message
+      error: error.message,
     });
   }
 });
 
-router.get('/vnpay_return', async (req, res) => {
+//
+router.get("/vnpay_return", async (req, res) => {
   try {
     const vnp_Params = req.query;
     const txnRef = vnp_Params.vnp_TxnRef;
     const responseCode = vnp_Params.vnp_ResponseCode;
 
-    if (responseCode === '00') {
+    if (responseCode === "00") {
       const allOrders = await Order.find({});
-      const matchedOrder = allOrders.find(o =>
+      const matchedOrder = allOrders.find((o) =>
         o._id.toString().endsWith(txnRef)
       );
 
@@ -181,7 +187,9 @@ router.get('/vnpay_return', async (req, res) => {
         matchedOrder.updated_at = new Date();
         await matchedOrder.save();
 
-        {/* console.log("📌 matchedOrder.user_id:", matchedOrder.user_id); */}
+        {
+          /* console.log("matchedOrder.user_id:", matchedOrder.user_id); */
+        }
         const user = (await User.findById(matchedOrder.user_id))
           ? await User.findById(matchedOrder.user_id)
           : null;
@@ -193,15 +201,18 @@ router.get('/vnpay_return', async (req, res) => {
         // Gộp địa chỉ giao hàng nếu có
         let shippingAddress = "Không có thông tin";
         if (matchedOrder.shipping_address) {
-          const { street, ward, city, province } = matchedOrder.shipping_address;
-          shippingAddress = [street, ward, city, province].filter(Boolean).join(", ");
+          const { street, ward, city, province } =
+            matchedOrder.shipping_address;
+          shippingAddress = [street, ward, city, province]
+            .filter(Boolean)
+            .join(", ");
         }
 
         // Chuyển products về plain object để tương thích với handlebars
-        const plainProducts = matchedOrder.products.map(p => ({
+        const plainProducts = matchedOrder.products.map((p) => ({
           product_name: p.product_name,
           quantity: p.quantity,
-          total_price: p.total_price.toLocaleString()
+          total_price: p.total_price.toLocaleString(),
         }));
 
         // Gửi email nếu có email hợp lệ
@@ -212,23 +223,27 @@ router.get('/vnpay_return', async (req, res) => {
             orderId: matchedOrder._id,
             totalAmount: matchedOrder.total_amount,
             shippingAddress,
-            products: plainProducts
+            products: plainProducts,
           });
         } else {
-          console.warn("⚠️ Không có email để gửi đơn hàng.");
+          console.warn("Không có email để gửi đơn hàng.");
         }
 
         // Gửi Telegram như cũ
         if (user?.telegramChatId) {
           const message =
-            `📦 *Thanh toán VNPay thành công!*\n\n` +
-            `🧾 Mã đơn: ${matchedOrder._id}\n` +
-            `👤 Tên: ${fullName}\n` +
-            `💵 Tổng tiền: ${matchedOrder.total_amount.toLocaleString()} đ\n` +
-            `📅 Ngày giao: ${matchedOrder.deliveryDate || "Chưa xác định"}\n\n` +
-            `🛍️ Sản phẩm:\n` +
-            matchedOrder.products.map(p => `- ${p.product_name} x${p.quantity}`).join('\n') +
-            `\n\n🚚 Địa chỉ: ${shippingAddress}`;
+            `*Thanh toán VNPay thành công!*\n\n` +
+            `Mã đơn: ${matchedOrder._id}\n` +
+            `Tên: ${fullName}\n` +
+            `Tổng tiền: ${matchedOrder.total_amount.toLocaleString()} đ\n` +
+            `Ngày giao: ${
+              matchedOrder.deliveryDate || "Chưa xác định"
+            }\n\n` +
+            `Sản phẩm:\n` +
+            matchedOrder.products
+              .map((p) => `- ${p.product_name} x${p.quantity}`)
+              .join("\n") +
+            `\n\nĐịa chỉ: ${shippingAddress}`;
 
           await sendMessage(user.telegramChatId, message);
         }

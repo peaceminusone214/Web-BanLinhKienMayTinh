@@ -1,6 +1,6 @@
-const TelegramBot = require('node-telegram-bot-api');
-const axios = require('axios');
-require('dotenv').config();
+const TelegramBot = require("node-telegram-bot-api");
+const axios = require("axios");
+require("dotenv").config();
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
 const bot = new TelegramBot(token, { polling: true });
@@ -12,22 +12,33 @@ bot.onText(/\/start(?:\s+(.+))?/, async (msg, match) => {
 
   if (deepLinkParam) {
     try {
-      const connectRes = await axios.post(`${process.env.BACKEND_URL}/user/connect-telegram`, {
-        token: deepLinkParam,
-        telegramChatId: chatId,
-      });
-    
+      const connectRes = await axios.post(
+        `${process.env.BACKEND_URL}/user/connect-telegram`,
+        {
+          token: deepLinkParam,
+          telegramChatId: chatId,
+        }
+      );
+
       if (connectRes.status === 200) {
-        bot.sendMessage(chatId, '✅ Kết nối Telegram thành công. Tài khoản của bạn đã được liên kết!');
+        bot.sendMessage(
+          chatId,
+          "Kết nối Telegram thành công. Tài khoản của bạn đã được liên kết!"
+        );
       } else {
-        bot.sendMessage(chatId, '❌ Có lỗi khi kết nối Telegram, vui lòng thử lại.');
+        bot.sendMessage(
+          chatId,
+          "Có lỗi khi kết nối Telegram, vui lòng thử lại."
+        );
         return;
       }
 
       // Gửi đơn hàng gần nhất (nếu có)
       const userId = connectRes.data.userId;
       if (userId) {
-        const orderRes = await axios.get(`${process.env.BACKEND_URL}/user/${userId}/latest-order`);
+        const orderRes = await axios.get(
+          `${process.env.BACKEND_URL}/user/${userId}/latest-order`
+        );
         const order = orderRes.data;
 
         if (order) {
@@ -36,31 +47,38 @@ bot.onText(/\/start(?:\s+(.+))?/, async (msg, match) => {
             : "Không có thông tin";
 
           const message =
-            `📦 *Đơn hàng mới nhất của bạn đã được xác nhận!*\n\n` +
-            `🧾 Mã đơn: ${order._id}\n` +
-            `👤 Tên: ${order.fullName}\n` +
-            `💵 Tổng tiền: ${order.total_amount.toLocaleString()} đ\n` +
-            `📅 Ngày giao: ${order.deliveryDate || "Chưa xác định"}\n\n` +
-            `🛍️ Sản phẩm:\n` +
-            order.products.map(p => `- ${p.product_name} x${p.quantity}`).join('\n') +
-            `\n\n🚚 Địa chỉ: ${shippingAddress}`;
+            `*Đơn hàng mới nhất của bạn đã được xác nhận!*\n\n` +
+            `Mã đơn: ${order._id}\n` +
+            `Tên: ${order.fullName}\n` +
+            `Tổng tiền: ${order.total_amount.toLocaleString()} đ\n` +
+            `Ngày giao: ${order.deliveryDate || "Chưa xác định"}\n\n` +
+            `Sản phẩm:\n` +
+            order.products
+              .map((p) => `- ${p.product_name} x${p.quantity}`)
+              .join("\n") +
+            `\n\nĐịa chỉ: ${shippingAddress}`;
 
           await sendMessage(chatId, message);
         }
       }
-
     } catch (error) {
-      console.error('❌ Lỗi cập nhật Telegram Chat ID:', error.message);
-    
+      console.error("Lỗi cập nhật Telegram Chat ID:", error.message);
+
       // Nếu là lỗi do server trả 4xx, 5xx
       if (error.response && error.response.data?.message) {
-        bot.sendMessage(chatId, `❌ ${error.response.data.message}`);
+        bot.sendMessage(chatId, `${error.response.data.message}`);
       } else {
-        bot.sendMessage(chatId, '❌ Có lỗi khi kết nối Telegram, vui lòng thử lại.');
+        bot.sendMessage(
+          chatId,
+          "Có lỗi khi kết nối Telegram, vui lòng thử lại."
+        );
       }
     }
   } else {
-    bot.sendMessage(chatId, '👋 Chào bạn! Vui lòng kết nối tài khoản trên website để nhận thông báo đơn hàng.');
+    bot.sendMessage(
+      chatId,
+      "Chào bạn! Vui lòng kết nối tài khoản trên website để nhận thông báo đơn hàng."
+    );
   }
 });
 

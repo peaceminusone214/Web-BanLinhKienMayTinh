@@ -340,10 +340,10 @@ const Cart = () => {
       deliveryDate: deliveryOption === "schedule" ? selectedDate : null,
       deliveryTime: deliveryOption === "schedule" ? selectedTime : null,
     };
-  
+
     localStorage.setItem("orderInfo", JSON.stringify(orderInfo));
   }, [note, deliveryOption, selectedDate, selectedTime]);
-  
+
   // Nếu giỏ hàng trống
   if (cartItems.length === 0) {
     return (
@@ -554,7 +554,7 @@ const Cart = () => {
               </p>
               <p>
                 Hiện chúng tôi có hỗ trợ giao hàng tận nơi với phí chỉ
-              50.000đ/đơn (tùy khu vực)
+                50.000đ/đơn (tùy khu vực)
               </p>
             </div>
           </div>

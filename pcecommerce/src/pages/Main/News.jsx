@@ -1,5 +1,5 @@
 // import React from "react";
-// import { Link, Outlet } from "react-router-dom"; 
+// import { Link, Outlet } from "react-router-dom";
 // import "./MainStyles/styleNews.css";
 
 // const News = () => {
@@ -180,11 +180,17 @@ const News = () => {
         if (!API_URL) throw new Error("API_URL không hợp lệ!");
 
         // Lấy tất cả tin có isDisplayed = true
-        const { data: articles } = await axios.get(`${API_URL}/news?isDisplayed=true`);
+        const { data: articles } = await axios.get(
+          `${API_URL}/news?isDisplayed=true`
+        );
 
         // Lọc bài viết dựa vào displaySection
-        const featured = articles.find(article => article.displaySection === "featured");
-        const latest = articles.filter(article => article.displaySection === "latest");
+        const featured = articles.find(
+          (article) => article.displaySection === "featured"
+        );
+        const latest = articles.filter(
+          (article) => article.displaySection === "latest"
+        );
 
         // Nếu không có bài nào được gán displaySection theo cách trên,
         // có thể dùng fallback là bài đầu tiên và phần còn lại cho latest
@@ -233,18 +239,24 @@ const News = () => {
           <div className="news-content">
             {/* Tin nổi bật */}
             {featuredArticle && (
-              <Link to={`/NewsDetail/${featuredArticle._id}`} className="featured-article-link">
-              <div className="featured-article">
-                <img src={featuredArticle.image} alt="Featured" />
-                <div className="overlay">
-                  <h2>{featuredArticle.title}</h2>
-                  <p>
-                    <span>{new Date(featuredArticle.createdAt).toLocaleDateString()}</span>
-                  </p>
+              <Link
+                to={`/NewsDetail/${featuredArticle._id}`}
+                className="featured-article-link"
+              >
+                <div className="featured-article">
+                  <img src={featuredArticle.image} alt="Featured" />
+                  <div className="overlay">
+                    <h2>{featuredArticle.title}</h2>
+                    <p>
+                      <span>
+                        {new Date(
+                          featuredArticle.createdAt
+                        ).toLocaleDateString()}
+                      </span>
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Link>
-            
+              </Link>
             )}
 
             {/* Bài viết mới nhất */}
@@ -280,7 +292,11 @@ const News = () => {
             <h3>TIN CÔNG NGHỆ</h3>
             <div className="news-experience-list">
               {techNews.slice(0, 6).map((news) => (
-                <Link to={`/NewsDetail/${news._id}`} key={news._id} className="tech-news-link">
+                <Link
+                  to={`/NewsDetail/${news._id}`}
+                  key={news._id}
+                  className="tech-news-link"
+                >
                   <div className="news-item">
                     <img src={news.image} alt={news.title} />
                     <div>
@@ -298,7 +314,11 @@ const News = () => {
             <h3>CHỦ ĐỀ GAME</h3>
             <div className="news-game-list">
               {gameNews.slice(0, 9).map((news) => (
-                <Link to={`/NewsDetail/${news._id}`} key={news._id} className="game-news-link">
+                <Link
+                  to={`/NewsDetail/${news._id}`}
+                  key={news._id}
+                  className="game-news-link"
+                >
                   <div className="game-item">
                     <img src={news.image} alt={news.title} />
                     <h4>{news.title}</h4>
@@ -319,8 +339,3 @@ const News = () => {
 };
 
 export default News;
-
-
-
-
-
