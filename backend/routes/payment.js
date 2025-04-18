@@ -79,7 +79,7 @@ router.post("/create_order_payment", async (req, res) => {
       VAT,
       shipping_fee,
       total_amount,
-      payment_method: "vnpay",
+      payment_method: "VNPAY",
       payment_status: "Unpaid",
       order_status: "Pending",
       created_at: new Date(),

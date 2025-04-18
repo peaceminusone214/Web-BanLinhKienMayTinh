@@ -362,7 +362,7 @@ function Checkout() {
       return;
     }
 
-    if (paymentMethod === "vnpay") {
+    if (paymentMethod === "VNPAY") {
       try {
         const paymentData = {
           user: user?._id || null,
@@ -606,9 +606,9 @@ function Checkout() {
               <input
                 type="radio"
                 name="paymentMethod"
-                value="vnpay"
-                checked={paymentMethod === "vnpay"}
-                onChange={() => setPaymentMethod("vnpay")}
+                value="VNPAY"
+                checked={paymentMethod === "VNPAY"}
+                onChange={() => setPaymentMethod("VNPAY")}
               />
               <img
                 src="./assets/icons/vnpay-icon.svg"
