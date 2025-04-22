@@ -13,14 +13,14 @@ router.get("/dashboard", async (req, res) => {
     console.log("Số đơn hàng đã thanh toán:", orders.length);
 
     // Log chi tiết để debug
-    orders.forEach((order, index) => {
-      console.log(`Đơn hàng ${index + 1}:`, {
-        id: order._id,
-        status: order.order_status,
-        payment: order.payment_status,
-        amount: order.total_amount,
-      });
-    });
+    // orders.forEach((order, index) => {
+    //   console.log(`Đơn hàng ${index + 1}:`, {
+    //     id: order._id,
+    //     status: order.order_status,
+    //     payment: order.payment_status,
+    //     amount: order.total_amount,
+    //   });
+    // });
 
     const totalRevenue = orders.reduce(
       (sum, order) => sum + (order.total_amount || 0),
@@ -43,7 +43,7 @@ router.get("/dashboard", async (req, res) => {
     // Get recent orders
     const recentOrders = await Order.find()
       .sort({ created_at: -1 })
-      .limit(5)
+      .limit(10)  // Increased to show more recent orders
       .populate("user_id", "username email");
 
     // Get recent users
@@ -85,6 +85,87 @@ router.get("/dashboard", async (req, res) => {
       },
       {
         $sort: { "_id.year": 1, "_id.month": 1 },
+      },
+    ]);
+
+    // Get revenue by day (last 30 days)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    const revenueByDay = await Order.aggregate([
+      {
+        $match: {
+          created_at: { $gte: thirtyDaysAgo },
+          payment_status: "Paid",
+        },
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$created_at" },
+            month: { $month: "$created_at" },
+            day: { $dayOfMonth: "$created_at" },
+          },
+          totalSales: { $sum: "$total_amount" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 },
+      },
+    ]);
+    
+    // Get revenue by week (last 12 weeks)
+    const twelveWeeksAgo = new Date();
+    twelveWeeksAgo.setDate(twelveWeeksAgo.getDate() - 84); // 12 weeks * 7 days
+    
+    const revenueByWeek = await Order.aggregate([
+      {
+        $match: {
+          created_at: { $gte: twelveWeeksAgo },
+          payment_status: "Paid",
+        },
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$created_at" },
+            week: { $week: "$created_at" },
+          },
+          totalSales: { $sum: "$total_amount" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { "_id.year": 1, "_id.week": 1 },
+      },
+    ]);
+    
+    // Get revenue by quarter (last 4 quarters)
+    const fourQuartersAgo = new Date();
+    fourQuartersAgo.setMonth(fourQuartersAgo.getMonth() - 12); // 4 quarters * 3 months
+    
+    const revenueByQuarter = await Order.aggregate([
+      {
+        $match: {
+          created_at: { $gte: fourQuartersAgo },
+          payment_status: "Paid",
+        },
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$created_at" },
+            quarter: { 
+              $ceil: { $divide: [{ $month: "$created_at" }, 3] } 
+            },
+          },
+          totalSales: { $sum: "$total_amount" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { "_id.year": 1, "_id.quarter": 1 },
       },
     ]);
 
@@ -136,6 +217,9 @@ router.get("/dashboard", async (req, res) => {
         ordersByStatus,
         salesByMonth,
         topSellingProducts,
+        revenueByDay,
+        revenueByWeek,
+        revenueByQuarter
       },
     });
   } catch (error) {

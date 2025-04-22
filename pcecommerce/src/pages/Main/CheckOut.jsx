@@ -5,6 +5,8 @@ import "./MainStyles/styleCheckOut.css";
 function Checkout() {
   const [telegramConnected, setTelegramConnected] = useState(false);
   const [telegramConnectLink, setTelegramConnectLink] = useState("");
+  const [telegramConnectionPending, setTelegramConnectionPending] = useState(false);
+  const [telegramCheckInterval, setTelegramCheckInterval] = useState(null);
   const [orderSuccessId, setOrderSuccessId] = useState(null);
 
   const API_URL = process.env.REACT_APP_API_URL;
@@ -256,27 +258,101 @@ function Checkout() {
     }
   };
 
+  // Kiểm tra trạng thái kết nối Telegram
+  useEffect(() => {
+    // Kiểm tra token trong localStorage
+    const token = localStorage.getItem("telegramGuestToken");
+    if (token) {
+      checkTelegramConnection(token);
+    }
+    
+    return () => {
+      // Clear interval khi component unmount
+      if (telegramCheckInterval) {
+        clearInterval(telegramCheckInterval);
+      }
+    };
+  }, []);
+  
+  // Hàm kiểm tra trạng thái kết nối Telegram
+  const checkTelegramConnection = async (token) => {
+    try {
+      const response = await fetch(`${API_URL}/user/check-telegram-connection`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
+
+      const result = await response.json();
+      
+      if (response.ok && result.connected) {
+        console.log("✅ Đã kết nối Telegram thành công!");
+        setTelegramConnected(true);
+        setTelegramConnectionPending(false);
+        
+        // Xóa interval kiểm tra nếu đang có
+        if (telegramCheckInterval) {
+          clearInterval(telegramCheckInterval);
+          setTelegramCheckInterval(null);
+        }
+      } else {
+        console.log("❌ Chưa kết nối Telegram");
+        setTelegramConnected(false);
+      }
+    } catch (error) {
+      console.error("Lỗi kiểm tra kết nối Telegram:", error);
+    }
+  };
+
   const handleTelegramConnection = async () => {
     try {
-      if (telegramConnectLink) {
+      // Nếu đang trong trạng thái pending, mở lại link
+      if (telegramConnectionPending && telegramConnectLink) {
         window.open(telegramConnectLink, "_blank");
         return;
       }
 
+      // Lấy token đã lưu hoặc tạo mới
       let token = localStorage.getItem("telegramGuestToken");
-
       if (!token) {
-        token =
-          Math.random().toString(36).substring(2) + Date.now().toString(36);
+        token = Math.random().toString(36).substring(2) + Date.now().toString(36);
         localStorage.setItem("telegramGuestToken", token);
       }
 
       const link = `https://t.me/Auchobot_bot?start=${token}`;
       setTelegramConnectLink(link);
-      setTelegramConnected(true);
+      setTelegramConnectionPending(true);
+      
+      // Mở link Telegram
       window.open(link, "_blank");
+      
+      // Thiết lập kiểm tra trạng thái kết nối mỗi 5 giây
+      if (telegramCheckInterval) {
+        clearInterval(telegramCheckInterval);
+      }
+      
+      const intervalId = setInterval(() => {
+        checkTelegramConnection(token);
+      }, 5000);
+      
+      setTelegramCheckInterval(intervalId);
+      
+      // Tự động hủy kiểm tra sau 3 phút
+      setTimeout(() => {
+        if (telegramCheckInterval) {
+          clearInterval(telegramCheckInterval);
+          setTelegramCheckInterval(null);
+          
+          // Nếu vẫn chưa kết nối sau 3 phút
+          if (!telegramConnected) {
+            setTelegramConnectionPending(false);
+          }
+        }
+      }, 3 * 60 * 1000);
+      
     } catch (error) {
       console.error("❌ Lỗi kết nối Telegram:", error);
+      setTelegramConnectionPending(false);
       alert("Không thể kết nối Telegram lúc này. Thử lại sau.");
     }
   };
@@ -291,34 +367,40 @@ function Checkout() {
         return;
       }
 
+      // Lấy token từ localStorage
+      const telegramGuestToken = localStorage.getItem("telegramGuestToken");
+
+      // Flag để biết nếu đang chờ kết nối Telegram
+      const isTelegramPending = telegramConnectionPending;
+
       const orderData = {
         user_id: user?._id || null,
         products: cartItems.map((item) => ({
           product_id: item.id,
           quantity: item.quantity,
         })),
-        fullName: orderInfo.fullName,
-        phone: orderInfo.phone,
-        email: orderInfo.email,
+        fullName: orderInfo.fullName || fullName,
+        phone: orderInfo.phone || phone,
+        email: orderInfo.email || email,
         discount_code: orderInfo.discount_code,
         shipping_fee: shippingFee,
         VAT,
-        payment_method: orderInfo.paymentMethod,
+        payment_method: orderInfo.paymentMethod || paymentMethod,
         payment_status: "Unpaid",
         order_status: "Pending",
         note: orderInfo.note || "",
         deliveryDate: orderInfo.deliveryDate || "",
         deliveryTime: orderInfo.deliveryTime || "",
         shipping_address: {
-          street: orderInfo.address || "",
+          street: orderInfo.address || address,
           province: orderInfo.selectedProvinceName || "",
           city: orderInfo.selectedDistrictName || "",
           ward: orderInfo.selectedWardName || "",
         },
-        note: telegramConnected
-          ? `guestToken=${localStorage.getItem("telegramGuestToken")}`
-          : "",
-        sendTelegram: telegramConnected,
+        // Gửi telegramGuestToken trong mọi trường hợp để backend có thể xử lý
+        telegramGuestToken: telegramGuestToken,
+        // Chỉ đánh dấu sendTelegram nếu đã kết nối hoặc đang chờ kết nối
+        sendTelegram: telegramConnected || isTelegramPending,
       };
 
       console.log("📦 Dữ liệu đơn hàng gửi đi:", orderData);
@@ -337,6 +419,43 @@ function Checkout() {
         const link = result.telegramConnectionInfo[0].connectionLink;
         console.log("📨 Gợi ý kết nối Telegram:", link);
         setTelegramConnectLink(link);
+        
+        // Nếu chưa kết nối và chưa đang chờ kết nối, hỏi người dùng
+        if (!telegramConnected && !telegramConnectionPending) {
+          const connectNow = window.confirm(
+            "Bạn có muốn kết nối Telegram để nhận thông báo đơn hàng không?"
+          );
+          
+          if (connectNow) {
+            // Bắt đầu quá trình kết nối
+            setTelegramConnectionPending(true);
+            window.open(link, "_blank");
+            
+            // Thiết lập kiểm tra trạng thái kết nối mỗi 5 giây
+            if (telegramCheckInterval) {
+              clearInterval(telegramCheckInterval);
+            }
+            
+            const intervalId = setInterval(() => {
+              checkTelegramConnection(telegramGuestToken);
+            }, 5000);
+            
+            setTelegramCheckInterval(intervalId);
+            
+            // Tự động hủy kiểm tra sau 3 phút
+            setTimeout(() => {
+              if (telegramCheckInterval) {
+                clearInterval(telegramCheckInterval);
+                setTelegramCheckInterval(null);
+                
+                // Nếu vẫn chưa kết nối sau 3 phút
+                if (!telegramConnected) {
+                  setTelegramConnectionPending(false);
+                }
+              }
+            }, 3 * 60 * 1000);
+          }
+        }
       }
 
       if (response.ok) {
@@ -622,13 +741,18 @@ function Checkout() {
           <button
             className={`telegram-connect-btn ${
               telegramConnected ? "connected" : ""
-            }`}
+            } ${telegramConnectionPending ? "pending" : ""}`}
             onClick={handleTelegramConnection}
           >
             {telegramConnected ? (
               <>
                 <i className="fas fa-check-circle"></i>
                 Đã kết nối Telegram
+              </>
+            ) : telegramConnectionPending ? (
+              <>
+                <i className="fas fa-sync fa-spin"></i>
+                Đang chờ kết nối...
               </>
             ) : (
               <>

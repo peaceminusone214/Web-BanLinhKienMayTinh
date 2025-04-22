@@ -231,14 +231,11 @@ router.get("/:id/latest-order", async (req, res) => {
   }
 });
 
-//
-router.post("/connect-telegram", async (req, res) => {
+router.post('/connect-telegram', async (req, res) => {
   try {
     const { token, telegramChatId } = req.body;
     if (!token || !telegramChatId) {
-      return res
-        .status(400)
-        .json({ message: "Thiếu token hoặc telegramChatId" });
+      return res.status(400).json({ message: 'Thiếu token hoặc telegramChatId' });
     }
 
     let user = await User.findOne({ telegramConnectToken: token });
@@ -254,30 +251,90 @@ router.post("/connect-telegram", async (req, res) => {
       });
 
       await newUser.save();
-      return res
-        .status(200)
-        .json({ message: "Kết nối Telegram thành công", userId: newUser._id });
+      console.log(`✅ Đã tạo tài khoản guest và kết nối Telegram cho user ${newUser._id}`);
+      return res.status(200).json({ message: 'Kết nối Telegram thành công', userId: newUser._id });
     }
 
     // Nếu đã có chatId thì không cần làm gì nữa
     if (user.telegramChatId && user.telegramChatId === telegramChatId) {
-      return res
-        .status(200)
-        .json({ message: "Đã kết nối Telegram trước đó", userId: user._id });
+      console.log(`ℹ️ User ${user._id} đã kết nối Telegram trước đó (chatId: ${telegramChatId})`);
+      return res.status(200).json({ message: 'Đã kết nối Telegram trước đó', userId: user._id });
     }
 
     // Nếu lần đầu kết nối
+    console.log(`✅ Đang kết nối Telegram cho user ${user._id} với chatId ${telegramChatId}`);
     user.telegramChatId = telegramChatId;
     await user.save();
 
-    return res
-      .status(200)
-      .json({ message: "Kết nối Telegram thành công", userId: user._id });
+    // Gửi thông báo kết nối thành công
+    const { sendMessage } = require('../utils/telegramBot');
+    const welcomeMessage = `✅ *Kết nối Telegram thành công!*\n\nBạn sẽ nhận được thông báo về đơn hàng qua Telegram.`;
+    await sendMessage(telegramChatId, welcomeMessage);
+    
+    // Kiểm tra xem có đơn hàng gần đây chưa được thông báo không
+    const Order = require('../models/Order');
+    const recentOrders = await Order.find({ 
+      user_id: user._id,
+      created_at: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } // Đơn hàng trong 24h qua
+    }).sort({ created_at: -1 }).limit(1);
+    
+    if (recentOrders.length > 0) {
+      const order = recentOrders[0];
+      const shippingAddress = order.shipping_address
+        ? `${order.shipping_address.street}, ${order.shipping_address.ward}, ${order.shipping_address.city}, ${order.shipping_address.province}`
+        : "Không có thông tin";
+        
+      const message =
+        `📦 *Đơn hàng gần đây của bạn:*\n\n` +
+        `🧾 Mã đơn: ${order._id}\n` +
+        `👤 Tên: ${order.fullName}\n` +
+        `💵 Tổng tiền: ${order.total_amount.toLocaleString()} đ\n` +
+        `📅 Ngày giao: ${order.deliveryDate || "Chưa xác định"}\n\n` +
+        `🛍️ Sản phẩm:\n` +
+        order.products
+          .map((p) => `- ${p.product_name} x${p.quantity}`)
+          .join("\n") +
+        `\n\n🚚 Địa chỉ: ${shippingAddress}`;
+
+      await sendMessage(telegramChatId, message);
+      console.log(`✅ Đã gửi thông tin đơn hàng gần đây cho user ${user._id}`);
+    }
+
+    return res.status(200).json({ message: 'Kết nối Telegram thành công', userId: user._id });
   } catch (error) {
-    console.error("Lỗi khi connect Telegram:", error.message);
-    return res
-      .status(500)
-      .json({ message: "Lỗi kết nối Telegram", error: error.message });
+    console.error('❌ Lỗi khi connect Telegram:', error.message);
+    return res.status(500).json({ message: 'Lỗi kết nối Telegram', error: error.message });
+  }
+});
+
+router.post('/check-telegram-connection', async (req, res) => {
+  try {
+    const { token } = req.body;
+    if (!token) {
+      return res.status(400).json({ message: 'Thiếu token', connected: false });
+    }
+
+    const user = await User.findOne({ telegramConnectToken: token });
+    
+    if (!user) {
+      return res.status(404).json({ message: 'Không tìm thấy token', connected: false });
+    }
+
+    // Kiểm tra nếu user đã kết nối Telegram (có chatId)
+    const isConnected = !!user.telegramChatId;
+    
+    return res.status(200).json({ 
+      connected: isConnected,
+      userId: user._id,
+      message: isConnected ? 'Đã kết nối Telegram' : 'Chưa kết nối Telegram'
+    });
+  } catch (error) {
+    console.error('❌ Lỗi khi kiểm tra kết nối Telegram:', error.message);
+    return res.status(500).json({ 
+      message: 'Lỗi kiểm tra kết nối Telegram', 
+      error: error.message,
+      connected: false 
+    });
   }
 });
 

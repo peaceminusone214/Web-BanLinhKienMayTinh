@@ -33,9 +33,6 @@
     animation: slideUp 0.3s ease;
 }
 
-
-
-
 .chat-header {
     background: linear-gradient(to right, #007bff, #00c6ff);
     color: white;
@@ -121,10 +118,25 @@
     line-height: 1.4;
 }
 
+.chat-msg.user .msg-bubble, .chat-msg.user .msg-bubble p {
+    color: #fff !important;
+}
+
 .chat-msg.user .msg-bubble {
-    background-color: #007bff;
+    background: linear-gradient(135deg, #007bff 60%, #00c6ff 100%);
     color: white;
-    border-bottom-right-radius: 2px;
+    border-bottom-right-radius: 12px;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    border-bottom-left-radius: 18px;
+    box-shadow: 0 4px 16px rgba(0, 123, 255, 0.10);
+    padding: 14px 18px;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.chat-msg.user .msg-bubble:hover {
+    box-shadow: 0 8px 24px rgba(0, 123, 255, 0.18);
+    transform: translateY(-2px) scale(1.03);
 }
 
 .chat-msg.assistant .msg-bubble {
