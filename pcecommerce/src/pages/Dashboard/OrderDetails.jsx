@@ -81,6 +81,7 @@ function Ordersdetails() {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({ id }),
         });
 
@@ -112,6 +113,7 @@ function Ordersdetails() {
         const userResponse = await fetch(`${API_URL}/user/get-user/`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify({ userId: order.user_id }),
         });
 

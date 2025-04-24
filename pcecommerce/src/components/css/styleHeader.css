@@ -1,8 +1,3 @@
-/* * {
-    font-size: 11px;
-
-} */
-
 .header-top {
     background-color: #0652b5;
 }
@@ -66,15 +61,12 @@
     background-position: -207px -0px
 }
 
-/* .header-top .fa-search .fa-info-circle .fa-envelope .fa-users i{
-    float: left;
-    margin-right: 5px;
-    width: 17px;
-    height: 11px;
-    background-position: -207px -0px
-} */
-
-
+.header-top,
+.header-banner-top {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
 
 .header-top .item-left .bg-linear {
     background: -o-repeating-linear-gradient(left, #0072ff 0%, #00c6ff 25%, #0056b3 50%, #2196f3 75%, #1e90ff 100%);
@@ -278,7 +270,3 @@
     color: #f1f8ff;
     transform: translateX(4px);
 }
-
-
-
-

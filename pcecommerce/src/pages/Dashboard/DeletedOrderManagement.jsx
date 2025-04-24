@@ -12,6 +12,7 @@ function DeletedOrderslist() {
     fetch(`${API_URL}/order/update-order-status/${orderId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ order_status: newStatus }),
     })
       .then((response) => response.json())
@@ -54,6 +55,7 @@ function DeletedOrderslist() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
         ids: [orderToRestore],
       }),
@@ -124,7 +126,7 @@ function DeletedOrderslist() {
   };
 
   useEffect(() => {
-    fetch(`${API_URL}/order/get-deleted-orders`)
+    fetch(`${API_URL}/order/get-deleted-orders`, { credentials: "include" })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Không thể lấy dữ liệu đơn hàng");

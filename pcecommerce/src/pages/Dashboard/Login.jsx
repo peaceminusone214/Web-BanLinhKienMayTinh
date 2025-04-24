@@ -5,13 +5,12 @@ function Login() {
   const API_URL = process.env.REACT_APP_API_URL;
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // Để chuyển hướng người dùng
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Ngừng hành vi mặc định của form
+    e.preventDefault();
 
     try {
-      // Gửi yêu cầu đăng nhập với credentials
       const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: {
@@ -21,12 +20,11 @@ function Login() {
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await response.json(); // Lấy dữ liệu JSON từ response
+      const data = await response.json();
 
       if (response.ok) {
-        alert(data.message); // Hiển thị thông điệp thành công
+        alert(data.message);
 
-        // **Lấy vai trò từ session thay vì token**
         const userResponse = await fetch(`${API_URL}/auth/session`, {
           credentials: "include",
         });
@@ -36,19 +34,20 @@ function Login() {
         if (userResponse.ok && userData.user) {
           const roles = userData.user.roles || [];
 
-          // Kiểm tra các vai trò và điều hướng tương ứng
           if (roles.includes("admin")) {
-            navigate("/admin"); // Chuyển hướng đến trang admin
-          } else if (roles.includes("employee")) {
-            navigate("/"); // Chuyển hướng đến trang employee hoặc dashboard
+            navigate("/admin");
+          } else if (roles.includes("cashier")) {
+            navigate("/admin/orderslist");
+          } else if (roles.includes("productManagement")) {
+            navigate("/admin/productslist");
           } else {
-            navigate("/"); // Trang mặc định nếu không có vai trò hợp lệ
-          }
+            navigate("/");
+          }          
         } else {
           alert("Không thể lấy thông tin người dùng.");
         }
       } else {
-        alert(data.message); // Hiển thị thông điệp lỗi từ server
+        alert(data.message);
       }
     } catch (error) {
       console.error("Error during login:", error);
@@ -95,7 +94,7 @@ function Login() {
                 </div>
                 {/* Welcome Heading */}
                 <h2 className="sherah-wc__title">
-                  Welcome to Sherah eCommerce <br /> Admin Panel
+                  Chào mừng đến với Shop
                 </h2>
               </div>
             </div>

@@ -42,14 +42,26 @@ const UserSchema = new mongoose.Schema({
     city: { type: String },
     ward: { type: String },
   },
-  // Thông tin liên quan đến các Build đã lưu
-  saved_builds: [{ type: mongoose.Schema.Types.ObjectId, ref: "Build" }],
+  role: {
+    type: String,
+    enum: ["admin", "cashier", "productManagement", "guest"],
+    default: "guest",
+  },  
   created_at: { type: Date, default: Date.now },
+  staff: { type: Boolean, default: false },
   deleted: { type: Boolean, default: false },
+  telegramChatId: { type: String, default: '' },
+  telegramConnectToken: { type: String }
 });
 
-// Middleware (hook) của Mongoose để mã hóa mật khẩu trước khi lưu
+// Middleware để mã hóa mật khẩu và tự động gán staff theo role
 UserSchema.pre("save", async function (next) {
+  const staffRoles = ["admin", "cashier", "productManagement"];
+
+  if (this.isModified("role")) {
+    this.staff = staffRoles.includes(this.role);
+  }
+
   if (!this.isModified("password")) return next();
 
   try {
@@ -59,6 +71,19 @@ UserSchema.pre("save", async function (next) {
   } catch (err) {
     next(err);
   }
+});
+
+// Middleware khi update bằng findOneAndUpdate
+UserSchema.pre("findOneAndUpdate", function (next) {
+  const update = this.getUpdate();
+  const staffRoles = ["admin", "cashier", "productManagement"];
+
+  if (update.role) {
+    update.staff = staffRoles.includes(update.role);
+    this.setUpdate(update);
+  }
+
+  next();
 });
 
 module.exports = mongoose.model("User", UserSchema);

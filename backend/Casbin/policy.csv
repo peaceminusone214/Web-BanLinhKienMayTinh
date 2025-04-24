@@ -1,5 +1,11 @@
-p, admin, /api/auth/admin, get
-p, employee, /api/auth/employee, get
-g, admin, admin
-g, admin, employee
-g, newuser, employee
+p, admin, *, *
+--
+p, cashier, /api/order/delete-orders, delete
+p, cashier, /api/order/restore-orders, patch
+p, cashier, /api/order/update-order-status/*, put
+--
+p, productManagement, /api/product/add-product, post
+p, productManagement, /api/product/add-category, post
+p, productManagement, /api/product/delete-products, delete
+p, productManagement, /api/product/restore-products, put
+p, productManagement, /api/product/update-product, put

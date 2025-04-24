@@ -2236,6 +2236,9 @@ Version:	1.0.0
 	text-align: left;
 	padding: 20px 40px;
 }
+ .sherah-table__head tr .sherah-table__column-10 {
+	 width: 35%;
+ }
 .sherah-table__main.sherah-table__main-v1 .sherah-table__column-1 {
 	width: 13% !important;
 	text-align: left !important;

@@ -19,7 +19,7 @@ const AdminCommentDetail = () => {
   // Lấy chi tiết bình luận (bao gồm cả replies)
   const fetchCommentDetail = async () => {
     try {
-      const res = await axios.get(`${API_URL}/comment/${id}`);
+      const res = await axios.get(`${API_URL}/comment/${id}`, { withCredentials: true });
       setComment(res.data);
       console.log("Chi tiết comment: ", res.data);
       setEditContent(res.data.content);

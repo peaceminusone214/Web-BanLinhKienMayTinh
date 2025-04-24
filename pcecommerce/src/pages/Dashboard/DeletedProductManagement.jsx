@@ -29,7 +29,7 @@ function Warehouse() {
   };
 
   useEffect(() => {
-    fetch(`${API_URL}/product/get-deleted-products`)
+    fetch(`${API_URL}/product/get-deleted-products`, { credentials: "include" })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Không thể lấy dữ liệu sản phẩm");
@@ -50,7 +50,9 @@ function Warehouse() {
     // Gọi API để lấy danh sách danh mục
     const fetchCategories = async () => {
       try {
-        const response = await fetch(`${API_URL}/product/categories`);
+        const response = await fetch(`${API_URL}/product/categories`, {
+          credentials: "include",
+        });
         const data = await response.json();
 
         // Giả sử API trả về dữ liệu là một mảng các đối tượng chứa trường 'name'
@@ -114,6 +116,7 @@ function Warehouse() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
         ids: [productToRestore], // Send the product ID to restore
       }),
@@ -156,6 +159,7 @@ function Warehouse() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(updatedProduct),
     })
       .then((response) => response.json())

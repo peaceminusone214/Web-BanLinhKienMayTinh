@@ -34,6 +34,7 @@ function ProfileinfoAdmin() {
           const userResponse = await fetch(`${API_URL}/user/get-user/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({ userId: user.userId }),
           });
 
@@ -64,16 +65,17 @@ function ProfileinfoAdmin() {
     fetch(`${API_URL}/user/get-login-history`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: user._id }), // Sử dụng userId từ session
+      credentials: "include",
+      body: JSON.stringify({ userId: user._id }),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("API login history response:", data); // Kiểm tra dữ liệu API trả về
+        console.log("API login history response:", data);
         if (Array.isArray(data)) {
-          setLogins(data); // Chỉ set nếu là mảng
+          setLogins(data);
         } else {
           console.error("Lỗi: API không trả về mảng!", data);
-          setLogins([]); // Đặt giá trị mặc định để tránh lỗi .map()
+          setLogins([]);
         }
       })
       .catch((error) => console.error("Lỗi lấy lịch sử đăng nhập:", error));
@@ -92,7 +94,8 @@ function ProfileinfoAdmin() {
       const response = await fetch(`${API_URL}/user/change-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user._id, oldPassword, newPassword }), // Dùng userId từ session
+        credentials: "include",
+        body: JSON.stringify({ userId: user._id, oldPassword, newPassword }),
       });
 
       const data = await response.json();
@@ -103,7 +106,7 @@ function ProfileinfoAdmin() {
   };
 
   if (!user) {
-    return <div>Loading...</div>; // Display a loading state until the user data is fetched
+    return <div>Loading...</div>;
   }
 
   return (

@@ -31,17 +31,18 @@ const Statistics = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [timePeriod, setTimePeriod] = useState("month"); // Default time period
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
         console.log(
           "API URL:",
-          `${process.env.REACT_APP_API_URL}/stats/dashboard`
+          `${process.env.REACT_APP_API_URL}/stats/dashboard?period=${timePeriod}`
         );
 
         const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/stats/dashboard`
+          `${process.env.REACT_APP_API_URL}/stats/dashboard?period=${timePeriod}`
         );
         setStats(response.data.data);
         setLoading(false);
@@ -53,36 +54,71 @@ const Statistics = () => {
     };
 
     fetchStats();
-  }, []);
+  }, [timePeriod]);
 
   // Prepare chart data
   const prepareSalesData = () => {
     if (!stats || !stats.salesByMonth) return null;
 
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
+    let labels = [];
+    let salesData = [];
+    let orderCountData = [];
 
-    const labels = stats.salesByMonth.map((item) => months[item._id.month - 1]);
-    const salesData = stats.salesByMonth.map((item) => item.totalSales);
-    const orderCountData = stats.salesByMonth.map((item) => item.count);
+    if (timePeriod === "day") {
+      // Format for daily display
+      labels = stats.salesByMonth.map((item) => {
+        const day = item._id?.day || 1;
+        const month = item._id?.month || 1;
+        const year = item._id?.year || new Date().getFullYear();
+        return `Ngày ${day}/${month}/${year}`;
+      });
+      salesData = stats.salesByMonth.map((item) => item.totalSales || 0);
+      orderCountData = stats.salesByMonth.map((item) => item.count || 0);
+    } else if (timePeriod === "month") {
+      // Format for monthly display
+      const months = [
+        "Tháng 1",
+        "Tháng 2",
+        "Tháng 3",
+        "Tháng 4",
+        "Tháng 5",
+        "Tháng 6",
+        "Tháng 7",
+        "Tháng 8",
+        "Tháng 9",
+        "Tháng 10",
+        "Tháng 11",
+        "Tháng 12",
+      ];
+      labels = stats.salesByMonth.map((item) => {
+        const month = item._id?.month || 1;
+        const monthIndex = Math.min(Math.max(0, month - 1), 11);
+        const year = item._id?.year || new Date().getFullYear();
+        return `${months[monthIndex]}/${year}`;
+      });
+      salesData = stats.salesByMonth.map((item) => item.totalSales || 0);
+      orderCountData = stats.salesByMonth.map((item) => item.count || 0);
+    } else if (timePeriod === "year") {
+      // Format for yearly display
+      labels = stats.salesByMonth.map((item) => {
+        const year = item._id?.year || new Date().getFullYear();
+        return `Năm ${year}`;
+      });
+      salesData = stats.salesByMonth.map((item) => item.totalSales || 0);
+      orderCountData = stats.salesByMonth.map((item) => item.count || 0);
+    }
 
     return {
       labels,
       datasets: [
         {
-          label: "Doanh thu theo tháng (VND)",
+          label: `Doanh thu theo ${
+            timePeriod === "day"
+              ? "ngày"
+              : timePeriod === "month"
+              ? "tháng"
+              : "năm"
+          } (VND)`,
           data: salesData,
           borderColor: "rgba(75, 192, 192, 1)",
           backgroundColor: "rgba(75, 192, 192, 0.2)",
@@ -99,19 +135,86 @@ const Statistics = () => {
     };
   };
 
+  // Define consistent status colors
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Delivered":
+        return "rgba(40, 167, 69, 0.6)";
+      case "Pending":
+        return "rgba(255, 193, 7, 0.6)";
+      case "Processing":
+        return "rgba(23, 162, 184, 0.6)";
+      case "Confirmed":
+        return "rgba(153, 102, 255, 0.6)";
+      case "Shipped":
+        return "rgba(13, 110, 253, 0.6)";
+      case "OutForDelivery":
+        return "rgba(0, 123, 255, 0.6)";
+      case "Cancelled":
+        return "rgba(220, 53, 69, 0.6)";
+      case "Failed":
+        return "rgba(255, 99, 71, 0.6)";
+      case "Returned":
+        return "rgba(108, 117, 125, 0.6)";
+      case "Refunded":
+        return "rgba(52, 58, 64, 0.6)";
+      default:
+        return "rgba(108, 117, 125, 0.6)";
+    }
+  };
+
+  // Function to get badge color based on order status
+  const getStatusBadgeClass = (status) => {
+    switch (status) {
+      case "Delivered":
+        return "bg-success";
+      case "Pending":
+        return "bg-warning";
+      case "Processing":
+      case "Confirmed":
+        return "bg-info";
+      case "Shipped":
+      case "OutForDelivery":
+        return "bg-primary";
+      case "Cancelled":
+      case "Failed":
+        return "bg-danger";
+      case "Returned":
+        return "bg-secondary";
+      case "Refunded":
+        return "bg-dark";
+      default:
+        return "bg-secondary";
+    }
+  };
+
   const prepareOrderStatusData = () => {
     if (!stats || !stats.ordersByStatus) return null;
 
-    const labels = stats.ordersByStatus.map((item) => item._id);
-    const data = stats.ordersByStatus.map((item) => item.count);
-    const backgroundColor = [
-      "rgba(75, 192, 192, 0.6)",
-      "rgba(255, 99, 132, 0.6)",
-      "rgba(255, 206, 86, 0.6)",
-      "rgba(54, 162, 235, 0.6)",
-      "rgba(153, 102, 255, 0.6)",
-      "rgba(255, 159, 64, 0.6)",
-    ];
+    // Translate status labels to Vietnamese
+    const statusTranslations = {
+      Pending: "Chờ xử lý",
+      Processing: "Đang xử lý",
+      Confirmed: "Đã xác nhận",
+      Shipped: "Đã gửi hàng",
+      OutForDelivery: "Đang giao hàng",
+      Delivered: "Đã giao hàng",
+      Cancelled: "Đã hủy",
+      Returned: "Đã trả lại",
+      Refunded: "Đã hoàn tiền",
+      Failed: "Thất bại",
+    };
+
+    const data = [];
+    const labels = [];
+    const backgroundColor = [];
+
+    // Process the data for consistent color mapping
+    stats.ordersByStatus.forEach((item) => {
+      labels.push(statusTranslations[item._id] || item._id);
+      data.push(item.count);
+      backgroundColor.push(getStatusColor(item._id));
+    });
 
     return {
       labels,
@@ -148,6 +251,23 @@ const Statistics = () => {
         },
       ],
     };
+  };
+
+  // Function to translate order status to Vietnamese
+  const translateOrderStatus = (status) => {
+    const statusTranslations = {
+      Pending: "Chờ xử lý",
+      Processing: "Đang xử lý",
+      Confirmed: "Đã xác nhận",
+      Shipped: "Đã gửi hàng",
+      OutForDelivery: "Đang giao hàng",
+      Delivered: "Đã giao hàng",
+      Cancelled: "Đã hủy",
+      Returned: "Đã trả lại",
+      Refunded: "Đã hoàn tiền",
+      Failed: "Thất bại",
+    };
+    return statusTranslations[status] || status;
   };
 
   if (loading) {
@@ -361,17 +481,52 @@ const Statistics = () => {
                         </div>
                       </div>
 
-                      {/* Charts */}
+                      {/* Time Period Selector */}
                       <div className="row mg-top-30">
                         <div className="col-12">
                           <div className="sherah-box sherah-border sherah-default-bg">
-                            <div className="sherah-box__header">
+                            <div className="sherah-box__header d-flex justify-content-between align-items-center">
                               <h5 className="sherah-box__title">
-                                Doanh thu theo tháng
+                                Doanh thu theo thời gian
                               </h5>
+                              <div className="btn-group">
+                                <button
+                                  type="button"
+                                  className={`btn ${
+                                    timePeriod === "day"
+                                      ? "btn-primary"
+                                      : "btn-outline-primary"
+                                  }`}
+                                  onClick={() => setTimePeriod("day")}
+                                >
+                                  Ngày
+                                </button>
+                                <button
+                                  type="button"
+                                  className={`btn ${
+                                    timePeriod === "month"
+                                      ? "btn-primary"
+                                      : "btn-outline-primary"
+                                  }`}
+                                  onClick={() => setTimePeriod("month")}
+                                >
+                                  Tháng
+                                </button>
+                                <button
+                                  type="button"
+                                  className={`btn ${
+                                    timePeriod === "year"
+                                      ? "btn-primary"
+                                      : "btn-outline-primary"
+                                  }`}
+                                  onClick={() => setTimePeriod("year")}
+                                >
+                                  Năm
+                                </button>
+                              </div>
                             </div>
                             <div className="sherah-box__body">
-                              {salesData && (
+                              {salesData ? (
                                 <div style={{ height: "400px" }}>
                                   <Line
                                     data={salesData}
@@ -384,11 +539,21 @@ const Statistics = () => {
                                         },
                                         title: {
                                           display: true,
-                                          text: "Doanh thu và đơn hàng 6 tháng gần nhất",
+                                          text: `Doanh thu theo ${
+                                            timePeriod === "day"
+                                              ? "ngày"
+                                              : timePeriod === "month"
+                                              ? "tháng"
+                                              : "năm"
+                                          }`,
                                         },
                                       },
                                     }}
                                   />
+                                </div>
+                              ) : (
+                                <div className="text-center p-5">
+                                  <p>Không có dữ liệu doanh thu để hiển thị</p>
                                 </div>
                               )}
                             </div>
@@ -453,9 +618,9 @@ const Statistics = () => {
                         </div>
                       </div>
 
-                      {/* Recent Orders */}
+                      {/* Recent Orders - Full Width */}
                       <div className="row mg-top-30">
-                        <div className="col-lg-6">
+                        <div className="col-12">
                           <div className="sherah-box sherah-border sherah-default-bg">
                             <div className="sherah-box__header">
                               <h5 className="sherah-box__title">
@@ -467,75 +632,63 @@ const Statistics = () => {
                                 <table className="table">
                                   <thead>
                                     <tr>
-                                      <th>ID</th>
-                                      <th>Người dùng</th>
+                                      <th>Mã đơn hàng</th>
+                                      <th>Mã người dùng</th>
+                                      <th>Tên khách hàng</th>
                                       <th>Tổng tiền</th>
                                       <th>Trạng thái</th>
+                                      <th>Ngày đặt hàng</th>
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    {stats?.recentOrders?.map((order) => (
-                                      <tr key={order._id}>
-                                        <td>#{order._id.slice(-6)}</td>
-                                        <td>{order.user?.username || "N/A"}</td>
-                                        <td>
-                                          {order.totalPrice?.toLocaleString()}{" "}
-                                          VND
-                                        </td>
-                                        <td>
-                                          <span
-                                            className={`badge ${
-                                              order.status === "Completed"
-                                                ? "bg-success"
-                                                : order.status === "Pending"
-                                                ? "bg-warning"
-                                                : order.status === "Processing"
-                                                ? "bg-info"
-                                                : order.status === "Cancelled"
-                                                ? "bg-danger"
-                                                : "bg-secondary"
-                                            }`}
-                                          >
-                                            {order.status}
-                                          </span>
-                                        </td>
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="col-lg-6">
-                          <div className="sherah-box sherah-border sherah-default-bg">
-                            <div className="sherah-box__header">
-                              <h5 className="sherah-box__title">
-                                Người dùng mới
-                              </h5>
-                            </div>
-                            <div className="sherah-box__body">
-                              <div className="sherah-table">
-                                <table className="table">
-                                  <thead>
-                                    <tr>
-                                      <th>Tên người dùng</th>
-                                      <th>Email</th>
-                                      <th>Ngày đăng ký</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {stats?.recentUsers?.map((user) => (
-                                      <tr key={user._id}>
-                                        <td>{user.username}</td>
-                                        <td>{user.email}</td>
-                                        <td>
-                                          {new Date(
-                                            user.createdAt
-                                          ).toLocaleDateString()}
-                                        </td>
-                                      </tr>
-                                    ))}
+                                    {stats?.recentOrders?.map(
+                                      (orders, index) => {
+                                        if (!orders || !orders._id) {
+                                          return (
+                                            <tr key={`order-${index}`}>
+                                              <td colSpan="6">
+                                                Dữ liệu đơn hàng không hợp lệ
+                                              </td>
+                                            </tr>
+                                          );
+                                        }
+
+                                        return (
+                                          <tr key={orders._id}>
+                                            <td>#{orders._id.slice(-6)}</td>
+                                            <td>
+                                              {typeof orders.user_id ===
+                                              "object"
+                                                ? orders.user_id?._id || "N/A"
+                                                : orders.user_id || "N/A"}
+                                            </td>
+                                            <td>
+                                              {orders.fullName || "Khách lẻ"}
+                                            </td>
+                                            <td>
+                                              {orders.total_amount?.toLocaleString()}{" "}
+                                              VND
+                                            </td>
+                                            <td>
+                                              <span
+                                                className={`badge ${getStatusBadgeClass(
+                                                  orders.order_status
+                                                )}`}
+                                              >
+                                                {translateOrderStatus(
+                                                  orders.order_status
+                                                )}
+                                              </span>
+                                            </td>
+                                            <td>
+                                              {new Date(
+                                                orders.created_at
+                                              ).toLocaleDateString()}
+                                            </td>
+                                          </tr>
+                                        );
+                                      }
+                                    )}
                                   </tbody>
                                 </table>
                               </div>

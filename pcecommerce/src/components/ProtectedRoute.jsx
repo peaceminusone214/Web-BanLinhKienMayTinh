@@ -20,8 +20,8 @@ import Wishlist from "../pages/Dashboard/wishlist";
 import Discount from "../pages/Dashboard/DiscountManagement";
 import Warehouse from "../pages/Dashboard/DeletedProductManagement";
 import DeletedOrderslist from "../pages/Dashboard/DeletedOrderManagement";
-import AdminMenu from "./AdminMenu";
-import AdminHeader from "./AdminHeader";
+import AdminMenu from "./admin-components/AdminMenu";
+import AdminHeader from "./admin-components/AdminHeader";
 import CustomerList from "../pages/Dashboard/CustomerManagement";
 import CustomerDetail from "../pages/Dashboard/CustomersDetail";
 import Uploaddiscount from "../pages/Dashboard/UploadDiscount";
@@ -31,18 +31,22 @@ import NewsDetail from "./NewsDetails";
 import AdminComments from "./AdminComments";
 import AdminCommentDetail from "./AdminCommentDetails";
 import Statistics from "../pages/Dashboard/Statistics";
+import NoPermission from "./NoPermission";
+import Buildslist from "../pages/Dashboard/BuildManagement";
+import StaffManagement from "../pages/Dashboard/StaffManagement";
 
 const ProtectedRoute = () => {
   const API_URL = process.env.REACT_APP_API_URL;
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [menuClass, setMenuClass] = useState("sherah-smenu");
 
   useEffect(() => {
     const checkSession = async () => {
       try {
         const response = await fetch(`${API_URL}/auth/session`, {
           method: "GET",
-          credentials: "include", // Đảm bảo gửi cookie session
+          credentials: "include",
         });
 
         if (response.ok) {
@@ -63,74 +67,100 @@ const ProtectedRoute = () => {
   }, []);
 
   if (loading) return <p>Loading...</p>;
-
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
+  if (!user) return <Navigate to="/login" />;
 
   const { roles } = user;
   const isAdmin = roles.includes("admin");
-  const isEmployee = roles.includes("employee");
+  const isCashier = roles.includes("cashier");
+  const isProductManager = roles.includes("productManagement");
 
-  if (isAdmin) {
-    return (
-      <div>
-        <AdminMenu />
-        <AdminHeader />
-        <Routes>
-          <Route path="/admin/chat" element={<Chatmessages />} />
-          <Route path="/admin/faq" element={<Faq />} />
-          <Route path="/admin/history" element={<History />} />
-          <Route path="/admin/invoiceprint" element={<Invoiceprint />} />
-          <Route path="/admin/languages" element={<Languages />} />
-          <Route path="/admin/notifications" element={<Notifications />} />
-          <Route path="/admin/ordersdetails/:id" element={<Ordersdetails />} />
-          <Route path="/admin/orderslist" element={<Orderslist />} />
-          <Route path="/admin/productslist" element={<Productslist />} />
-          <Route path="/admin/products" element={<Products />} />
-          <Route path="/admin/profileinfo" element={<ProfileinfoAdmin />} />
-          <Route path="/admin/termsconditions" element={<Termsconditions />} />
-          <Route path="/admin/uploadproduct" element={<Uploadproduct />} />
-          <Route path="/admin/uploaddiscount" element={<Uploaddiscount />} />
-          <Route path="/admin/vendorlist" element={<Vendorlist />} />
-          <Route path="/admin/vendorprofile" element={<Vendorprofile />} />
-          <Route path="/admin/vendor" element={<Vendor />} />
-          <Route path="/admin/wishlist" element={<Wishlist />} />
-          <Route path="/admin/discount" element={<Discount />} />
-          <Route path="/admin/customers-list" element={<CustomerList />} />
-          <Route path="/admin/customer/:userId" element={<CustomerDetail />} />
-          <Route path="/admin/news-management" element={<NewsManagement />} />
-          <Route path="/admin/add-news" element={<AddNews />} />
-          <Route path="/admin/news-management" element={<NewsManagement />} />
-          <Route path="/admin/news-detail" element={<NewsDetail />} />
-          <Route path="/admin/admin-comments" element={<AdminComments />} />
-          <Route
-            path="/admin/admin-comments-detail/:id"
-            element={<AdminCommentDetail />}
-          />
-          <Route path="/admin" element={<Statistics />} />
-          <Route path="/admin/warehouse" element={<Warehouse />} />
-          <Route path="/admin/deletedorders" element={<DeletedOrderslist />} />
-        </Routes>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <AdminMenu menuClass={menuClass} setMenuClass={setMenuClass} />
+      <AdminHeader menuClass={menuClass} setMenuClass={setMenuClass} />
+      <Routes>
+        {isAdmin && (
+          <>
+            <Route path="/admin/chat" element={<Chatmessages />} />
+            <Route path="/admin/faq" element={<Faq />} />
+            <Route path="/admin/history" element={<History />} />
+            <Route path="/admin/invoiceprint" element={<Invoiceprint />} />
+            <Route path="/admin/languages" element={<Languages />} />
+            <Route path="/admin/notifications" element={<Notifications />} />
+            <Route
+              path="/admin/ordersdetails/:id"
+              element={<Ordersdetails />}
+            />
+            <Route path="/admin/orderslist" element={<Orderslist />} />
+            <Route path="/admin/productslist" element={<Productslist />} />
+            <Route path="/admin/products" element={<Products />} />
+            <Route path="/admin/profileinfo" element={<ProfileinfoAdmin />} />
+            <Route
+              path="/admin/termsconditions"
+              element={<Termsconditions />}
+            />
+            <Route path="/admin/uploadproduct" element={<Uploadproduct />} />
+            <Route path="/admin/uploaddiscount" element={<Uploaddiscount />} />
+            <Route path="/admin/vendorlist" element={<Vendorlist />} />
+            <Route path="/admin/vendorprofile" element={<Vendorprofile />} />
+            <Route path="/admin/vendor" element={<Vendor />} />
+            <Route path="/admin/wishlist" element={<Wishlist />} />
+            <Route path="/admin/discount" element={<Discount />} />
+            <Route path="/admin/customers-list" element={<CustomerList />} />
+            <Route
+              path="/admin/customer/:userId"
+              element={<CustomerDetail />}
+            />
+            <Route path="/admin/news-management" element={<NewsManagement />} />
+            <Route path="/admin/add-news" element={<AddNews />} />
+            <Route path="/admin/news-detail" element={<NewsDetail />} />
+            <Route path="/admin/admin-comments" element={<AdminComments />} />
+            <Route
+              path="/admin/admin-comments-detail/:id"
+              element={<AdminCommentDetail />}
+            />
+            <Route path="/admin/warehouse" element={<Warehouse />} />
+            <Route
+              path="/admin/deletedorders"
+              element={<DeletedOrderslist />}
+            />
+            <Route path="/admin/buildslist" element={<Buildslist />} />
+            <Route path="/admin/staffmanagement" element={<StaffManagement />} />
+            <Route path="/admin" element={<Statistics />} />
+          </>
+        )}
 
-  if (isEmployee) {
-    return (
-      <div>
-        <AdminMenu />
-        <AdminHeader />
-        <Routes>
-          <Route path="/admin/products" element={<Products />} />
-          <Route path="/admin/profileinfo" element={<ProfileinfoAdmin />} />
-          <Route path="/admin/statistics" element={<Statistics />} />
-        </Routes>
-      </div>
-    );
-  }
+        {isCashier && (
+          <>
+            <Route path="/admin/orderslist" element={<Orderslist />} />
+            <Route
+              path="/admin/ordersdetails/:id"
+              element={<Ordersdetails />}
+            />
+            <Route
+              path="/admin/deletedorders"
+              element={<DeletedOrderslist />}
+            />
+            <Route path="/admin/profileinfo" element={<ProfileinfoAdmin />} />
+          </>
+        )}
 
-  return <Navigate to="/" />;
+        {isProductManager && (
+          <>
+            <Route path="/admin/products" element={<Products />} />
+            <Route path="/admin/uploadproduct" element={<Uploadproduct />} />
+            <Route path="/admin/productslist" element={<Productslist />} />
+            <Route path="/admin/profileinfo" element={<ProfileinfoAdmin />} />
+            <Route path="/admin/warehouse" element={<Warehouse />} />
+            <Route path="/admin/buildslist" element={<Buildslist />} />
+          </>
+        )}
+
+        {/* Nếu không có quyền truy cập và không thuộc vai trò nào phù hợp */}
+        <Route path="*" element={<NoPermission />} />
+      </Routes>
+    </div>
+  );
 };
 
 export default ProtectedRoute;

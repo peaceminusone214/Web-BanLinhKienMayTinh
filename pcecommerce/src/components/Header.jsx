@@ -71,8 +71,7 @@ function Header() {
                 thiệu
               </a>
               <a href="/" className="title-group title-group-hover">
-                <i className="fa fa-search" aria-hidden="true"></i> Tra cứu bảo
-                hành
+                <i className="fa fa-search" aria-hidden="true"></i> Theo dõi đơn hàng
               </a>
               <a
                 href="/News"
@@ -128,37 +127,6 @@ function Header() {
                     Tivi
                   </a>
                 </li>
-                {/* <li className="header-nav-item dropdown" data-id="2">
-                  <a href="index.html" className="header-nav-link">
-                    <img src="/assets/interface-main/category/cat_icon_2_1666948667.png" className="lazy" alt="Bộ PC" />
-                    Bộ PC
-                  </a>
-                  <div className="dropdown-menu">
-                    <div className="dropdown-content">
-                      <a href="#">Bộ PC KCC cho thuê</a>
-                      <a href="#">PC Máy bộ KCC I5 / R5</a>
-                      <a href="#">Bộ PC KCC Powered by MSI</a>
-                      <a href="#">PC Server KCC</a>
-                      <a href="#">PC Máy bộ KCC I7 / R7</a>
-                      <a href="#">Bộ PC KCC Powered by Gigabyte</a>
-                      <a href="#">PC Máy bộ KCC I3 / R3</a>
-                      <a href="#">PC Máy bộ KCC I9 / R9</a>
-                    </div>
-                    <div className="dropdown-image">
-                      <img src="/assets/interface-main/images/pc110.jpg" alt="Icon Image" />
-                    </div>
-                  </div>
-                </li>
-
-
-
-
-                <li class="header-nav-item" data-id="1">
-                  <a href="https://kccshop.vn/laptop/" class="header-nav-link">
-                    <img src="/assets/interface-main/category/cat_icon_1_1666948464.png" class="lazy" alt="Laptop" />
-                    Laptop
-                  </a>
-                </li> */}
 
                 <li class="header-nav-item" data-id="5">
                   <a href="/category/main" class="header-nav-link">

@@ -11,25 +11,24 @@ function Discount() {
   const [editedDiscount, setEditedDiscount] = useState({});
 
   const handleConfirmDelete = () => {
-    // Make DELETE request to the server to delete the product
     fetch(`${API_URL}/discount/delete-discounts`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
-        ids: [discountToDelete], // Send the product ID to delete
+        ids: [discountToDelete],
       }),
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.message) {
-          // Remove the product from the list after successful deletion
           setDiscounts(
             discounts.filter((discount) => discount._id !== discountToDelete)
           );
         }
-        setDiscountToDelete(null); // Reset the productToDelete state after confirmation
+        setDiscountToDelete(null);
       })
       .catch((error) => {
         setError("Có lỗi xảy ra khi xóa sản phẩm.");
@@ -72,7 +71,7 @@ function Discount() {
   };
 
   useEffect(() => {
-    fetch(`${API_URL}/discount/get-discounts`)
+    fetch(`${API_URL}/discount/get-discounts`, { credentials: "include" })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Không thể lấy dữ liệu đơn hàng");
@@ -122,6 +121,7 @@ function Discount() {
     fetch(`${API_URL}/discount/update-discount`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify(updatedDiscount),
     })
       .then((response) => response.json())

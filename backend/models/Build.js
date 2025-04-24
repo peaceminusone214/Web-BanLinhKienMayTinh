@@ -4,25 +4,21 @@ const BuildSchema = new mongoose.Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
+    required: false, // Không bắt buộc
   },
   name: {
     type: String,
-    required: true,
+    required: false,
   },
   description: {
     type: String,
   },
-  components: {
-    cpu: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-    gpu: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-    ram: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-    motherboard: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-    storage: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-    psu: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-    case: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-    cooling_solution: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-  },
+  components: [
+    {
+      product_id: { type: mongoose.Schema.Types.ObjectId, ref: "Product" }, // ref tới bảng Product
+      quantity: { type: Number, required: false },
+    },
+  ],
   total_price: {
     type: Number,
     required: true,
@@ -31,6 +27,20 @@ const BuildSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  updated_at: {
+    type: Date,
+    default: Date.now,
+  },
+  deleted: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+// Middleware để cập nhật `updated_at` khi chỉnh sửa
+BuildSchema.pre("save", function (next) {
+  this.updated_at = Date.now();
+  next();
 });
 
 module.exports = mongoose.model("Build", BuildSchema);

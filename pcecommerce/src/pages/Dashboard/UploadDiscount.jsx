@@ -29,7 +29,9 @@ function Uploaddiscount() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${API_URL}/product/get-product-names`);
+        const response = await fetch(`${API_URL}/product/get-product-names`, {
+          credentials: "include",
+        });
         const data = await response.json();
 
         setProducts(data);
@@ -44,7 +46,9 @@ function Uploaddiscount() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch(`${API_URL}/product/categories`);
+        const response = await fetch(`${API_URL}/product/categories`, {
+          credentials: "include",
+        });
         const data = await response.json();
 
         setCategories(data.map((category) => category.name));
@@ -67,7 +71,9 @@ function Uploaddiscount() {
   useEffect(() => {
     const fetchDiscountTypes = async () => {
       try {
-        const response = await fetch(`${API_URL}/discount/get-discount-types`);
+        const response = await fetch(`${API_URL}/discount/get-discount-types`, {
+          credentials: "include",
+        });
         const data = await response.json();
         setDiscountTypes(data);
       } catch (err) {
@@ -101,6 +107,7 @@ function Uploaddiscount() {
       const response = await fetch(`${API_URL}/discount/add-discount`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(data),
       });
 

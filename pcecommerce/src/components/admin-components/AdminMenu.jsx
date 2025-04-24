@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-function AdminMenu() {
+
+function AdminMenu({ menuClass, setMenuClass }) {
   const [isVendorsOpen, setIsVendorsOpen] = useState(false);
   const [isCustomersOpen, setIsCustomersOpen] = useState(false);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
@@ -8,6 +9,16 @@ function AdminMenu() {
   const [isPagesOpen, setIsPagesOpen] = useState(false);
   const [isNewsOpen, setIsNewsOpen] = useState(false);
   const [isCommentsOpen, setIsCommentOpen] = useState(false);
+
+  const toggleMenu = () => {
+    // Nếu đang đóng theo kiểu 'sherah-close' thì mở lại bình thường
+    if (menuClass === "sherah-smenu sherah-close") {
+      setMenuClass("sherah-smenu");
+    } else {
+      // Toggle giữa hiện/ẩn
+      setMenuClass((prev) => (prev === "sherah-smenu" ? "" : "sherah-smenu"));
+    }
+  };
 
   const toggleVendorsDropdown = () => {
     setIsVendorsOpen(!isVendorsOpen);
@@ -35,7 +46,7 @@ function AdminMenu() {
     <div>
       <div className="sherah-body-area">
         {/* Admin Menu */}
-        <div className="sherah-smenu">
+        <div className={menuClass}>
           {/* Admin Menu */}
           <div className="admin-menu">
             {/* Logo */}
@@ -47,7 +58,10 @@ function AdminMenu() {
                   alt="#"
                 />
               </Link>
-              <div className="sherah__sicon close-icon d-xl-none">
+              <div
+                onClick={toggleMenu}
+                className="sherah__sicon close-icon d-xl-none"
+              >
                 <svg
                   width={9}
                   height={15}
@@ -67,7 +81,6 @@ function AdminMenu() {
                   className="menu-bar__one sherah-dashboard-menu"
                   id="sherahMenu"
                 >
-
                   {/* Statistics menu item */}
                   <li>
                     <Link to="/admin">
@@ -95,7 +108,7 @@ function AdminMenu() {
                       onClick={toggleVendorsDropdown}
                     >
                       <span className="menu-bar__text">
-                        <span className="sherah-menu-icon sherah-svg-icon__v1">
+                        <span className="sherah-menu-icon sherah-toggleMenu-icon__v1">
                           <svg
                             className="sherah-svg-icon"
                             xmlns="http://www.w3.org/2000/svg"
@@ -128,7 +141,7 @@ function AdminMenu() {
                             </g>
                           </svg>
                         </span>
-                        <span className="menu-bar__name">Vendors</span>
+                        <span className="menu-bar__name">Nhân viên</span>
                       </span>
                       <span className="sherah__toggle" />
                     </a>
@@ -141,6 +154,15 @@ function AdminMenu() {
                       id="menu-item_vendors"
                     >
                       <ul className="menu-bar__one-dropdown">
+                        <li>
+                          <Link to="/admin/staffmanagement">
+                            <span className="menu-bar__text">
+                              <span className="menu-bar__name">
+                                Danh sách nhân viên
+                              </span>
+                            </span>
+                          </Link>
+                        </li>
                         <li>
                           <Link to="/admin/vendor">
                             <span className="menu-bar__text">
@@ -233,7 +255,9 @@ function AdminMenu() {
                         <li>
                           <Link to="/admin/customers-list">
                             <span className="menu-bar__text">
-                              <span className="menu-bar__name">Danh sách khách hàng</span>
+                              <span className="menu-bar__name">
+                                Danh sách khách hàng
+                              </span>
                             </span>
                           </Link>
                         </li>
@@ -297,6 +321,15 @@ function AdminMenu() {
                             <span className="menu-bar__text">
                               <span className="menu-bar__name">
                                 Thêm sản phẩm
+                              </span>
+                            </span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link to="/admin/buildslist">
+                            <span className="menu-bar__text">
+                              <span className="menu-bar__name">
+                                Danh sách cấu hình
                               </span>
                             </span>
                           </Link>
@@ -419,15 +452,6 @@ function AdminMenu() {
                           </Link>
                         </li>
                         <li>
-                          <Link to="/admin/ordersdetails">
-                            <span className="menu-bar__text">
-                              <span className="menu-bar__name">
-                                Chi tiết đơn hàng
-                              </span>
-                            </span>
-                          </Link>
-                        </li>
-                        <li>
                           <Link to="/admin/deletedorders">
                             <span className="menu-bar__text">
                               <span className="menu-bar__name">
@@ -492,7 +516,7 @@ function AdminMenu() {
                     </div>
                   </li>
 
-                  {/*Quản lý bình luận */}
+                  {/* Quản lý bình luận */}
                   <li>
                     <a
                       className={`collapsed ${isCommentsOpen ? "show" : ""}`}
@@ -501,16 +525,19 @@ function AdminMenu() {
                       <span className="menu-bar__text">
                         <span className="sherah-menu-icon sherah-svg-icon__v1">
                           <svg
-                            className="sherah-svg-icon"
                             xmlns="http://www.w3.org/2000/svg"
-                            width="19.527"
-                            height="19.527"
-                            viewBox="0 0 24 24"
+                            width="22"
+                            height="22"
+                            viewBox="0 0 22 22"
                           >
-                            <path
-                              fill="currentColor"
-                              d="M20,2H4C2.897,2,2,2.897,2,4v14c0,1.103,0.897,2,2,2h4v4l4-4h10c1.103,0,2-0.897,2-2V4 C22,2.897,21.103,2,20,2z"
-                            />
+                            <g>
+                              <path
+                                d="M4 2 H18 C19.1 2 20 2.9 20 4 V12 C20 13.1 19.1 14 18 14 H6 L4 16 V4 C4 2.9 4.9 2 6 2 Z"
+                                fill="white"
+                                stroke="black"
+                                stroke-width="2"
+                              />
+                            </g>
                           </svg>
                         </span>
                         <span className="menu-bar__name">

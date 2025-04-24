@@ -136,6 +136,7 @@ function Checkout() {
           const userResponse = await fetch(`${API_URL}/user/get-user/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({ userId: user.userId }),
           });
 
@@ -169,7 +170,9 @@ function Checkout() {
     const fetchProductDetails = async () => {
       const fetchedProducts = await Promise.all(
         cartItems.map(async (item) => {
-          const response = await fetch(`${API_URL}/product/${item.id}`);
+          const response = await fetch(`${API_URL}/product/${item.id}`, {
+            credentials: "include",
+          });
           if (response.ok) {
             const product = await response.json();
             return { ...item, product }; // Kết hợp thông tin sản phẩm với item
@@ -221,6 +224,7 @@ function Checkout() {
       const response = await fetch(`${API_URL}/discount/apply-discount`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           discount_code: couponCode,
           products: cartItems.map((item) => ({
@@ -321,21 +325,22 @@ function Checkout() {
         sendTelegram: telegramConnected,
       };
 
-      console.log("📦 Dữ liệu đơn hàng gửi đi:", orderData);
+      console.log("Dữ liệu đơn hàng gửi đi:", orderData);
 
       const response = await fetch(`${API_URL}/order/add-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify([orderData]),
       });
 
       const result = await response.json();
-      console.log("📥 API result:", result);
+      console.log("API result:", result);
 
       // 👉 Xử lý Telegram
       if (result.telegramConnectionInfo?.length > 0) {
         const link = result.telegramConnectionInfo[0].connectionLink;
-        console.log("📨 Gợi ý kết nối Telegram:", link);
+        console.log("Gợi ý kết nối Telegram:", link);
         setTelegramConnectLink(link);
       }
 
@@ -361,7 +366,7 @@ function Checkout() {
       alert("Giỏ hàng trống. Vui lòng thêm sản phẩm!");
       return;
     }
-
+  
     if (paymentMethod === "VNPAY") {
       try {
         const paymentData = {
@@ -383,22 +388,16 @@ function Checkout() {
             ward: selectedWard,
           },
         };
-
-        const response = await fetch(
-          `${API_URL}/payment/create_order_payment`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(paymentData),
-          }
-        );
-
+  
+        const response = await fetch(`${API_URL}/payment/create_order_payment`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(paymentData),
+        });
+  
         const result = await response.json();
-
-        if (result.telegramConnectLink) {
-          console.log("Telegram link từ BE:", result.telegramConnectLink);
-          setTelegramConnectLink(result.telegramConnectLink);
-        }
+  
         if (result.paymentUrl) {
           window.location.href = result.paymentUrl;
         } else {
@@ -406,9 +405,29 @@ function Checkout() {
         }
       } catch (error) {
         console.error("Lỗi khi tạo đơn hàng VNPay:", error);
-        alert(
-          "Có lỗi xảy ra khi thực hiện thanh toán bằng VNPay. Vui lòng thử lại sau!"
-        );
+        alert("Có lỗi xảy ra khi thực hiện thanh toán bằng VNPay. Vui lòng thử lại sau!");
+      }
+    } else if (paymentMethod === "MOMO") {
+      try {
+        const response = await fetch(`${API_URL}/momo/create`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: totalAmount,
+            orderInfo: `Thanh toán đơn hàng từ ${fullName}`,
+          }),
+        });
+  
+        const result = await response.json();
+  
+        if (result.payUrl) {
+          window.location.href = result.payUrl;
+        } else {
+          alert("Không nhận được đường dẫn thanh toán từ MoMo!");
+        }
+      } catch (error) {
+        console.error("Lỗi khi tạo đơn hàng MoMo:", error);
+        alert("Có lỗi xảy ra khi thanh toán qua MoMo. Vui lòng thử lại sau!");
       }
     } else {
       handlePlaceOrder();
@@ -616,6 +635,25 @@ function Checkout() {
                 className="payment-icon"
               />
               Thanh toán qua VNPAY
+            </label>
+          </div>
+
+          {/**MoMo method */}
+          <div className="form-group-radio">
+            <label>
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="MoMo"
+                checked={paymentMethod === "MoMo"}
+                onChange={() => setPaymentMethod("MoMo")}
+              />
+              <img
+                src="./assets/icons/momo-icon.png"
+                alt="VNPAY Icon"
+                className="payment-icon"
+              />
+              Thanh toán qua MoMo
             </label>
           </div>
 

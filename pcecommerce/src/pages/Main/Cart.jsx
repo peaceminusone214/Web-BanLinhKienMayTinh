@@ -33,6 +33,7 @@ const Cart = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(payload),
       });
 
@@ -98,7 +99,9 @@ const Cart = () => {
 
       for (let id of ids) {
         try {
-          const response = await fetch(`${API_URL}/product/${id}`);
+          const response = await fetch(`${API_URL}/product/${id}`, {
+            credentials: "include",
+          });
           if (response.ok) {
             const product = await response.json();
             productDetails.push(product);
@@ -187,7 +190,9 @@ const Cart = () => {
 
       const fetchUserCart = async () => {
         try {
-          const response = await fetch(`${API_URL}/cart/get/${user.userId}`);
+          const response = await fetch(`${API_URL}/cart/get/${user.userId}`, {
+            credentials: "include",
+          });
           if (!response.ok) throw new Error("Không thể lấy giỏ hàng từ server");
 
           const serverCart = await response.json();
@@ -248,6 +253,7 @@ const Cart = () => {
           await fetch(`${API_URL}/cart/sync`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({
               user_id: user.userId,
               cartItems: mergedCart.map((item) => ({

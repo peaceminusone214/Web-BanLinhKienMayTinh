@@ -12,6 +12,7 @@ function Orderslist() {
     fetch(`${API_URL}/order/update-order-status/${orderId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ order_status: newStatus }),
     })
       .then((response) => response.json())
@@ -55,6 +56,7 @@ function Orderslist() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({
         ids: [orderToDelete], // Send the product ID to delete
       }),
@@ -126,7 +128,7 @@ function Orderslist() {
   };
 
   useEffect(() => {
-    fetch(`${API_URL}/order/get-orders`)
+    fetch(`${API_URL}/order/get-orders`, { credentials: "include" })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Không thể lấy dữ liệu đơn hàng");
@@ -168,7 +170,7 @@ function Orderslist() {
                           </h2>
                           <ul className="sherah-breadcrumb__list">
                             <li>
-                              <a href="#">admin</a>
+                              <a href="/admin">admin</a>
                             </li>
                             <li className="active">
                               <Link to="/admin/orderslist">orderslist</Link>
@@ -213,20 +215,13 @@ function Orderslist() {
                             <tr key={order._id}>
                               <td className="sherah-table__column-1 sherah-table__data-1">
                                 <p className="crany-table__order--number">
-                                  <a
-                                    href="#"
+                                  <Link
+                                    to={`/admin/ordersdetails/${order._id}`}
                                     className="sherah-color1"
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      const target = e.target;
-                                      target.textContent =
-                                        target.textContent === order._id
-                                          ? order._id.slice(0, 3) + "..."
-                                          : order._id;
-                                    }}
+                                    title="Chi tiết"
                                   >
                                     {order._id.slice(0, 3) + "..."}
-                                  </a>
+                                  </Link>
                                 </p>
                               </td>
                               <td className="sherah-table__column-2 sherah-table__data-2">
@@ -264,8 +259,6 @@ function Orderslist() {
                                 <div
                                   className={getStatusClass(order.order_status)}
                                 >
-                                  {/* {statusMap[order.order_status] ||
-                                    order.order_status} */}
                                   <select
                                     value={order.order_status}
                                     onChange={(e) =>
@@ -300,7 +293,6 @@ function Orderslist() {
                               <td className="sherah-table__column-8 sherah-table__data-8">
                                 <div className="sherah-table__status__group">
                                   <a
-                                    href="#"
                                     className="sherah-table__action sherah-color2 sherah-color2__bg--offset"
                                     onClick={() => handleDeleteClick(order._id)}
                                   >

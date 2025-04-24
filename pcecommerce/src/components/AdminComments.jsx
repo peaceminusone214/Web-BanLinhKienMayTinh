@@ -24,8 +24,11 @@ const AdminComments = () => {
 
       const res =
         Object.keys(params).length > 0
-          ? await axios.get(`${API_URL}/comment/reported`, { params })
-          : await axios.get(`${API_URL}/comment`);
+          ? await axios.get(`${API_URL}/comment/reported`, {
+              params,
+              withCredentials: true,
+            })
+          : await axios.get(`${API_URL}/comment`, { withCredentials: true });
       setComments(res.data);
     } catch (err) {
       console.error("Error fetching comments:", err);
@@ -36,7 +39,9 @@ const AdminComments = () => {
     const fetchData = async () => {
       try {
         // Fetch comments data
-        const commentsRes = await axios.get(`${API_URL}/comment`);
+        const commentsRes = await axios.get(`${API_URL}/comment`, {
+          withCredentials: true,
+        });
         setComments(commentsRes.data);
 
         // Fetch replies data
@@ -115,7 +120,10 @@ const AdminComments = () => {
       if (replyFilters.sortBy) params.sortBy = replyFilters.sortBy;
       if (replyFilters.username) params.username = replyFilters.username;
 
-      const res = await axios.get(`${API_URL}/comment/replies`, { params });
+      const res = await axios.get(`${API_URL}/comment/replies`, {
+        params,
+        withCredentials: true,
+      });
       setReplies(res.data);
     } catch (err) {
       console.error("Error fetching replies:", err);

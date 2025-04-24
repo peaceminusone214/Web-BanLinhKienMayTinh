@@ -69,8 +69,27 @@ const CardProduct = ({ product }) => {
               </button>
             </div>
             <a
-              href="javascript:;"
               className="btn-cart-sp d-flex align-items-center justify-content-center"
+              onClick={() => {
+                const productId = product._id || product.id;
+                const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+                const existingProductIndex = cart.findIndex(
+                  (item) => item.id === productId
+                );
+
+                if (existingProductIndex !== -1) {
+                  // Nếu sản phẩm đã có, tăng số lượng
+                  cart[existingProductIndex].quantity += 1;
+                  console.log("Tăng số lượng sản phẩm:", productId);
+                } else {
+                  // Nếu sản phẩm chưa có, thêm mới
+                  cart.push({ id: productId, quantity: 1 });
+                  console.log("Thêm vào giỏ hàng:", productId);
+                }
+
+                localStorage.setItem("cart", JSON.stringify(cart));
+              }}
             >
               <i className="static-icon static-icon-cart"></i>
             </a>

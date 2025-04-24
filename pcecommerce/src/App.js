@@ -26,6 +26,7 @@ import CategoryPage from "./pages/Main/CategoryPage";
 import MultiCategoryPage from "./pages/Main/MultiCategoryPage";
 import CompareResult from "./pages/Main/ComparetionResulf";
 import FloatingChat from "../src/pages/Main/ChatBox/FloatingChat";
+import Buildslist from "../src/pages/Main/BuildsList";
 
 // Component chính App
 function App() {
@@ -62,6 +63,7 @@ function App() {
         <Route path="/search-results" element={<SearchResultsPage />} />
         <Route path="/compare-results" element={<CompareResult />} />
         <Route path="/order-success" element={<OrderSuccess />} />
+        <Route path="/buildslist" element={<Buildslist />} />
 
         {/* Admin Routes (protected) */}
         <Route element={<ProtectedRoute />}>

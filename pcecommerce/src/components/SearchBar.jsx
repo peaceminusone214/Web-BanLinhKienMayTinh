@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { fetchSearchResults } from "../redux/actions/searchAction";
 import "../../src/components/css/styleSearchBar.css";
 
 function SearchBar() {
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const [searchText, setSearchText] = useState("");
   const [cartCount, setCartCount] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -26,6 +29,48 @@ function SearchBar() {
       navigate("/search-results");
     }
   };
+
+  // Cập nhật số lượng sản phẩm trong giỏ hàng và tính tổng giá
+  useEffect(() => {
+    let prevCartData = JSON.stringify(localStorage.getItem("cart"));
+  
+    const updateCartData = async () => {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      setCartCount(cart.length);
+  
+      let total = 0;
+      for (const item of cart) {
+        const productId = item.id;
+  
+        try {
+          const response = await fetch(`${API_URL}/product/${productId}`);
+          const product = await response.json();
+          if (product && product.price) {
+            total += product.price * item.quantity;
+          }
+        } catch (error) {
+          console.error("Lỗi khi lấy giá sản phẩm:", error);
+        }
+      }
+  
+      setTotalPrice(total);
+    };
+  
+    // Gọi lần đầu
+    updateCartData();
+  
+    // Thiết lập interval để kiểm tra thay đổi
+    const interval = setInterval(() => {
+      const currentCartData = JSON.stringify(localStorage.getItem("cart"));
+      if (currentCartData !== prevCartData) {
+        prevCartData = currentCartData;
+        updateCartData();
+      }
+    }, 100); // kiểm tra mỗi 100ms
+  
+    return () => clearInterval(interval);
+  }, []);
+  
 
   return (
     <div>
@@ -140,7 +185,7 @@ function SearchBar() {
                   <p>
                     <i>(Số lượng: {cartCount} sản phẩm)</i>
                   </p>
-                  <p>0₫</p>
+                  <p>{totalPrice.toLocaleString()} ₫</p>{" "}
                 </div>
                 <div className="cart-ttip-price-button">
                   <a href="/cart" className="color-white">

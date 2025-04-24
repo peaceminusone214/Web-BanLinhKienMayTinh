@@ -2,9 +2,10 @@ const express = require("express");
 const Product = require("../models/Product");
 const Category = require("../models/Category");
 const router = express.Router();
+const { casbinMiddleware } = require("../middlewares/authMiddleware");
 
 // Route thêm danh mục sản phẩm
-router.post("/add-category", async (req, res) => {
+router.post("/add-category", casbinMiddleware, async (req, res) => {
   const { name, description } = req.body;
 
   if (!name || !description) {
@@ -29,24 +30,24 @@ router.post("/add-category", async (req, res) => {
   }
 });
 
-// Route lấy danh sách tên của danh mục sản phẩm
-router.get("/categories", async (req, res) => {
-  try {
-    // Lấy chỉ trường 'name' của tất cả các danh mục từ cơ sở dữ liệu
-    const categories = await Category.find().select("name");
+  // Route lấy danh sách tên của danh mục sản phẩm
+  router.get("/categories", async (req, res) => {
+    try {
+      // Lấy chỉ trường 'name' của tất cả các danh mục từ cơ sở dữ liệu
+      const categories = await Category.find().select("name");
 
-    // Kiểm tra nếu không có danh mục nào
-    if (categories.length === 0) {
-      return res.status(404).json({ message: "Không có danh mục nào!" });
+      // Kiểm tra nếu không có danh mục nào
+      if (categories.length === 0) {
+        return res.status(404).json({ message: "Không có danh mục nào!" });
+      }
+
+      // Trả về danh sách tên các danh mục
+      res.status(200).json(categories);
+    } catch (err) {
+      console.error("Lỗi:", err);
+      res.status(500).json({ message: "Lỗi máy chủ" });
     }
-
-    // Trả về danh sách tên các danh mục
-    res.status(200).json(categories);
-  } catch (err) {
-    console.error("Lỗi:", err);
-    res.status(500).json({ message: "Lỗi máy chủ" });
-  }
-});
+  });
 
 // Route lấy thông tin danh mục theo tên
 router.get("/category-by-name/:name", async (req, res) => {
@@ -59,7 +60,7 @@ router.get("/category-by-name/:name", async (req, res) => {
 });
 
 // Route thêm sản phẩm (có thể thêm nhiều hơn 1 sp)
-router.post("/add-product", async (req, res) => {
+router.post("/add-product", casbinMiddleware, async (req, res) => {
   let products = req.body;
 
   if (!Array.isArray(products)) {
@@ -492,7 +493,7 @@ router.get("/get-compatibilityvalues", async (req, res) => {
 });
 
 // Route xóa sản phẩm (có thể xóa một hoặc nhiều sản phẩm)
-router.delete("/delete-products", async (req, res) => {
+router.delete("/delete-products", casbinMiddleware, async (req, res) => {
   const { ids } = req.body;
 
   // Kiểm tra xem mảng IDs có hợp lệ không
@@ -525,7 +526,7 @@ router.delete("/delete-products", async (req, res) => {
 });
 
 // Route khôi phục sản phẩm (thêm lại sản phẩm đã xóa)
-router.put("/restore-products", async (req, res) => {
+router.put("/restore-products", casbinMiddleware, async (req, res) => {
   const { ids } = req.body;
 
   // Kiểm tra xem mảng IDs có hợp lệ không
@@ -847,7 +848,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // Route cập nhật sản phẩm
-router.put("/update-product", async (req, res) => {
+router.put("/update-product", casbinMiddleware, async (req, res) => {
   try {
     const { _id, product_name, category_id, stock_quantity, price } = req.body;
 

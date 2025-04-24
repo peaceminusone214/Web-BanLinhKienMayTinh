@@ -92,6 +92,7 @@ const Product = () => {
     try {
       const res = await axios.get(`${API_URL}/comment`, {
         params: { productId: id },
+        withCredentials: true,
       });
       // Chỉ hiển thị các bình luận có trạng thái "active"
       const activeReviews = res.data.filter((rev) => rev.status === "active");
@@ -99,12 +100,12 @@ const Product = () => {
     } catch (err) {
       console.error("Lỗi khi lấy danh sách bình luận:", err);
     }
-  };
+  };  
 
   // Lấy thông tin sản phẩm và bình luận
   useEffect(() => {
     if (!id) return;
-    fetch(`${API_URL}/product/${id}`)
+    fetch(`${API_URL}/product/${id}`, { credentials: 'include' })
       .then((res) => {
         if (!res.ok) throw new Error(`Lỗi API sản phẩm: ${res.status}`);
         return res.json();
@@ -119,10 +120,12 @@ const Product = () => {
       .catch((err) => console.error("Lỗi khi lấy sản phẩm:", err));
   }, [id, API_URL]);
 
+  //
   const fetchCategory = (categoryId) => {
     fetch(`${API_URL}/product/get-category`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: 'include',
       body: JSON.stringify({ id: categoryId }),
     })
       .then((res) => {

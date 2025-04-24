@@ -27,7 +27,7 @@ const NewsManagement = () => {
   // Fetch news from API
   const fetchNews = async () => {
     try {
-      const res = await axios.get(`${API_URL}/news`);
+      const res = await axios.get(`${API_URL}/news`, { withCredentials: true });
       setNewsList(res.data);
     } catch (err) {
       console.error("Error fetching news:", err);
