@@ -251,3 +251,30 @@
     border-style: solid;
     border-color: transparent transparent transparent #007bff;
 }
+
+.chat-suggestion-wrapper {
+    display: flex;
+    justify-content: center;
+    background-color: #f1f3f5;
+    padding-bottom: 16px;
+  }
+  
+  .chat-admin-btn {
+    background-color: transparent;
+    color: #007bff;
+    border: 2px solid #007bff;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .chat-admin-btn:hover {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 2px 10px rgba(0, 123, 255, 0.3);
+  }
+  
+  

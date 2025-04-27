@@ -747,7 +747,7 @@ function AdminMenu() {
                             </g>
                           </svg>
                         </span>
-                        <span className="menu-bar__name">X-History</span>
+                        <span className="menu-bar__name">Thống kê</span>
                       </span>
                     </Link>
                   </li>
@@ -831,7 +831,7 @@ function AdminMenu() {
                             </g>
                           </svg>
                         </span>
-                        <span className="menu-bar__name">X-Message</span>
+                        <span className="menu-bar__name">Quản lý tin nhắn</span>
                       </span>
                     </Link>
                   </li>
@@ -951,7 +951,7 @@ function AdminMenu() {
                             </g>
                           </svg>
                         </span>
-                        <span className="menu-bar__name">X-Language</span>
+                        <span className="menu-bar__name">Cài đặt ngôn ngữ</span>
                       </span>
                     </Link>
                   </li>

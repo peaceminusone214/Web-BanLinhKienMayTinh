@@ -69,6 +69,8 @@ function App() {
 
       {/* Conditionally render Footer based on the route */}
       {!isAdminPath && !isLoginPage && <Footer />}
+      {/* chatbox */}
+      {!isAdminPath && !isLoginPage && <FloatingChat />}
     </div>
   );
 }
