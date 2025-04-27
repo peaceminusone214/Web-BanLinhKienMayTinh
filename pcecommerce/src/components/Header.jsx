@@ -26,6 +26,7 @@ function Header() {
         method: "POST",
         credentials: "include",
       });
+      setUser(null);
       navigate("/");
     } catch (error) {
       console.error("Logout error:", error);
@@ -71,7 +72,8 @@ function Header() {
                 thiệu
               </a>
               <a href="/" className="title-group title-group-hover">
-                <i className="fa fa-search" aria-hidden="true"></i> Theo dõi đơn hàng
+                <i className="fa fa-search" aria-hidden="true"></i> Theo dõi đơn
+                hàng
               </a>
               <a
                 href="/News"
@@ -87,7 +89,16 @@ function Header() {
                 <>
                   <span className="title-group">Xin chào, {user.username}</span>
                   <span className="pl-chia">|</span>
-                  <a href="/" className="title-group" onClick={handleLogout}>
+                  <a
+                    href="/"
+                    className="title-group"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      localStorage.setItem("alreadyMerged", "false");
+                      localStorage.removeItem("cart");
+                      handleLogout();
+                    }}
+                  >
                     Đăng xuất
                   </a>
                 </>

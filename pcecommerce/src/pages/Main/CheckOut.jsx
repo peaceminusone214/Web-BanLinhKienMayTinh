@@ -17,6 +17,7 @@ function Checkout() {
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [receiveEmail, setReceiveEmail] = useState(false);
   const [address, setAddress] = useState("");
 
   // Địa chỉ (Tỉnh/TP, Quận/Huyện, Phường/Xã)
@@ -40,6 +41,10 @@ function Checkout() {
   // Phương thức vận chuyển & thanh toán
   //const [shippingMethod, setShippingMethod] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("COD");
+
+  const handleCheckboxChange = (e) => {
+    setReceiveEmail(e.target.checked);
+  };
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -150,11 +155,10 @@ function Checkout() {
           }
         }
 
-        setFullName(user.name);
-        setPhone(user.phoneNumber);
-        setEmail(user.email);
-        setAddress(user.address.street);
-
+        setFullName(user.name ?? "");
+        setPhone(user.phoneNumber ?? "");
+        setEmail(user.email ?? "");
+        setAddress(user.address?.street ?? "");
         setUser(user);
       } catch (error) {
         console.error("Lỗi lấy dữ liệu user:", error);
@@ -304,6 +308,7 @@ function Checkout() {
         fullName: orderInfo.fullName,
         phone: orderInfo.phone,
         email: orderInfo.email,
+        receive_email: receiveEmail,
         discount_code: orderInfo.discount_code,
         shipping_fee: shippingFee,
         VAT,
@@ -346,11 +351,20 @@ function Checkout() {
 
       if (response.ok) {
         alert(`🎉 Đặt hàng thành công! Mã đơn hàng: ${result.orders[0]._id}`);
-
+        // 👉 Nếu có user thì gọi API xóa cart
+        if (user?._id) {
+          try {
+            await fetch(`${API_URL}/cart/clear-cart/${user._id}`, {
+              method: "DELETE",
+              credentials: "include",
+            });
+            console.log("Đã xóa giỏ hàng server theo user ID:", user._id);
+          } catch (clearCartError) {
+            console.error("Lỗi khi xóa giỏ hàng:", clearCartError);
+          }
+        }
         localStorage.removeItem("cart");
         localStorage.removeItem("orderInfo");
-        localStorage.removeItem("mergedCart");
-
         navigate("/");
       } else {
         alert(`❌ Lỗi khi đặt hàng: ${result.message}`);
@@ -366,7 +380,7 @@ function Checkout() {
       alert("Giỏ hàng trống. Vui lòng thêm sản phẩm!");
       return;
     }
-  
+
     if (paymentMethod === "VNPAY") {
       try {
         const paymentData = {
@@ -388,16 +402,19 @@ function Checkout() {
             ward: selectedWard,
           },
         };
-  
-        const response = await fetch(`${API_URL}/payment/create_order_payment`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(paymentData),
-        });
-  
+
+        const response = await fetch(
+          `${API_URL}/payment/create_order_payment`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(paymentData),
+          }
+        );
+
         const result = await response.json();
-  
+
         if (result.paymentUrl) {
           window.location.href = result.paymentUrl;
         } else {
@@ -405,7 +422,9 @@ function Checkout() {
         }
       } catch (error) {
         console.error("Lỗi khi tạo đơn hàng VNPay:", error);
-        alert("Có lỗi xảy ra khi thực hiện thanh toán bằng VNPay. Vui lòng thử lại sau!");
+        alert(
+          "Có lỗi xảy ra khi thực hiện thanh toán bằng VNPay. Vui lòng thử lại sau!"
+        );
       }
     } else if (paymentMethod === "MOMO") {
       try {
@@ -417,9 +436,9 @@ function Checkout() {
             orderInfo: `Thanh toán đơn hàng từ ${fullName}`,
           }),
         });
-  
+
         const result = await response.json();
-  
+
         if (result.payUrl) {
           window.location.href = result.payUrl;
         } else {
@@ -456,7 +475,7 @@ function Checkout() {
             <h2></h2>
           ) : (
             <div className="checkout-login-notice">
-              Bạn có tài khoản? <a href="/login">Đăng nhập</a>
+              Bạn đã có tài khoản? <a href="/login">Đăng nhập</a>
             </div>
           )}
 
@@ -488,6 +507,19 @@ function Checkout() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
+
+          <div className="form-group-radio">
+            <label>
+              <input
+                type="checkbox"
+                name="receive_email"
+                checked={receiveEmail} // giá trị này sẽ được set từ state
+                onChange={handleCheckboxChange} // sự kiện khi thay đổi trạng thái checkbox
+              />
+              Tích vào nút nếu bạn muốn nhận Email về đơn hàng
+            </label>
+          </div>
+
           <div className="form-group-CO">
             <label>Địa chỉ cụ thể</label>
             <input

@@ -108,8 +108,10 @@ function AdminHeader({ menuClass, setMenuClass }) {
               {/* Dashboard Header */}
               <div className="sherah-header__inner">
                 <div className="sherah-header__middle">
-                  <div className="sherah__sicon close-icon d-xl-none"
-                    onClick={toggleHeaderMenu}>
+                  <div
+                    className="sherah__sicon close-icon d-xl-none"
+                    onClick={toggleHeaderMenu}
+                  >
                     <svg
                       width={9}
                       height={15}
@@ -915,7 +917,16 @@ function AdminHeader({ menuClass, setMenuClass }) {
                                   </Link>
                                 </li>
                                 <li>
-                                  <a onClick={handleLogout}>
+                                  <a
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      localStorage.setItem(
+                                        "alreadyMerged",
+                                        "false"
+                                      );
+                                      handleLogout();
+                                    }}
+                                  >
                                     <div className="sherah-dropdown-card-info">
                                       <div className="sherah-dropdown-card__img sherah-color1__bg">
                                         <svg

@@ -78,6 +78,7 @@ const OrderSchema = new mongoose.Schema({
   },
   telegramChatId: { type: String, default: "" },
   telegramConnectToken: { type: String },
+  receive_email: { type: Boolean, default: true },
   created_at: {
     type: Date,
     default: Date.now,

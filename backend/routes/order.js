@@ -126,14 +126,18 @@ router.post("/add-order", async (req, res) => {
       newOrders.push(newOrder);
 
       // Gửi email xác nhận đơn hàng
-      await sendOrderEmail({
-        fullName: order.fullName,
-        email: order.email,
-        orderId: newOrder._id,
-        totalAmount,
-        shippingAddress: `${order.shipping_address.street}, ${order.shipping_address.ward}, ${order.shipping_address.city}, ${order.shipping_address.province}`,
-        products: productDetails,
-      });
+      if (order.receive_email) {
+        await sendOrderEmail({
+          fullName: order.fullName,
+          email: order.email,
+          orderId: newOrder._id,
+          totalAmount,
+          shippingAddress: `${order.shipping_address.street}, ${order.shipping_address.ward}, ${order.shipping_address.city}, ${order.shipping_address.province}`,
+          products: productDetails,
+        });
+      } else {
+        console.log(`🚫 Người đặt hàng đã tắt nhận email (Order ID: ${newOrder._id})`);
+      }
 
       // Lấy thông tin user để kiểm tra kết nối Telegram
       const user = await User.findById(order.user_id);
