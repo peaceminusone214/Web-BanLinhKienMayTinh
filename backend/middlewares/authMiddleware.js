@@ -14,15 +14,6 @@ const initializeCasbin = async () => {
   console.log("Casbin Enforcer đã được khởi tạo");
 };
 
-// Lấy vai trò người dùng từ Casbin
-const getRolesForUsername = async (username) => {
-  if (!enforcer) {
-    throw new Error("Casbin enforcer chưa được khởi tạo");
-  }
-  const roles = await enforcer.getRolesForUser(username);
-  return roles.length > 0 ? roles : ["customer"];
-};
-
 // Middleware phân quyền bằng Casbin
 const casbinMiddleware = async (req, res, next) => {
   if (!enforcer) {
@@ -30,18 +21,31 @@ const casbinMiddleware = async (req, res, next) => {
     return res.status(500).send("Casbin Enforcer chưa được khởi tạo");
   }
 
-  const { roles } = req.user;
-  const object = req.originalUrl;
-  const action = req.method.toLowerCase();
+  if (!req.user || !req.user.roles || req.user.roles.length === 0) {
+    return res.status(401).json({ message: "Bạn chưa đăng nhập hoặc không có vai trò" });
+  }
+
+  const roles = req.user.roles; // Lấy roles từ session của người dùng
+  const object = req.originalUrl.split("?")[0]; // Lấy URL không có query string
+  const action = req.method.toLowerCase(); // Phương thức HTTP (GET, POST, PUT, DELETE)
 
   console.log("Kiểm tra quyền:", roles, object, action);
 
   try {
-    const allowed = await enforcer.enforce(roles, object, action);
+    let allowed = false;
+
+    // Kiểm tra quyền cho từng role trong danh sách roles của người dùng
+    for (const role of roles) {
+      const result = await enforcer.enforce(role, object, action);
+      if (result) {
+        allowed = true;
+        break;
+      }
+    }
 
     if (allowed) {
       console.log("Truy cập được phép");
-      next();
+      next(); // Cho phép truy cập
     } else {
       console.log("Truy cập bị từ chối");
       res.status(403).send("Truy cập bị từ chối");
@@ -55,5 +59,4 @@ const casbinMiddleware = async (req, res, next) => {
 module.exports = {
   casbinMiddleware,
   initializeCasbin,
-  getRolesForUsername,
 };

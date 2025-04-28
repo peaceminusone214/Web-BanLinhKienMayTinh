@@ -13,7 +13,7 @@ const NewsDetail = () => {
   useEffect(() => {
     const fetchNewsDetail = async () => {
       try {
-        const res = await axios.get(`${API_URL}/news/${id}`);
+        const res = await axios.get(`${API_URL}/news/${id}`, { withCredentials: true });
         setNews(res.data);
       } catch (err) {
         console.error("Error fetching news detail:", err);

@@ -125,7 +125,11 @@ function Uploadproduct() {
     // Gọi API để lấy danh sách danh mục
     const fetchCategories = async () => {
       try {
-        const response = await fetch(`${API_URL}/product/categories`);
+        const response = await fetch(`${API_URL}/product/categories`, {
+          method: "GET",
+          credentials: "include",
+        });
+
         const data = await response.json();
 
         // Giả sử API trả về dữ liệu là một mảng các đối tượng chứa trường 'name'
@@ -152,7 +156,10 @@ function Uploadproduct() {
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        const response = await fetch(`${API_URL}/product/get-brands`);
+        const response = await fetch(`${API_URL}/product/get-brands`, {
+          method: "GET",
+          credentials: "include",
+        });
         const data = await response.json();
         setBrands(data); // Trực tiếp gán data cho brands
       } catch (err) {
@@ -176,7 +183,10 @@ function Uploadproduct() {
   useEffect(() => {
     const fetchSpecifications = async () => {
       try {
-        const response = await fetch(`${API_URL}/product/get-specifications`);
+        const response = await fetch(`${API_URL}/product/get-specifications`, {
+          method: "GET",
+          credentials: "include",
+        });
         const data = await response.json();
         setSpecifications(data);
       } catch (err) {
@@ -190,7 +200,11 @@ function Uploadproduct() {
     const fetchSValues = async () => {
       try {
         const response = await fetch(
-          `${API_URL}/product/get-specificationvalues`
+          `${API_URL}/product/get-specificationvalues`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
         );
         const data = await response.json();
         setSValues(data);
@@ -204,7 +218,10 @@ function Uploadproduct() {
   useEffect(() => {
     const fetchCompatibilities = async () => {
       try {
-        const response = await fetch(`${API_URL}/product/get-compatibilities`);
+        const response = await fetch(`${API_URL}/product/get-compatibilities`, {
+          method: "GET",
+          credentials: "include",
+        });
         const data = await response.json();
         setCompatibilities(data);
       } catch (err) {
@@ -219,7 +236,11 @@ function Uploadproduct() {
     const fetchCValues = async () => {
       try {
         const response = await fetch(
-          `${API_URL}/product/get-compatibilityvalues`
+          `${API_URL}/product/get-compatibilityvalues`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
         );
         const data = await response.json();
         setCValues(data);
@@ -237,6 +258,7 @@ function Uploadproduct() {
       const categoryId = await fetch(`${API_URL}/product/get-category-id`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ name: selectedCategory }),
       })
         .then((response) => response.json())
@@ -290,11 +312,12 @@ function Uploadproduct() {
       const response = await fetch(`${API_URL}/product/add-product`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(data),
       });
 
       if (response.ok) {
-        alert("Sản phẩm đã tải thành công! 🎉");
+        alert("Thêm sản phẩm thành công!");
 
         // Reset tất cả các trường về mặc định
         setProductName("");

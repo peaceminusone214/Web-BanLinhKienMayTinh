@@ -1,16 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { fetchSearchResults } from "../redux/actions/searchAction";
 import "../../src/components/css/styleSearchBar.css";
 
 function SearchBar() {
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const [searchText, setSearchText] = useState("");
   const [cartCount, setCartCount] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [user, setUser] = useState(null);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const fetchUserFromSession = async () => {
+    try {
+      const response = await fetch(`${API_URL}/auth/session`, {
+        method: "GET",
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Không lấy được user");
+      const data = await response.json();
+      setUser(data.user);
+    } catch (error) {
+      console.error("Lỗi lấy user từ session:", error);
+    }
+  };
+  
   const handleSearchChange = (e) => {
     setSearchText(e.target.value);
   };
@@ -27,6 +45,72 @@ function SearchBar() {
     }
   };
 
+  // Cập nhật số lượng sản phẩm trong giỏ hàng và tính tổng giá
+  useEffect(() => {
+    let prevCartData = JSON.stringify(localStorage.getItem("cart"));
+  
+    const updateCartData = async () => {
+      const alreadyMerged = localStorage.getItem("alreadyMerged") === "true";
+  
+      if (!alreadyMerged) {
+        // Chưa merged → lấy localStorage
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        setCartCount(cart.length);
+  
+        let total = 0;
+        for (const item of cart) {
+          const productId = item.id;
+          try {
+            const response = await fetch(`${API_URL}/product/${productId}`);
+            const product = await response.json();
+            if (product && product.price) {
+              total += product.price * item.quantity;
+            }
+          } catch (error) {
+            console.error("Lỗi khi lấy giá sản phẩm:", error);
+          }
+        }
+        setTotalPrice(total);
+  
+      } else if (user?.userId) {
+        // Đã merged → lấy từ server
+        try {
+          const response = await fetch(`${API_URL}/cart/get/${user.userId}`, {
+            credentials: "include",
+          });
+          if (!response.ok) throw new Error("Không lấy được cart từ server");
+  
+          const cart = await response.json();
+          setCartCount(cart.items.length);
+  
+          const total = cart.items.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0);
+          setTotalPrice(total);
+  
+        } catch (error) {
+          console.error("Lỗi lấy cart từ database:", error);
+        }
+      }
+    };
+  
+    // Gọi lần đầu
+    fetchUserFromSession().then(() => updateCartData());
+  
+    // Set interval nếu chưa merged
+    const interval = setInterval(() => {
+      const alreadyMerged = localStorage.getItem("alreadyMerged") === "true";
+  
+      if (!alreadyMerged) {
+        const currentCartData = JSON.stringify(localStorage.getItem("cart"));
+        if (currentCartData !== prevCartData) {
+          prevCartData = currentCartData;
+          updateCartData();
+        }
+      }
+    }, 200);
+  
+    return () => clearInterval(interval);
+  }, [API_URL, user]);  
+  
   return (
     <div>
       {/* searchBar */}
@@ -140,7 +224,7 @@ function SearchBar() {
                   <p>
                     <i>(Số lượng: {cartCount} sản phẩm)</i>
                   </p>
-                  <p>0₫</p>
+                  <p>{totalPrice.toLocaleString()} ₫</p>{" "}
                 </div>
                 <div className="cart-ttip-price-button">
                   <a href="/cart" className="color-white">

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FaTrash, FaPlus, FaSync } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./MainStyles/styleBuildPC.css";
 
 const BuildPC = () => {
   const API_URL = process.env.REACT_APP_API_URL;
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [selectedComponents, setSelectedComponents] = useState([]);
@@ -14,6 +15,111 @@ const BuildPC = () => {
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
   const [sortOption, setSortOption] = useState("default");
+  const [selectedCPU, setSelectedCPU] = useState(null);
+  const [selectedMainboard, setSelectedMainboard] = useState(null);
+
+  const handlePrint = () => {
+    const html = `
+      <html>
+        <head>
+          <title>WatchTheCAT</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+            h2 { text-align: center; }
+          </style>
+        </head>
+        <body>
+          <h2>PHIẾU BÁO GIÁ</h2>
+          <p>Ngày: ${new Date().toLocaleDateString('vi-VN')}</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Linh kiện</th>
+                <th>Tên sản phẩm</th>
+                <th>SL</th>
+                <th>Đơn giá</th>
+                <th>Thành tiền</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${selectedComponents.map(item => `
+                <tr>
+                  <td>${item.category}</td>
+                  <td>${item.product_name}</td>
+                  <td>${item.quantity}</td>
+                  <td>${item.price.toLocaleString()} đ</td>
+                  <td>${(item.price * item.quantity).toLocaleString()} đ</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <h3 style="margin-top: 20px;">Tổng cộng: ${estimatedCost.toLocaleString()} đ</h3>
+        </body>
+      </html>
+    `;
+  
+    const win = window.open('', '_blank');
+    win.document.write(html);
+    win.document.close();
+    win.focus();
+    win.print();
+  };  
+
+  useEffect(() => {
+    const cpu = selectedComponents.find((item) => item.category === "CPU");
+    setSelectedCPU(cpu || null);
+  }, [selectedComponents]);
+
+  useEffect(() => {
+    const mb = selectedComponents.find((item) => item.category === "Mainboard");
+    setSelectedMainboard(mb || null);
+  }, [selectedComponents]);
+
+  const handleClickViewBuild = async () => {
+    try {
+      const response = await fetch(`${API_URL}/auth/session`, {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.user) {
+          handleOpenBuild();
+        }
+      } else if (response.status === 401) {
+        alert("Bạn cần đăng nhập để xem cấu hình đã lưu");
+      } else {
+        alert("Đã xảy ra lỗi, vui lòng thử lại sau.");
+      }
+    } catch (error) {
+      alert("Không thể kết nối đến máy chủ.");
+    }
+  };
+
+  const handleOpenBuild = () => {
+    navigate("/buildslist");
+  };
+
+  // Lưu vào localStorage khi selectedComponents thay đổi
+  useEffect(() => {
+    if (selectedComponents.length > 0) {
+      localStorage.setItem(
+        "selectedComponents",
+        JSON.stringify(selectedComponents)
+      );
+    }
+  }, [selectedComponents]);
+
+  // Tải lại selectedComponents từ localStorage khi trang được tải lại
+  useEffect(() => {
+    const storedComponents = localStorage.getItem("selectedComponents");
+    if (storedComponents) {
+      setSelectedComponents(JSON.parse(storedComponents));
+    }
+  }, []);
 
   const handleSortChange = (e) => {
     setSortOption(e.target.value);
@@ -64,7 +170,8 @@ const BuildPC = () => {
   useEffect(() => {
     if (selectedCategory) {
       fetch(
-        `${API_URL}/product/get-brands-category?category_id=${selectedCategory._id}`
+        `${API_URL}/product/get-brands-category?category_id=${selectedCategory._id}`,
+        { credentials: "include" }
       )
         .then((response) => response.json())
         .then((data) => setBrands(data))
@@ -74,7 +181,7 @@ const BuildPC = () => {
 
   // Lấy danh sách danh mục từ API bằng fetch
   useEffect(() => {
-    fetch(`${API_URL}/product/categories`)
+    fetch(`${API_URL}/product/categories`, { credentials: "include" })
       .then((response) => response.json())
       .then((data) => setCategories(data))
       .catch((error) => console.error("Lỗi khi lấy danh mục:", error));
@@ -89,7 +196,8 @@ const BuildPC = () => {
 
       // Lấy hãng sản xuất
       fetch(
-        `${API_URL}/product/get-brands-category?category_id=${selectedCategory._id}`
+        `${API_URL}/product/get-brands-category?category_id=${selectedCategory._id}`,
+        { credentials: "include" }
       )
         .then((response) => response.json())
         .then((data) => setBrands(data))
@@ -97,7 +205,8 @@ const BuildPC = () => {
 
       // Lấy sản phẩm
       fetch(
-        `${API_URL}/product/get-products?category_id=${selectedCategory._id}`
+        `${API_URL}/product/get-products?category_id=${selectedCategory._id}`,
+        { credentials: "include" }
       )
         .then((response) => response.json())
         .then((data) => setProducts(data))
@@ -123,17 +232,15 @@ const BuildPC = () => {
       (item) => item._id === newItem._id
     );
 
-    if (existing) {
-      setSelectedComponents(
-        selectedComponents.map((item) =>
+    const updatedComponents = existing
+      ? selectedComponents.map((item) =>
           item._id === newItem._id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         )
-      );
-    } else {
-      setSelectedComponents([...selectedComponents, newItem]);
-    }
+      : [...selectedComponents, newItem];
+
+    setSelectedComponents(updatedComponents);
 
     // Tắt popup sau khi chọn sản phẩm
     closePopup();
@@ -141,7 +248,19 @@ const BuildPC = () => {
 
   // Xoá sản phẩm khỏi cấu hình
   const removeComponent = (id) => {
-    setSelectedComponents(selectedComponents.filter((item) => item._id !== id));
+    // Lọc ra các sản phẩm không bị xóa
+    const updatedComponents = selectedComponents.filter(
+      (item) => item._id !== id
+    );
+
+    // Cập nhật lại state
+    setSelectedComponents(updatedComponents);
+
+    // Cập nhật lại localStorage
+    localStorage.setItem(
+      "selectedComponents",
+      JSON.stringify(updatedComponents)
+    );
   };
 
   // Cập nhật số lượng sản phẩm
@@ -163,6 +282,61 @@ const BuildPC = () => {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
+
+  // Hàm lưu cấu hình
+  const handleSaveBuild = async () => {
+    const buildData = {
+      name: "Cấu hình máy tính",
+      description: "Mô tả cấu hình",
+      components: selectedComponents,
+      total_price: estimatedCost,
+    };
+
+    try {
+      const response = await fetch(`${API_URL}/build/add-build`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(buildData),
+      });
+
+      const data = await response.json();
+
+      if (response.status === 201) {
+        alert("Cấu hình đã được lưu thành công!");
+      } else {
+        alert(data.error || "Không thể lưu cấu hình.");
+      }
+    } catch (error) {
+      console.error("Lỗi khi lưu cấu hình:", error);
+      alert("Có lỗi xảy ra khi lưu cấu hình.");
+    }
+  };
+
+  //
+  const compatibilityFilteredProducts = sortedProducts.filter((prod) => {
+    // Nếu đang chọn Mainboard, lọc theo CPU socket_type và mem_type
+    if (selectedCategory?.name === "Mainboard" && selectedCPU) {
+      return (
+        prod.compatibility?.socket_type ===
+          selectedCPU.compatibility?.socket_type &&
+        prod.compatibility?.mem_type === selectedCPU.compatibility?.mem_type
+      );
+    }
+
+    // Nếu đang chọn RAM, lọc theo Mainboard mem_type
+    if (selectedCategory?.name === "RAM" && selectedMainboard) {
+      return (
+        prod.compatibility?.mem_type ===
+        selectedMainboard.compatibility?.mem_type
+      );
+    }
+
+    // Mặc định không lọc gì thêm
+    return true;
+  });
 
   return (
     <div className="news-container">
@@ -198,7 +372,12 @@ const BuildPC = () => {
                         <strong className="product-name">
                           {selectedItem.product_name}
                         </strong>
-                        <p>Bảo hành: {selectedItem.warranty}</p>
+                        <p>
+                          Bảo hành:{" "}
+                          {selectedItem.warranty
+                            .replace(" years", " năm")
+                            .replace(" year", " năm")}
+                        </p>{" "}
                       </div>
                       <div className="selected-product-price">
                         {selectedItem.price.toLocaleString()} đ
@@ -272,8 +451,17 @@ const BuildPC = () => {
             </span>
           </div>
           <div className="summary-actions">
-            <button className="btn-cart">Thêm tất cả vào giỏ</button>
-            <button className="btn-print">In báo giá</button>
+            <button className="btn-cart" onClick={handleSaveBuild}>
+              Lưu cấu hình
+            </button>
+            <button className="btn-print" onClick={handlePrint}>
+              In báo giá
+            </button>
+          </div>
+          <div className="summary-actions">
+            <button onClick={handleClickViewBuild} className="btn-cart2">
+              Xem cấu hình đã lưu
+            </button>
           </div>
         </div>
       </div>
@@ -349,8 +537,8 @@ const BuildPC = () => {
                 </div>
               </div>
               <div className="product-list">
-                {sortedProducts.length > 0 ? (
-                  sortedProducts.map((prod) => (
+                {compatibilityFilteredProducts.length > 0 ? (
+                  compatibilityFilteredProducts.map((prod) => (
                     <div
                       className="product-item vip-product-item"
                       key={prod._id}

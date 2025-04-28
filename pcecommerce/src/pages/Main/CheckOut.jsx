@@ -17,6 +17,7 @@ function Checkout() {
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const [receiveEmail, setReceiveEmail] = useState(false);
   const [address, setAddress] = useState("");
 
   // Địa chỉ (Tỉnh/TP, Quận/Huyện, Phường/Xã)
@@ -40,6 +41,10 @@ function Checkout() {
   // Phương thức vận chuyển & thanh toán
   //const [shippingMethod, setShippingMethod] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("COD");
+
+  const handleCheckboxChange = (e) => {
+    setReceiveEmail(e.target.checked);
+  };
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -136,6 +141,7 @@ function Checkout() {
           const userResponse = await fetch(`${API_URL}/user/get-user/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({ userId: user.userId }),
           });
 
@@ -149,11 +155,10 @@ function Checkout() {
           }
         }
 
-        setFullName(user.name);
-        setPhone(user.phoneNumber);
-        setEmail(user.email);
-        setAddress(user.address.street);
-
+        setFullName(user.name ?? "");
+        setPhone(user.phoneNumber ?? "");
+        setEmail(user.email ?? "");
+        setAddress(user.address?.street ?? "");
         setUser(user);
       } catch (error) {
         console.error("Lỗi lấy dữ liệu user:", error);
@@ -169,7 +174,9 @@ function Checkout() {
     const fetchProductDetails = async () => {
       const fetchedProducts = await Promise.all(
         cartItems.map(async (item) => {
-          const response = await fetch(`${API_URL}/product/${item.id}`);
+          const response = await fetch(`${API_URL}/product/${item.id}`, {
+            credentials: "include",
+          });
           if (response.ok) {
             const product = await response.json();
             return { ...item, product }; // Kết hợp thông tin sản phẩm với item
@@ -221,6 +228,7 @@ function Checkout() {
       const response = await fetch(`${API_URL}/discount/apply-discount`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({
           discount_code: couponCode,
           products: cartItems.map((item) => ({
@@ -300,6 +308,7 @@ function Checkout() {
         fullName: orderInfo.fullName,
         phone: orderInfo.phone,
         email: orderInfo.email,
+        receive_email: receiveEmail,
         discount_code: orderInfo.discount_code,
         shipping_fee: shippingFee,
         VAT,
@@ -321,31 +330,41 @@ function Checkout() {
         sendTelegram: telegramConnected,
       };
 
-      console.log("📦 Dữ liệu đơn hàng gửi đi:", orderData);
+      console.log("Dữ liệu đơn hàng gửi đi:", orderData);
 
       const response = await fetch(`${API_URL}/order/add-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify([orderData]),
       });
 
       const result = await response.json();
-      console.log("📥 API result:", result);
+      console.log("API result:", result);
 
       // 👉 Xử lý Telegram
       if (result.telegramConnectionInfo?.length > 0) {
         const link = result.telegramConnectionInfo[0].connectionLink;
-        console.log("📨 Gợi ý kết nối Telegram:", link);
+        console.log("Gợi ý kết nối Telegram:", link);
         setTelegramConnectLink(link);
       }
 
       if (response.ok) {
         alert(`🎉 Đặt hàng thành công! Mã đơn hàng: ${result.orders[0]._id}`);
-
+        // 👉 Nếu có user thì gọi API xóa cart
+        if (user?._id) {
+          try {
+            await fetch(`${API_URL}/cart/clear-cart/${user._id}`, {
+              method: "DELETE",
+              credentials: "include",
+            });
+            console.log("Đã xóa giỏ hàng server theo user ID:", user._id);
+          } catch (clearCartError) {
+            console.error("Lỗi khi xóa giỏ hàng:", clearCartError);
+          }
+        }
         localStorage.removeItem("cart");
         localStorage.removeItem("orderInfo");
-        localStorage.removeItem("mergedCart");
-
         navigate("/");
       } else {
         alert(`❌ Lỗi khi đặt hàng: ${result.message}`);
@@ -389,16 +408,13 @@ function Checkout() {
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify(paymentData),
           }
         );
 
         const result = await response.json();
 
-        if (result.telegramConnectLink) {
-          console.log("Telegram link từ BE:", result.telegramConnectLink);
-          setTelegramConnectLink(result.telegramConnectLink);
-        }
         if (result.paymentUrl) {
           window.location.href = result.paymentUrl;
         } else {
@@ -409,6 +425,28 @@ function Checkout() {
         alert(
           "Có lỗi xảy ra khi thực hiện thanh toán bằng VNPay. Vui lòng thử lại sau!"
         );
+      }
+    } else if (paymentMethod === "MOMO") {
+      try {
+        const response = await fetch(`${API_URL}/momo/create`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: totalAmount,
+            orderInfo: `Thanh toán đơn hàng từ ${fullName}`,
+          }),
+        });
+
+        const result = await response.json();
+
+        if (result.payUrl) {
+          window.location.href = result.payUrl;
+        } else {
+          alert("Không nhận được đường dẫn thanh toán từ MoMo!");
+        }
+      } catch (error) {
+        console.error("Lỗi khi tạo đơn hàng MoMo:", error);
+        alert("Có lỗi xảy ra khi thanh toán qua MoMo. Vui lòng thử lại sau!");
       }
     } else {
       handlePlaceOrder();
@@ -437,7 +475,7 @@ function Checkout() {
             <h2></h2>
           ) : (
             <div className="checkout-login-notice">
-              Bạn có tài khoản? <a href="/login">Đăng nhập</a>
+              Bạn đã có tài khoản? <a href="/login">Đăng nhập</a>
             </div>
           )}
 
@@ -469,6 +507,19 @@ function Checkout() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
+
+          <div className="form-group-radio">
+            <label>
+              <input
+                type="checkbox"
+                name="receive_email"
+                checked={receiveEmail} // giá trị này sẽ được set từ state
+                onChange={handleCheckboxChange} // sự kiện khi thay đổi trạng thái checkbox
+              />
+              Tích vào nút nếu bạn muốn nhận Email về đơn hàng
+            </label>
+          </div>
+
           <div className="form-group-CO">
             <label>Địa chỉ cụ thể</label>
             <input
@@ -616,6 +667,25 @@ function Checkout() {
                 className="payment-icon"
               />
               Thanh toán qua VNPAY
+            </label>
+          </div>
+
+          {/**MoMo method */}
+          <div className="form-group-radio">
+            <label>
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="MoMo"
+                checked={paymentMethod === "MoMo"}
+                onChange={() => setPaymentMethod("MoMo")}
+              />
+              <img
+                src="./assets/icons/momo-icon.png"
+                alt="VNPAY Icon"
+                className="payment-icon"
+              />
+              Thanh toán qua MoMo
             </label>
           </div>
 

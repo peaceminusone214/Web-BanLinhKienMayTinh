@@ -1,8 +1,11 @@
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCompare } from "../redux/actions/compareActions";
 import "./css/styleCardProduct.css";
 
 const CardProduct = ({ product }) => {
+  const [user, setUser] = useState(null);
+  const API_URL = process.env.REACT_APP_API_URL;
   const formattedPrice = product.price.toLocaleString();
   const dispatch = useDispatch();
 
@@ -10,6 +13,67 @@ const CardProduct = ({ product }) => {
   const isSelected = compareList.some(
     (p) => (p._id || p.id) === (product._id || product.id)
   );
+
+  const fetchUserFromSession = async () => {
+    try {
+      const response = await fetch(`${API_URL}/auth/session`, {
+        method: "GET",
+        credentials: "include",
+      });
+      if (!response.ok)
+        throw new Error("Không lấy được thông tin user từ session");
+      const data = await response.json();
+      setUser(data.user);
+    } catch (error) {
+      console.error("Lỗi lấy user từ session:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserFromSession();
+  }, []);
+
+  const handleAddToCart = async (product) => {
+    const productId = product._id || product.id;
+
+    const alreadyMerged = localStorage.getItem("alreadyMerged") === "true";
+    const cartKey = "cart";
+    let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+    const existingIndex = cart.findIndex((item) => item.id === productId);
+
+    if (existingIndex !== -1) {
+      cart[existingIndex].quantity += 1;
+      console.log("Tăng số lượng sản phẩm:", productId);
+    } else {
+      cart.push({ id: productId, quantity: 1 });
+      console.log("Thêm sản phẩm mới vào giỏ:", productId);
+    }
+
+    localStorage.setItem(cartKey, JSON.stringify(cart));
+
+    if (alreadyMerged && user?.userId) {
+      try {
+        await fetch(`${API_URL}/cart/sync`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            user_id: user.userId,
+            cartItems: cart.map((item) => ({
+              id: item.id,
+              quantity: item.quantity,
+              price: product.price || 0,
+            })),
+            note: "",
+          }),
+        });
+        console.log("Đã đồng bộ cart server sau thêm sản phẩm.");
+      } catch (error) {
+        console.error("Lỗi đồng bộ cart khi thêm sản phẩm:", error);
+      }
+    }
+  };
 
   const handleCompare = () => {
     if (!isSelected) {
@@ -69,8 +133,8 @@ const CardProduct = ({ product }) => {
               </button>
             </div>
             <a
-              href="javascript:;"
               className="btn-cart-sp d-flex align-items-center justify-content-center"
+              onClick={() => handleAddToCart(product)}
             >
               <i className="static-icon static-icon-cart"></i>
             </a>

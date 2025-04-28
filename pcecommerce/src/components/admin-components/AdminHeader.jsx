@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-function AdminHeader() {
+function AdminHeader({ menuClass, setMenuClass }) {
   const API_URL = process.env.REACT_APP_API_URL;
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const navigate = useNavigate();
   const [roleToDisplay, setRoleToDisplay] = useState("");
   const [user, setUser] = useState(null);
+
+  const toggleHeaderMenu = () => {
+    setMenuClass("sherah-smenu sherah-close");
+  };
 
   const checkFullscreen = () => {
     setIsFullscreen(!!document.fullscreenElement);
@@ -67,6 +71,7 @@ function AdminHeader() {
           const userResponse = await fetch(`${API_URL}/user/get-user/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({ userId: user.userId }),
           });
 
@@ -103,7 +108,10 @@ function AdminHeader() {
               {/* Dashboard Header */}
               <div className="sherah-header__inner">
                 <div className="sherah-header__middle">
-                  <div className="sherah__sicon close-icon d-xl-none">
+                  <div
+                    className="sherah__sicon close-icon d-xl-none"
+                    onClick={toggleHeaderMenu}
+                  >
                     <svg
                       width={9}
                       height={15}
@@ -909,7 +917,16 @@ function AdminHeader() {
                                   </Link>
                                 </li>
                                 <li>
-                                  <a onClick={handleLogout}>
+                                  <a
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      localStorage.setItem(
+                                        "alreadyMerged",
+                                        "false"
+                                      );
+                                      handleLogout();
+                                    }}
+                                  >
                                     <div className="sherah-dropdown-card-info">
                                       <div className="sherah-dropdown-card__img sherah-color1__bg">
                                         <svg

@@ -2,14 +2,7 @@ const express = require("express");
 const User = require("../models/User");
 const LoginHistory = require("../models/LoginHistory");
 const bcrypt = require("bcryptjs");
-const {
-  initializeCasbin,
-  getRolesForUsername,
-} = require("../middleware/authMiddleware");
 const router = express.Router();
-
-// Khởi tạo Casbin
-initializeCasbin();
 
 //Route kiểm tra session
 router.get("/session", (req, res) => {
@@ -54,15 +47,11 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Sai mật khẩu" });
     }
 
-    // Lấy vai trò người dùng từ Casbin
-    const userRoles = await getRolesForUsername(username);
-    const roles = userRoles.length > 0 ? userRoles : ["guest"];
-
     // Lưu thông tin vào session
     req.session.user = {
       userId: user._id,
       username: user.username,
-      roles: roles,
+      roles: [user.role], // Lưu role từ cơ sở dữ liệu vào session
     };
 
     // Lưu lại lịch sử đăng nhập

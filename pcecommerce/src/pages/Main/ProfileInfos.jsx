@@ -34,6 +34,7 @@ function ProfileInfo() {
           const userResponse = await fetch(`${API_URL}/user/get-user/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: "include",
             body: JSON.stringify({ userId: user.userId }),
           });
 
@@ -64,6 +65,7 @@ function ProfileInfo() {
     fetch(`${API_URL}/user/get-login-history`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ userId: user._id }), // Sử dụng userId từ session
     })
       .then((response) => response.json())
@@ -92,6 +94,7 @@ function ProfileInfo() {
       const response = await fetch(`${API_URL}/user/change-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ userId: user._id, oldPassword, newPassword }), // Dùng userId từ session
       });
 

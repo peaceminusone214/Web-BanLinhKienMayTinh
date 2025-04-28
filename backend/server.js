@@ -13,8 +13,11 @@ const cartRoutes = require("./routes/cart");
 const newsRoutes = require("./routes/news");
 const paymentRoutes = require('./routes/payment');
 const commentRoutes = require('./routes/comment');
-const chatRoutes = require("./routes/ChatBot");
+const chatRoutes = require("./routes/chatbot");
 const statsRoutes = require('./routes/stats');
+const momoRoutes = require("./routes/momo");
+const authSessionMiddleware = require("./middlewares/authSessionMiddleware");
+const { initializeCasbin } = require("./middlewares/authMiddleware");
 
 const app = express();
 require("dotenv").config();
@@ -44,10 +47,13 @@ app.use(
       maxAge: 60 * 60 * 1000, // 1 giờ
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
-      sameSite: "Lax", //Để Lax nếu muốn chạy ở local, ngược lại None
+      sameSite: process.env.COOKIE_SAMESITE, //Để Lax nếu muốn chạy ở local, ngược lại None
     },
   })
 );
+
+// Gán session.user → req.user
+app.use(authSessionMiddleware);
 
 // Cấu hình CORS
 app.use(
@@ -76,9 +82,15 @@ app.use('/api/comment', commentRoutes);
 app.use("/uploads", express.static("uploads"));
 app.use("/api/chat", chatRoutes);
 app.use('/api/stats', statsRoutes);
+app.use("/api/momo", momoRoutes);
 
 // Khởi động server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+
+(async () => {
+  await initializeCasbin();
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+})();
+

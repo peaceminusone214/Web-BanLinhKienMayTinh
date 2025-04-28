@@ -1,43 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-function Productslist() {
+function Buildslist() {
   const API_URL = process.env.REACT_APP_API_URL;
-  const [products, setProducts] = useState([]);
+  const [builds, setBuilds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSortedByNameAsc, setIsSortedByNameAsc] = useState(true);
-  const [isSortedByCategoryAsc, setIsSortedByCategoryAsc] = useState(true);
-  const [isSortedByQuantityAsc, setIsSortedByQuantityAsc] = useState(true);
-  const [productToDelete, setProductToDelete] = useState(null);
-  const [editingProductId, setEditingProductId] = useState(null);
-  const [editedProduct, setEditedProduct] = useState({});
-  const [categories, setCategories] = useState([]);
-
-  const handleEditClick = (product) => {
-    setEditingProductId(product._id);
-    setEditedProduct({ ...product }); // Sao chép dữ liệu sản phẩm vào state
-  };
-
-  const handleInputChange = (e, field) => {
-    setEditedProduct({ ...editedProduct, [field]: e.target.value });
-  };
-
-  const handleSaveClick = () => {
-    handleUpdateProduct(editingProductId);
-    setEditingProductId(null); // Thoát chế độ chỉnh sửa
-  };
+  const [buildToDelete, setBuildToDelete] = useState(null);
+  const [editingBuildId, setEditingBuildId] = useState(null);
+  const [editedBuild, setEditedBuild] = useState({});
 
   useEffect(() => {
-    fetch(`${API_URL}/product/get-products`, { credentials: "include" })
+    fetch(`${API_URL}/build/get-builds`, { credentials: "include" })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Không thể lấy dữ liệu sản phẩm");
+          throw new Error("Không thể lấy dữ liệu cấu hình");
         }
         return response.json();
       })
       .then((data) => {
-        setProducts(data);
+        setBuilds(data);
         setLoading(false);
       })
       .catch((error) => {
@@ -46,149 +29,115 @@ function Productslist() {
       });
   }, []);
 
-  useEffect(() => {
-    // Gọi API để lấy danh sách danh mục
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch(`${API_URL}/product/categories`, {
-          credentials: "include",
-        });
-        const data = await response.json();
-
-        // Giả sử API trả về dữ liệu là một mảng các đối tượng chứa trường 'name'
-        setCategories(data.map((category) => category.name));
-      } catch (err) {
-        console.error("Lỗi khi lấy danh mục:", err);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
   const handleSortByName = () => {
-    const sortedProducts = [...products];
-    sortedProducts.sort((a, b) => {
+    const sortedBuilds = [...builds];
+    sortedBuilds.sort((a, b) => {
       if (isSortedByNameAsc) {
-        return a.product_name.localeCompare(b.product_name);
+        return a.name.localeCompare(b.name);
       } else {
-        return b.product_name.localeCompare(a.product_name);
+        return b.name.localeCompare(a.name);
       }
     });
-    setProducts(sortedProducts);
+    setBuilds(sortedBuilds);
     setIsSortedByNameAsc(!isSortedByNameAsc); // Toggle sort direction
   };
 
-  const handleSortByCategory = () => {
-    const sortedProducts = [...products];
-    sortedProducts.sort((a, b) => {
-      if (isSortedByCategoryAsc) {
-        return a.category_id.name.localeCompare(b.category_id.name);
-      } else {
-        return b.category_id.name.localeCompare(a.category_id.name);
-      }
-    });
-    setProducts(sortedProducts);
-    setIsSortedByCategoryAsc(!isSortedByCategoryAsc); // Toggle sort direction
+  const handleInputChange = (e, field) => {
+    setEditedBuild({ ...editedBuild, [field]: e.target.value });
   };
 
-  const handleSortByQuantity = () => {
-    const sortedProducts = [...products];
-    sortedProducts.sort((a, b) => {
-      if (isSortedByQuantityAsc) {
-        return a.stock_quantity - b.stock_quantity;
-      } else {
-        return b.stock_quantity - a.stock_quantity;
-      }
-    });
-    setProducts(sortedProducts);
-    setIsSortedByQuantityAsc(!isSortedByQuantityAsc); // Toggle sort direction
+  const handleDeleteClick = (buildId) => {
+    // Set the buildToDelete to the current build ID
+    setBuildToDelete(buildId);
   };
 
-  const handleDeleteClick = (productId) => {
-    // Set the productToDelete to the current product ID
-    setProductToDelete(productId);
+  const handleSaveClick = () => {
+    handleUpdateBuild(editingBuildId);
+    setEditingBuildId(null); // Thoát chế độ chỉnh sửa
   };
 
   const handleConfirmDelete = () => {
-    fetch(`${API_URL}/product/delete-products`, {
+    fetch(`${API_URL}/build/delete-builds`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
       body: JSON.stringify({
-        ids: [productToDelete],
+        ids: [buildToDelete],
       }),
     })
       .then((response) => response.json())
       .then((data) => {
         if (data.message) {
-          setProducts(
-            products.filter((product) => product._id !== productToDelete)
+          setBuilds(
+            builds.filter((build) => build._id !== buildToDelete)
           );
         }
-        setProductToDelete(null);
+        setBuildToDelete(null);
       })
       .catch((error) => {
-        setError("Có lỗi xảy ra khi xóa sản phẩm.");
-        setProductToDelete(null);
+        setError("Có lỗi xảy ra khi xóa cấu hình.");
+        setBuildToDelete(null);
       });
   };
 
-  const handleUpdateProduct = (productId) => {
-    // Kiểm tra nếu không có sản phẩm được chỉnh sửa
-    if (!editedProduct || !productId) {
-      console.error("Không có dữ liệu sản phẩm cần cập nhật.");
+  const handleEditClick = (build) => {
+    setEditingBuildId(build._id);
+    setEditedBuild({ ...build });
+  };
+
+  const handleCancelDelete = () => {
+    // Reset buildToDelete to null to cancel the delete operation
+    setBuildToDelete(null);
+  };
+
+  const handleUpdateBuild = (buildId) => {
+    // Kiểm tra nếu không có cấu hình được chỉnh sửa
+    if (!editedBuild || !buildId) {
+      console.error("Không có dữ liệu cấu hình cần cập nhật.");
       return;
     }
 
-    const updatedProduct = {
-      _id: productId, // Lấy ID sản phẩm
-      product_name: editedProduct.product_name, // Lấy tên sản phẩm đã nhập
-      category_id: editedProduct.category_id, // Lấy category ID từ danh mục đã chọn
-      stock_quantity: parseInt(editedProduct.stock_quantity) || 0, // Lấy số lượng đã nhập
-      price: parseFloat(editedProduct.price) || 0, // Lấy giá đã nhập
+    const updatedBuild = {
+      _id: buildId,
+      name: editedBuild.name,
     };
 
-    console.log("Dữ liệu gửi API:", updatedProduct); // Kiểm tra dữ liệu trước khi gửi
+    console.log("Dữ liệu gửi API:", updatedBuild); // Kiểm tra dữ liệu trước khi gửi
 
-    // Gửi yêu cầu cập nhật sản phẩm
-    fetch(`${API_URL}/product/update-product`, {
+    // Gửi yêu cầu cập nhật cấu hình
+    fetch(`${API_URL}/build/update-build`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(updatedProduct),
+      body: JSON.stringify(updatedBuild),
     })
       .then((response) => response.json())
       .then((data) => {
         console.log("Phản hồi từ server:", data);
         if (data.message) {
-          // Cập nhật lại danh sách sản phẩm
-          setProducts(
-            products.map((product) =>
-              product._id === productId
-                ? { ...product, ...updatedProduct }
-                : product
+          // Cập nhật lại danh sách cấu hình
+          setBuilds(
+            builds.map((build) =>
+              build._id === buildId
+                ? { ...build, ...updatedBuild }
+                : build
             )
           );
         }
-        setEditingProductId(null); // Thoát chế độ chỉnh sửa
+        setEditingBuildId(null); // Thoát chế độ chỉnh sửa
       })
       .catch((error) => {
-        console.error("Lỗi khi cập nhật sản phẩm:", error);
-        setError("Có lỗi xảy ra khi cập nhật sản phẩm.");
+        console.error("Lỗi khi cập nhật cấu hình:", error);
+        setError("Có lỗi xảy ra khi cập nhật cấu hình.");
       });
   };
 
-  const handleCancelDelete = () => {
-    // Reset productToDelete to null to cancel the delete operation
-    setProductToDelete(null);
-  };
-
   if (loading) {
-    return <div>Đang tải sản phẩm...</div>;
+    return <div>Đang tải cấu hình...</div>;
   }
 
   if (error) {
@@ -208,14 +157,14 @@ function Productslist() {
                       <div className="col-12 sherah-flex-between">
                         <div className="sherah-breadcrumb">
                           <h2 className="sherah-breadcrumb__title">
-                            Danh sách sản phẩm
+                            Danh sách cấu hình
                           </h2>
                           <ul className="sherah-breadcrumb__list">
                             <li>
-                              <a href="#">admin</a>
+                              <a>Trang chủ</a>
                             </li>
                             <li className="active">
-                              <Link to="/admin/productslist">productslist</Link>
+                              <Link to="/admin/buildslist">buildslist</Link>
                             </li>
                           </ul>
                         </div>
@@ -229,10 +178,10 @@ function Productslist() {
                         <thead className="sherah-table__head">
                           <tr>
                             <th className="sherah-table__column-1 sherah-table__h1">
-                              ID sản phẩm
+                              ID cấu hình
                             </th>
                             <th className="sherah-table__column-2 sherah-table__h2">
-                              Tên sản phẩm
+                              Tên cấu hình
                               <button
                                 onClick={handleSortByName}
                                 style={{
@@ -256,58 +205,8 @@ function Productslist() {
                                 )}
                               </button>
                             </th>
-                            <th className="sherah-table__column-3 sherah-table__h3">
-                              Danh mục
-                              <button
-                                onClick={handleSortByCategory}
-                                style={{
-                                  padding: "4px 8px",
-                                  fontSize: "14px",
-                                  background: "transparent",
-                                  border: "none",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                {isSortedByNameAsc ? (
-                                  <i
-                                    className="fa-duotone fa-solid fa-sort-up"
-                                    style={{ fontSize: "16px" }}
-                                  ></i>
-                                ) : (
-                                  <i
-                                    className="fa-duotone fa-solid fa-sort-down"
-                                    style={{ fontSize: "16px" }}
-                                  ></i>
-                                )}
-                              </button>
-                            </th>
-                            <th className="sherah-table__column-4 sherah-table__h4">
-                              Số lượng
-                              <button
-                                onClick={handleSortByQuantity}
-                                style={{
-                                  padding: "4px 8px",
-                                  fontSize: "14px",
-                                  background: "transparent",
-                                  border: "none",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                {isSortedByNameAsc ? (
-                                  <i
-                                    className="fa-duotone fa-solid fa-sort-up"
-                                    style={{ fontSize: "16px" }}
-                                  ></i>
-                                ) : (
-                                  <i
-                                    className="fa-duotone fa-solid fa-sort-down"
-                                    style={{ fontSize: "16px" }}
-                                  ></i>
-                                )}
-                              </button>
-                            </th>
-                            <th className="sherah-table__column-5 sherah-table__h5">
-                              Giá
+                            <th className="sherah-table__column-10 sherah-table__h3">
+                              Danh sách phần cứng
                             </th>
                             <th className="sherah-table__column-8 sherah-table__h8">
                               Thao tác
@@ -315,101 +214,50 @@ function Productslist() {
                           </tr>
                         </thead>
                         <tbody className="sherah-table__body">
-                          {products.map((product) => (
-                            <tr key={product._id}>
+                          {builds.map((build) => (
+                            <tr key={build._id}>
                               <td className="sherah-table__column-1 sherah-table__data-1">
                                 <p className="crany-table__product--number">
-                                  <a href="#" className="sherah-color1">
-                                    {product._id}
+                                <a
+                                    className="sherah-color1"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      const target = e.target;
+                                      target.textContent =
+                                        target.textContent === build._id
+                                          ? build._id.slice(0, 3) + "..."
+                                          : build._id;
+                                    }}
+                                  >
+                                    {build._id.slice(0, 3) + "..."}
                                   </a>
                                 </p>
                               </td>
                               <td className="sherah-table__column-2 sherah-table__data-2">
-                                {editingProductId === product._id ? (
+                                {editingBuildId === build._id ? (
                                   <input
                                     type="text"
-                                    value={editedProduct.product_name}
+                                    value={editedBuild.name}
                                     onChange={(e) =>
-                                      handleInputChange(e, "product_name")
+                                      handleInputChange(e, "name")
                                     }
                                   />
                                 ) : (
                                   <p className="sherah-table__product-desc">
-                                    {product.product_name}
+                                    {build.name}
                                   </p>
                                 )}
                               </td>
-                              <td className="sherah-table__column-5 sherah-table__data-5">
-                                {editingProductId === product._id ? (
-                                  <select
-                                    className="form-group__input"
-                                    aria-label="Chọn danh mục"
-                                    value={editedProduct.category_id.name || ""}
-                                    onChange={(e) =>
-                                      setEditedProduct({
-                                        ...editedProduct,
-                                        category_id: {
-                                          ...editedProduct.category_id,
-                                          name: e.target.value,
-                                        },
-                                      })
-                                    }
-                                  >
-                                    <option value="">Chọn danh mục</option>
-                                    {categories.length > 0 ? (
-                                      categories.map((category, index) => (
-                                        <option key={index} value={category}>
-                                          {category}
-                                        </option>
-                                      ))
-                                    ) : (
-                                      <option disabled>
-                                        Không có danh mục nào
-                                      </option>
-                                    )}
-                                  </select>
-                                ) : (
-                                  <p className="sherah-table__product-desc">
-                                    {product.category_id.name}
-                                  </p>
-                                )}
-                              </td>
-                              <td className="sherah-table__column-5 sherah-table__data-5">
-                                {editingProductId === product._id ? (
-                                  <input
-                                    type="number"
-                                    value={editedProduct.stock_quantity}
-                                    onChange={(e) =>
-                                      handleInputChange(e, "stock_quantity")
-                                    }
-                                  />
-                                ) : (
-                                  <p className="sherah-table__product-desc">
-                                    {product.stock_quantity}
-                                  </p>
-                                )}
-                              </td>
-                              <td className="sherah-table__column-5 sherah-table__data-5">
-                                {editingProductId === product._id ? (
-                                  <input
-                                    type="number"
-                                    value={editedProduct.price}
-                                    onChange={(e) =>
-                                      handleInputChange(e, "price")
-                                    }
-                                  />
-                                ) : (
-                                  <p className="sherah-table__product-desc">
-                                    {product.price.toLocaleString("vi-VN", {
-                                      style: "currency",
-                                      currency: "VND",
-                                    })}
-                                  </p>
-                                )}
+                              <td className="sherah-table__column-3 sherah-table__data-3">
+                                {build.components.map((component, index) => (
+                                  <div key={component._id} style={{ marginBottom: "4px" }}>
+                                    {index + 1}. {component.name} - SL: {component.quantity}
+                                  </div>
+                                ))}
                               </td>
                               <td className="sherah-table__column-8 sherah-table__data-8">
                                 <div className="sherah-table__status__group">
-                                  {editingProductId === product._id ? (
+                                  {editingBuildId === build._id ? (
                                     <>
                                       <button
                                         onClick={handleSaveClick}
@@ -425,7 +273,7 @@ function Productslist() {
                                       </button>
                                       <button
                                         onClick={() =>
-                                          setEditingProductId(null)
+                                          setEditingBuildId(null)
                                         }
                                         className="sherah-color2"
                                         style={{
@@ -440,9 +288,8 @@ function Productslist() {
                                     </>
                                   ) : (
                                     <a
-                                      href="#"
                                       className="sherah-table__action sherah-color2 sherah-color3__bg--opactity"
-                                      onClick={() => handleEditClick(product)}
+                                      onClick={() => handleEditClick(build)}
                                     >
                                       {/* Edit icon */}
                                       <svg
@@ -483,11 +330,10 @@ function Productslist() {
                                     </a>
                                   )}
                                   <a
-                                    href="#"
                                     className="sherah-table__action sherah-color2 sherah-color2__bg--offset"
                                     onClick={() =>
-                                      handleDeleteClick(product._id)
-                                    } // Pass product ID
+                                      handleDeleteClick(build._id)
+                                    } // Pass build ID
                                   >
                                     {/* Delete icon */}
                                     <svg
@@ -529,7 +375,7 @@ function Productslist() {
                                     </svg>
                                   </a>
                                 </div>
-                                {productToDelete === product._id && (
+                                {buildToDelete === build._id && (
                                   <div
                                     style={{
                                       background: "#fff",
@@ -548,7 +394,7 @@ function Productslist() {
                                         color: "#333",
                                       }}
                                     >
-                                      Bạn có chắc chắn muốn xóa sản phẩm này?
+                                      Bạn có chắc chắn muốn xóa cấu hình này?
                                     </p>
                                     <button
                                       onClick={handleConfirmDelete}
@@ -610,4 +456,4 @@ function Productslist() {
   );
 }
 
-export default Productslist;
+export default Buildslist;

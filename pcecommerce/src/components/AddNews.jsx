@@ -30,7 +30,9 @@ const AddNews = () => {
   // Lấy danh sách tin tức
   const fetchNews = async () => {
     try {
-      const res = await axios.get(`${API_URL}/news`);
+      const config = {};
+
+      const res = await axios.get(`${API_URL}/news`, { withCredentials: true });
       setNewsList(res.data);
     } catch (err) {
       console.error("Error fetching news:", err);
