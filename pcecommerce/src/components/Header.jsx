@@ -35,11 +35,11 @@ function Header() {
 
   return (
     <div>
-      <section className="header-banner-top">
+      {/* <section className="header-banner-top">
         <a href="/">
           <img src="" alt="#" />
         </a>
-      </section>
+      </section> */}
 
       <section className="header-top">
         <div className="container">
@@ -71,7 +71,7 @@ function Header() {
                 <i className="fa fa-info-circle" aria-hidden="true"></i> Giới
                 thiệu
               </a>
-              <a href="/" className="title-group title-group-hover">
+              <a href="/order-tracking" className="title-group title-group-hover">
                 <i className="fa fa-search" aria-hidden="true"></i> Theo dõi đơn
                 hàng
               </a>

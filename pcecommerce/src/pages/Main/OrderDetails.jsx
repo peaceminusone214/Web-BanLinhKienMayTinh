@@ -143,7 +143,7 @@ function Ordersdetails() {
   return (
     <div>
       <>
-        <div className="sherah-body-area">
+        <div className="sherah-body-area" style={{ marginLeft: "-3%", marginRight: "15%" }}>
           {/* sherah Dashboard */}
           <section className="sherah-adashboard sherah-show">
             <div className="container">
@@ -160,12 +160,6 @@ function Ordersdetails() {
                               Chi tiết đơn hàng
                             </h2>
                             <ul className="sherah-breadcrumb__list">
-                              <li>
-                                <a href="#">Trang quản trị</a>
-                              </li>
-                              <li className="active">
-                                <a href="order-list.html">Chi tiết đơn hàng</a>
-                              </li>
                             </ul>
                           </div>
                           {/* End Sherah Breadcrumb */}

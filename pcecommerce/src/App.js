@@ -25,8 +25,10 @@ import SearchResultsPage from "./pages/Main/SearchResultsPage";
 import CategoryPage from "./pages/Main/CategoryPage";
 import MultiCategoryPage from "./pages/Main/MultiCategoryPage";
 import CompareResult from "./pages/Main/ComparetionResulf";
-import FloatingChat from "../src/pages/Main/ChatBox/FloatingChat";
-import Buildslist from "../src/pages/Main/BuildsList";
+import FloatingChat from "./pages/Main/ChatBox/FloatingChat";
+import Buildslist from "./pages/Main/BuildsList";
+import OrderTracking from "./pages/Main/OrderTracking";
+import Ordersdetails from "./pages/Main/OrderDetails";
 
 // Component chính App
 function App() {
@@ -64,6 +66,11 @@ function App() {
         <Route path="/compare-results" element={<CompareResult />} />
         <Route path="/order-success" element={<OrderSuccess />} />
         <Route path="/buildslist" element={<Buildslist />} />
+        <Route path="/order-tracking" element={<OrderTracking />} />
+        <Route
+              path="/orderdetails/:id"
+              element={<Ordersdetails />}
+            />
 
         {/* Admin Routes (protected) */}
         <Route element={<ProtectedRoute />}>

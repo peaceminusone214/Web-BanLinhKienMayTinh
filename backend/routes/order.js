@@ -9,6 +9,31 @@ const { casbinMiddleware } = require("../middlewares/authMiddleware");
 const crypto = require("crypto");
 const router = express.Router();
 
+const mongoose = require('mongoose');
+
+// Kiểm tra mã đơn hàng
+router.post('/check-order', async (req, res) => {
+  const { orderCode } = req.body; // orderCode lúc này chính là _id
+
+  try {
+    // Kiểm tra xem orderCode có phải là ObjectId hợp lệ không
+    if (!mongoose.Types.ObjectId.isValid(orderCode)) {
+      return res.json({ valid: false });
+    }
+
+    const order = await Order.findById(orderCode); // tìm theo _id
+
+    if (order) {
+      res.json({ valid: true });
+    } else {
+      res.json({ valid: false });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ valid: false, message: "Server error" });
+  }
+});
+
 // Hàm tạo token ngẫu nhiên
 const generateToken = () => {
   return crypto.randomBytes(16).toString("hex");

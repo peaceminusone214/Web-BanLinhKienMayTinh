@@ -6,7 +6,6 @@ import History from "../pages/Dashboard/history";
 import Invoiceprint from "../pages/Dashboard/invoice-print";
 import Languages from "../pages/Dashboard/languages";
 import Notifications from "../pages/Dashboard/notifications";
-import Ordersdetails from "../pages/Dashboard/OrderDetails";
 import Orderslist from "../pages/Dashboard/OrderManagement";
 import Productslist from "../pages/Dashboard/ProductManagement";
 import Products from "../pages/Dashboard/products";
@@ -87,10 +86,6 @@ const ProtectedRoute = () => {
             <Route path="/admin/invoiceprint" element={<Invoiceprint />} />
             <Route path="/admin/languages" element={<Languages />} />
             <Route path="/admin/notifications" element={<Notifications />} />
-            <Route
-              path="/admin/ordersdetails/:id"
-              element={<Ordersdetails />}
-            />
             <Route path="/admin/orderslist" element={<Orderslist />} />
             <Route path="/admin/productslist" element={<Productslist />} />
             <Route path="/admin/products" element={<Products />} />
@@ -133,10 +128,6 @@ const ProtectedRoute = () => {
         {isCashier && (
           <>
             <Route path="/admin/orderslist" element={<Orderslist />} />
-            <Route
-              path="/admin/ordersdetails/:id"
-              element={<Ordersdetails />}
-            />
             <Route
               path="/admin/deletedorders"
               element={<DeletedOrderslist />}
