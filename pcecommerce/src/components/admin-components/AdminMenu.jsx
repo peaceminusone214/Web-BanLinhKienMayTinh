@@ -761,7 +761,7 @@ function AdminMenu({ menuClass, setMenuClass }) {
                             </g>
                           </svg>
                         </span>
-                        <span className="menu-bar__name">X-Message</span>
+                        <span className="menu-bar__name">Quản lý tin nhắn</span>
                       </span>
                     </Link>
                   </li>

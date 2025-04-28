@@ -8,6 +8,7 @@ import { fetchProductsByCategory } from "../../Service/productApi";
 import { useParams } from "react-router-dom";
 
 function CompareProducts() {
+  const API_URL = process.env.REACT_APP_API_URL;
   const [products, setProducts] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [comparisonResult, setComparisonResult] = useState([]);
@@ -20,7 +21,7 @@ function CompareProducts() {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/product/get-products",
+        `${API_URL}/product/get-products`,
         { withCredentials: true }
       );
       setProducts(response.data);
@@ -49,7 +50,7 @@ function CompareProducts() {
     try {
       const productIds = selectedProducts.map((product) => product._id);
       const response = await axios.get(
-        "http://localhost:5000/api/product/compare-products",
+        `${API_URL}/product/compare-products`,
         {
           params: { ids: productIds },
         }

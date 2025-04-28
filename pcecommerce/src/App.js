@@ -88,8 +88,10 @@ function App() {
 function FloatingChatWrapper() {
   const location = useLocation();
   const isAdminPath = location.pathname.startsWith("/admin");
+  const isLoginPath = location.pathname.startsWith("/login");
+  const isRegisterPath = location.pathname.startsWith("/register");
 
-  return !isAdminPath ? <FloatingChat /> : null;
+  return !(isAdminPath || isLoginPath || isRegisterPath) ? <FloatingChat /> : null;
 }
 
 function AppWrapper() {

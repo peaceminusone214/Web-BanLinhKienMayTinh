@@ -16,6 +16,7 @@ const commentRoutes = require('./routes/comment');
 const chatRoutes = require("./routes/chatbot");
 const statsRoutes = require('./routes/stats');
 const momoRoutes = require("./routes/momo");
+const messageRoutes = require("./routes/message");
 const authSessionMiddleware = require("./middlewares/authSessionMiddleware");
 const { initializeCasbin } = require("./middlewares/authMiddleware");
 
@@ -83,6 +84,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/chat", chatRoutes);
 app.use('/api/stats', statsRoutes);
 app.use("/api/momo", momoRoutes);
+app.use("/api/message", messageRoutes);
 
 // Khởi động server
 const PORT = process.env.PORT || 5000;

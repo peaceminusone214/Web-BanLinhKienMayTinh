@@ -29,9 +29,9 @@ function Home() {
 
   const banners = [
     { id: 32, img: "/assets/interface-main/imgComp/banner-slide1.png" },
-    { id: 70, img: "/assets/interface-main/imgComp/bannner-slide2.png" },
-    { id: 65, img: "/assets/interface-main/imgComp/banner-slide3.png" },
-    { id: 42, img: "/assets/interface-main/imgComp/banner-slide4.png" },
+    //{ id: 70, img: "/assets/interface-main/imgComp/bannner-slide2.png" },
+    //{ id: 65, img: "/assets/interface-main/imgComp/banner-slide3.png" },
+    //{ id: 42, img: "/assets/interface-main/imgComp/banner-slide4.png" },
   ];
 
   const articles = [
@@ -74,89 +74,6 @@ function Home() {
       date: "13-07-2024",
       description:
         "Làm thế nào để làm giả một card đồ họa GeForce RTX 4090, một trong những card đồ họa tốt nhất hiện nay, với giá ít nhất 1.500 đô la mà không cần truy cập vào bộ vi xử lý AD102 của Nvidia và bộ nhớ GDDR6X của Micron? Dễ dàng, theo NorthWest Repair, một cửa hàng sửa chữa nổi tiếng.",
-    },
-  ];
-
-  const product = [
-    {
-      id: 5547,
-      name: "Mainboard MSI B760 GAMING PLUS WIFI (DDR5)",
-      img: "https://www.tncstore.vn/media/product/250-4569-card-man-hinh-gigabyte-rtx-3080-gaming-oc-10gd-1.jpg",
-      price: "4.650.000 ₫",
-      oldPrice: "5.178.000 ₫",
-      discount: "-10%",
-      status: "✓ Còn hàng",
-      description: [
-        "Model: B760 GAMING PLUS WIFI",
-        "Socket: LGA 1700",
-        "Hỗ trợ CPU: Intel 12th,13th",
-        "Hỗ trợ RAM: 4x DDR5 (192GB)",
-        "Kích thước: ATX",
-      ],
-    },
-    {
-      id: 9121,
-      name: "Laptop HP Victus Gaming 15 FB2063DX",
-      img: "https://product.hstatic.net/1000167396/product/56_087565e885ce4274abcf63ec3eff346a_master.png",
-      price: "14.200.000 ₫",
-      oldPrice: "15.340.000 ₫",
-      discount: "-7%",
-      status: "✓ Liên hệ",
-      description: [
-        "CPU: Ryzen 5 - 7535HS",
-        "RAM: 8GB DDR5",
-        "Ổ cứng: SSD 512GB NVMe",
-        "Card đồ họa: AMD Radeon RX 6550M 4G",
-        "Màn hình: 15.6 inch Full HD 144Hz",
-      ],
-    },
-    {
-      id: 9123,
-      name: "Laptop HP Victus Gaming 15 FB2063DX",
-      img: "https://bizweb.dktcdn.net/100/329/122/files/amd-5700g-02.jpg?v=1633579298069",
-      price: "14.200.000 ₫",
-      oldPrice: "15.340.000 ₫",
-      discount: "-7%",
-      status: "✓ Liên hệ",
-      description: [
-        "CPU: Ryzen 5 - 7535HS",
-        "RAM: 8GB DDR5",
-        "Ổ cứng: SSD 512GB NVMe",
-        "Card đồ họa: AMD Radeon RX 6550M 4G",
-        "Màn hình: 15.6 inch Full HD 144Hz",
-      ],
-    },
-    {
-      id: 9124,
-      name: "Laptop HP Victus Gaming 15 FB2063DX",
-      img: "https://anphat.com.vn/media/product/47721_last.jpg",
-      price: "14.200.000 ₫",
-      oldPrice: "15.340.000 ₫",
-      discount: "-7%",
-      status: "✓ Liên hệ",
-      description: [
-        "CPU: Ryzen 5 - 7535HS",
-        "RAM: 8GB DDR5",
-        "Ổ cứng: SSD 512GB NVMe",
-        "Card đồ họa: AMD Radeon RX 6550M 4G",
-        "Màn hình: 15.6 inch Full HD 144Hz",
-      ],
-    },
-    {
-      id: 9125,
-      name: "Laptop HP Victus Gaming 15 FB2063DX",
-      img: "https://www.tncstore.vn/media/product/250-4569-card-man-hinh-gigabyte-rtx-3080-gaming-oc-10gd-1.jpg",
-      price: "14.200.000 ₫",
-      oldPrice: "15.340.000 ₫",
-      discount: "-7%",
-      status: "✓ Liên hệ",
-      description: [
-        "CPU: Ryzen 5 - 7535HS",
-        "RAM: 8GB DDR5",
-        "Ổ cứng: SSD 512GB NVMe",
-        "Card đồ họa: AMD Radeon RX 6550M 4G",
-        "Màn hình: 15.6 inch Full HD 144Hz",
-      ],
     },
   ];
 

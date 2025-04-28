@@ -1,7 +1,8 @@
 import axios from "axios";
 
 export const fetchBotReply = async (messages) => {
-  const res = await axios.post("http://localhost:5000/api/chat/", { messages });
+  const API_URL = process.env.REACT_APP_API_URL;
+  const res = await axios.post(`${API_URL}/chat`, { messages });
   // Kiểm tra cả hai định dạng phản hồi có thể có từ backend
   if (res.data.reply && res.data.reply.content) {
     return res.data.reply.content;
